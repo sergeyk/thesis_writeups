@@ -1,0 +1,378 @@
+% NOTE: remove [handout] for presentation mode
+\documentclass[handout]{beamer}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{subfigure}
+\usepackage{algorithm2e}
+\usepackage{xspace}
+\usepackage{ifthen}
+\usepackage{microtype}
+\usepackage{color}
+\usepackage{bbm}
+\usepackage{stmaryrd}
+\usepackage{varioref}
+\usepackage{natbib}
+\bibliographystyle{apalike}
+
+% \input{../JAIR_2011/macros}
+\input{macros}
+
+% Use a clean theme with a sidebar.
+\usetheme{Goettingen}
+\usecolortheme{dove}
+\setbeamercovered{transparent}
+
+\begin{document}
+
+%% Title and ToC
+\title[Adaptive Submodularity]{Adaptive Submodularity\\for Active Classification}
+\author[]{Sergey Karayev}
+\date[Dec 2013]{December 2013\\CS 270 Project}
+\frame{
+    \titlepage
+}
+
+\begin{frame}\frametitle{Table of Contents}
+\tableofcontents[]
+\end{frame}
+
+
+%% Introduction
+\section{Problem}
+
+\begin{frame}\frametitle{Problem}
+\begin{itemize}
+    \item Have:
+        \begin{itemize}
+            \item Hypothesis $H \in \mathcal{H}$, set of possible observations $\mathcal{X} = \{X_1, \dots, X_F\}$.
+            \item Each $X_i$ has cost $c_i$ and depends on $H$ in some way.
+        \end{itemize}
+    \pause
+    \item Goal: select subset $\mathcal{X}_S$ to maximize reward $f(\mathcal{X}_S)$.
+    \begin{itemize}
+        % \item For example, decision theoretic: $f(H, \mathcal{X}_S) = \max_a \sum_h P(h \mid \mathcal{X}_S) U(h, a)$.
+        \item e.g. loss: $f(\mathcal{X}_S) = -\ell(h^*, \argmax_h P(h \mid \mathcal{X}_S))$.
+        \item e.g. entropy: $f(\mathcal{X}_S) = \sum_x P(h \mid \mathcal{X}_S) \log P(h \mid \mathcal{X}_S)$
+    \end{itemize}
+    \pause
+    \item Variants:
+    \begin{itemize}
+        \item \emph{Budgeted maximization}: Maximize objective without exceeding cost budget.
+        \item \emph{Minimum-cost cover}: Minimize cost while achieving some minimum objective value.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{Active classification}
+\begin{itemize}
+    \item Furthermore, want to do this \emph{adaptively}: selecting and observing values in sequence (motivation to follow).
+    \pause
+    \item Lots of recent work in this setting: POMDPs, cascades, trees for spam detection, object recognition, sentence parsing.
+    \pause
+    \item Different heuristic methods, but no performance guarantees.
+    \pause
+    \item Here, we synthesize a few recent papers that may construe a promising avenue for theoretical analysis of the active classification problem.
+\end{itemize}
+\end{frame}
+
+
+%% Solving offline with submodularity.
+\section{Offline solution}
+
+\begin{frame}\frametitle{Offline problem formulation}
+Take the problem of selecting the whole subset before observing anything; assume uniform costs.
+\vfill
+\pause
+\begin{columns}[c]
+\column{.5\linewidth}
+    \centering
+    \underline{Budgeted maximization}
+    \begin{align*}
+    &\underset{\mathcal{X}_S \subseteq \mathcal{X}}{\argmax}\ f(\mathcal{X}_S)\\
+    s.t &\ |\mathcal{X}_S| \leq N
+    \end{align*}
+
+\column{.5\linewidth}
+    \centering
+    \underline{Min-cost cover}
+    \begin{align*}
+    &\underset{\mathcal{X}_S \subseteq \mathcal{X}}{\argmin}\ |\mathcal{X}_S|\\
+    s.t &\ f(\mathcal{X}_S) \geq Q
+    \end{align*}
+\end{columns}
+\vfill
+\begin{itemize}
+    \pause
+    \item For most interesting $f$, this is NP-hard.
+    \pause
+    \item \cite{Nemhauser-1978} showed that if $f$ is \emph{monotone submodular}, then a simple greedy algorithm is near-optimal with these bounds:
+\end{itemize}
+
+\visible<4->{
+    \begin{columns}[c]
+    \column{.5\linewidth}
+    \centering
+    $$f(\mathcal{X}_{S_N}) \geq (1-\frac{1}{e})\, f(\mathcal{X}_{S_N}^*)$$
+    % the greedy solution is at least 63% as good as optimal.
+    \column{.5\linewidth}
+    \centering
+    $$|\mathcal{X}_{S_Q}| \leq |\mathcal{X}_S^*|\, (1 + \log \max_X f(X))$$
+    % the greedy solution is at most a logarithmic factor larger than the min cost solution.
+    \end{columns}
+}
+
+\end{frame}
+
+\subsection{Submodular functions}
+
+\begin{frame}\frametitle{Monotone submodular functions}
+\begin{itemize}
+    \item Intuitively, submodularity is the property of diminishing returns. For proving near-optimality of the greedy method, we additionally require monotonicity.
+    \pause
+    \item Define the \emph{gain} of adding another item to a set as $$\Delta_f(X \mid \mathcal{X}_A) = f(\mathcal{X}_A \cup \{X\}) - f(\mathcal{X}_A)$$
+    \pause
+    \item For all $X$, the submodularity requirement must hold. ``Adding an element to a smaller set helps more than adding the same element to a larger set.''
+$$\mathcal{X}_A \subseteq \mathcal{X}_B \implies \Delta_f(X \mid \mathcal{X}_A) \geq \Delta_f(X \mid \mathcal{X}_B)$$
+    \pause
+    \item For all $X$, the monotonicity requirement must hold. ``Adding an element can never hurt.''
+$$\Delta_f(X \mid \mathcal{X}_A) \geq 0$$
+\end{itemize}
+\end{frame}
+
+\subsection{Greedy algorithm}
+
+\begin{frame}\frametitle{Greedy algorithm}
+\vspace{1em}
+\begin{algorithm}[H]
+\KwIn{Budget $N$; observations $\mathcal{X}$; objective $f$.}
+\KwOut{Set $\groundsubset \subseteq \groundset$ of size $N$}
+\Begin{
+    $\groundsubset\leftarrow\emptyset$\;
+    \For{$i=1$ \KwTo $k$}{
+        \lForEach{$\elem\in\groundset\setminus \groundsubset$}{compute $\Delta_f(\elem \mid \mathcal{X}_S)$}
+        Select $X^* \in \underset{X}{\argmax} \frac{\Delta_f(\elem \mid \mathcal{X}_S)}{c(X)}$\;
+        Set $\groundsubset \leftarrow \groundsubset \cup \{\elem^{*}\}$\;
+    }
+}
+\end{algorithm}
+\pause
+\begin{itemize}
+\item Costs have been omitted in the exposition, but are handled by the algorithm if the cost function is modular: $$c(\mathcal{X}_S) = \sum_{X \in \mathcal{X}_S} c(X)$$.
+\end{itemize}
+\end{frame}
+
+\subsection{Example}
+
+\begin{frame}\frametitle{Example}
+\centering
+\includegraphics[width=0.8\linewidth]{../figures/sensor.pdf}
+\begin{itemize}
+    \item Sensor network: want minimal set of observations (Sensors) to maximize utility over  hidden variables (Fire): f(P(Fire $\mid$ Sensors)).
+    \pause
+    \item If the observation model satisfies certain conditional independence requirements, then Information Gain (reduction in entropy) is submodular [\cite{Krause-UAI-2005}].
+    \pause
+    \item Classification models like Naive Bayes are very similar.
+\end{itemize}
+\end{frame}
+
+
+%% Solving online with adaptive submodularity.
+\section{Adaptive solution}
+
+\subsection{Motivation}
+
+\begin{frame}\frametitle{Adaptivity motivation}
+\begin{itemize}
+    \item With the greedy algorithm and monotone submodular objective, we can find a near-optimal subset.
+    \pause
+    \item But what if we can observe the results of our actions upon execution?
+    \pause
+    \item In this case, offline submodularity also can be exponentially far from optimal [\cite{DBLP:journals/corr/abs-1106-5829}].
+\end{itemize}
+\centering
+\visible<3>{
+    \includegraphics[width=0.8\linewidth]{../figures/my_cstc.pdf}
+}
+\end{frame}
+
+\subsection[Adaptive Submod.]{Adaptive submodular functions}
+
+\begin{frame}\frametitle{Adaptive submodularity}
+\begin{itemize}
+    \item Introduced by \cite{Golovin-and-Krause-2010-JAIR}\footnote{JAIR Best Paper Prize 2013}.
+    \pause
+    \item All $F$ potential observations $X_i$ are now random variables taking on values in $\mathcal{O}$, and have \emph{realization} $\mathbf{x}$.
+    \pause
+    \item Selected subset $\mathcal{X}_S \subseteq \mathcal{X}$ forms a \emph{partial realization} $\mathbf{x}_S$.
+    \pause
+    \item The objective function $f: 2^F \times |\mathcal{O}|^F \rightarrow \mathcal{R}$ takes a realization as well as the selected subset.
+    \pause
+    \item The \emph{policy} $\pi$ maps partial realizations to new observations, and can be thought of as a decision tree.
+    \pause
+    \item $F(\pi) = \mathbb{E}[f(\pi(\mathbf{x}), \mathbf{x})] = \sum_{\mathbf{x}} P(\mathbf{x}) f(\pi(\mathbf{x}), \mathbf{x})$
+\end{itemize}
+\centering
+\visible<5->{
+    \includegraphics[width=.8\linewidth]{../figures/policy_and_tree.pdf}
+}
+\end{frame}
+
+\begin{frame}\frametitle{Adaptive submodular functions}
+\begin{itemize}
+    \item We transfer the guarantees of greedy optimization with submodular functions to the adaptive setting by taking expectation over realizations, conditioned on the current partial realization.
+    \pause
+    \item Define the \emph{conditional expected gain} of adding another item to a set as
+$$\Delta_f(X \mid \mathbf{x}_A) = \mathbb{E}\left[ f(\mathcal{X}_A \cup \{X\}, \mathbf{x}) - f(\mathcal{X}_A, \mathbf{x}) \mid \mathbf{x}_A \right]$$
+    \pause
+    \item For all $X$, the function must be adaptive submodular. %Observing an item with a smaller partial realization helps more than observing the same item with a larger partial realization.
+$$\mathbf{x}_A \preceq \mathbf{x}_B \implies \Delta_f(X \mid \mathbf{x}_A) \geq \Delta_f(X \mid \mathbf{x}_B)$$
+    \pause
+    \item For all $X$, the function must be adaptive monotone.
+$$\Delta_f(X \mid \mathbf{x}_A) \geq 0$$
+\end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{Greedy policy}
+\begin{algorithm}[H]
+\KwIn{Budget $N$; observation set $\mathcal{X}$; $p(\mathbf{x})$; objective $f$.}
+\KwOut{Set $\groundsubset \subseteq \groundset$ of size $N$}
+\Begin{
+$\groundsubset\leftarrow\emptyset$; $\mathbf{x_S} \leftarrow \emptyset$\;
+\For{$i=1$ \KwTo $k$}{
+    \lForEach{$\elem\in\groundset\setminus \groundsubset$}{compute $\Delta_f(\elem \mid \mathbf{x}_S)$}
+    Select $X^* \in \underset{X}{\argmax} \frac{\Delta_f(\elem \mid \mathbf{x}_S)}{c(X)}$\;
+    Set $\groundsubset \leftarrow \groundsubset \cup \{\elem^{*}\}$\;
+    \lnl{1} Observe value $\mathbf{x}^*$ and update $\mathbf{x}_S \leftarrow \mathbf{x}_S \cup \mathbf{x}^*$\;
+    }
+}
+\end{algorithm}
+\end{frame}
+
+\begin{frame}\frametitle{Submodularity $\rightarrow$ Adaptive submodularity}
+Remarkably, optimality bounds stay the same!
+\vspace{2em}
+
+\begin{columns}[c]
+\column{.45\linewidth}
+\centering
+\underline{Submodularity}
+\tiny{
+\begin{itemize}
+    \item Works with sets.
+    \item $\Delta_f(X \mid \mathcal{X}_A) = f(\mathcal{X}_A \cup \{X\}) - f(\mathcal{X}_A)$
+    \item $\Delta_f(X \mid \mathcal{X}_A) \geq \Delta_f(X \mid \mathcal{X}_B)$ if $\mathcal{X}_A \subseteq \mathcal{X}_B$
+    \item $\Delta_f(X \mid \mathcal{X}_A) \geq 0$
+    \item $\underset{\mathcal{X}_S}{\max}\ f(\mathcal{X}_S)$ s.t. $|\mathcal{X}_S| \leq N$
+    \item Budgeted maximization: greedy is within $(1 - 1/e)$ of OPT.
+    \item Min-cost cover: greedy subset size is less than $1 + log \max_X f(X)$ of OPT subset size.
+\end{itemize}
+}
+
+\column{.55\linewidth}
+\centering
+\underline{Adaptive submodularity}
+\tiny{
+\begin{itemize}
+    \item Works with policies.
+    \item $\Delta(X \mid \mathbf{x}_A) = \mathbb{E}\left[ f(\mathcal{X}_A \cup \{X\}, \mathbf{x}) - f(\mathcal{X}_A, \mathbf{x}) \mid \mathbf{x}_A \right]$
+    \item $\Delta_f(X \mid \mathbf{x}_A) \geq \Delta_f(X \mid \mathbf{x}_B)$ if $\mathbf{x}_A \preceq \mathbf{x}_B$
+    \item $\Delta_f(X \mid \mathbf{x}_A) \geq 0$
+    \item $\underset{\pi}{\max}\ F(\pi)$  s.t. $|\pi| \leq N$
+    \item Budgeted maximization: greedy policy is within $(1 - 1/e)$ of OPT policy.
+    \item Min-cost cover: greedy policy size is less than $1 + log \max_X f(X,
+    \mathbf{x})$ of OPT policy size.
+\end{itemize}
+}
+\end{columns}
+\end{frame}
+
+\subsection{Additional benefits}
+
+\begin{frame}\frametitle{Benefit: Lazy evaluation}
+\begin{itemize}
+    \item A neat algorithmic speed-up follows from the submodularity of the objective: \textbf{the expected utility of an observation cannot increase}. This means not all observations need to be evaluated on every iteration.
+\end{itemize}
+\vspace{2em}
+\centering
+\includegraphics<2>[width=0.8\linewidth]{../figures/lazy1.png}
+\includegraphics<3>[width=0.8\linewidth]{../figures/lazy2.png}
+\includegraphics<4>[width=0.8\linewidth]{../figures/lazy3.png}
+\includegraphics<5>[width=0.8\linewidth]{../figures/lazy4.png}
+\includegraphics<6>[width=0.8\linewidth]{../figures/lazy5.png}
+\end{frame}
+
+% \begin{frame}\frametitle{Benefit: Data-dependent bounds}
+% \begin{itemize}
+%     \item
+% \end{itemize}
+% \end{frame}
+
+
+%% Active Classification
+\section[Objective]{Formulating the objective}
+
+\begin{frame}\frametitle{Formulating the objective}
+\begin{itemize}
+    \item So far, things look promising!
+    \pause
+    \item Unfortunately, infogain is only adaptive submodular in the noiseless setting (in Naive Bayes, only one outcome $\mathbf{x}_i$ given $h$).
+    \pause
+    \item If there is noise, need to find an objective that both optimizes what we want and is adaptive submodular.
+    \pause
+    \item Have two previously explored options:
+    \begin{itemize}
+        \item \emph{Hypothesis Pruning} [\cite{DBLP:journals/corr/abs-1010-3091}]
+        \item \emph{Equivalence Class Edge Cutting} [\cite{DBLP:journals/corr/abs-1208-6067}]
+    \end{itemize}
+    \pause
+    \item Both have proofs only for the Min-Cost Cover setting.
+\end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{Hypothesis pruning}
+\begin{itemize}
+    \item Motivation: efficiently figure out where an object is in 3D space so that a robotic arm can grasp it.
+    \pause
+    \item Idea: downweight hypotheses with a non-normalized Gaussian, which effectively removes a portion of the hypothesis space. By construction, the probability mass of the posterior distribution can only become smaller with each step.
+    \item Proof: lengthy (in report). Tricky to prove that the \emph{expected} utility does not increase.
+\end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{Equivalence Class Edge Cutting}
+\begin{itemize}
+    \item Motivation: request most informative instance to be labeled by an oracle.
+    \pause
+    \item Idea: expand the space of realizations to account for all possible noise settings. A single hypothesis can now be true in multiple states. Find the test that removes the most hypotheses.
+    \item Proof: lengthy (in report).
+\end{itemize}
+\visible<2->{
+\centering
+    \includegraphics[width=.8\linewidth]{../figures/ecec.pdf}
+}
+\end{frame}
+
+
+%% Future work
+\section{Future work}
+
+\begin{frame}\frametitle{Future Work}
+\begin{itemize}
+    \item Empirically evaluate the two adaptive submodular objectives against my current POMDP approach and on my datasets.
+    \begin{itemize}
+        \item Adaptive submodularity of a function can depend on the distribution $p(\mathbf{x})$.
+    \end{itemize}
+    \pause
+    \item Modular\footnote{$c(\mathcal{X}_S) = \sum_{X \in \mathcal{X}_S} c(X)$} costs are fine. How about submodular costs?
+    \pause
+    \item Analyze the adaptivity gap of these methods via data-dependent bounds.
+\end{itemize}
+\end{frame}
+
+%% References
+\begin{frame}
+\frametitle{References}
+\small{\bibliography{../references}}
+\end{frame}
+
+\end{document}

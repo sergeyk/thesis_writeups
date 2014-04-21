@@ -1,0 +1,294 @@
+%
+\section{\Term Submodularity} \label{sec:term-submodularity}
+%
+
+\looseness -1 We first review the classical notion of submodular set functions, and then introduce the novel notion of \term submodularity.
+
+\subsection{Background on Submodularity} 
+\label{sec:submod-background}
+Let us first consider the very special case where $\rlzprior$ is
+deterministic or, equivalently, $|\outcomes|=1$ (e.g., in our sensor
+placement applications, sensors never fail).  In this case, the
+realization $\rlz$ is known to the decision maker in advance, and thus
+there is no benefit in adaptive selection.  
+Given the realization $\rlz$, Problem~\eqref{eq:stochmax} is equivalent to finding a set $A^{*}\subseteq\groundset$ such that
+\begin{equation}A^{*}\in\argmax_{A\subseteq\groundset} f(A,\rlz)\text{ such that }|A|\leq \budget.\label{eq:detmax}\end{equation}
+For most interesting classes of utility functions $f$, this is an NP-hard optimization problem.  However, in many practical problems, such as those mentioned in \secref{sec:intro},  $f(A)=f(A,\rlz)$ satisfies \emph{submodularity}.  A set function $f:2^{\groundset}\rightarrow\Real$ is called submodular if, whenever $A\subseteq B\subseteq \groundset$ and $\elem\in \groundset\setminus B$ it holds that
+\begin{equation}
+f(A\cup\{\elem\})-f(A)\geq
+f(B\cup\{\elem\})-f(B),\label{eq:dimreturns}
+\end{equation}
+\looseness -1 i.e., adding $\elem$ to the smaller set $A$ increases $f$ by at least as
+much as adding $\elem$ to the superset $B$.  Furthermore, $f$ is
+called \emph{monotone}, if, whenever $A\subseteq B$ it holds that
+$f(A)\leq f(B)$ (e.g., adding a sensor can never reduce the amount of information obtained). A celebrated result by~\citet{nemhauser78} states
+that for monotone submodular functions with $f(\emptyset)=0$, a
+simple greedy algorithm that starts with the empty set,
+$A_{0}=\emptyset$ and chooses
+\begin{equation}A_{i+1}=A_{i}\cup\{\argmax_{\elem\in\groundset\setminus A_{i}}
+f(A_{i}\cup\{\elem\})\}\label{eq:greedyrule}\end{equation} guarantees that $f(A_{\budget})\geq (1-1/e)
+\max_{|A|\leq \budget} f(A)$. Thus, the greedy set $A_{\budget}$
+obtains at least a $(1-1/e)$ fraction of the optimal value
+achievable using $\budget$ elements.  
+Furthermore,
+\citet{feige98threshold} shows that this result is tight if
+$\class{P} \neq \NP$; under this assumption \emph{no polynomial time algorithm} can do strictly better than the greedy algorithm, i.e., achieve a
+$(1 - 1/e + \epsilon)$-approximation for any constant $\epsilon > 0$, 
+even for
+the special case of Maximum $k$-Cover where $f(A)$ is the
+cardinality of the union of sets indexed by $A$. 
+Similarly,  \citet{wolsey82} shows that the same greedy algorithm also
+near-optimally solves the
+deterministic case of Problem~\eqref{eq:stochcover}, called  the \emph{Minimum Submodular Cover} problem:
+\begin{equation}
+A^{*}\in\argmin_{A\subseteq\groundset} |A|\text{ such that }f(A)\geq
+\quota
+\label{eq:detcover}.
+\end{equation}
+\looseness -1 Pick the first set $A_{\ell}$ constructed by the greedy
+algorithm such that $f(A_{\ell})\geq \quota$. Then, for integer-valued
+submodular functions, $\ell$ is at most $|A^{*}|(1+\log \max_{\elem}
+f(\elem))$, i.e., the greedy set is at most a logarithmic factor
+larger than the smallest set achieving quota $\quota$.  For the 
+special case of Set Cover, where $f(A)$ is the cardinality
+of a union of sets indexed by $A$, this result matches a lower bound by \citet{feige98threshold}: Unless $\NP\subseteq \text{DTIME}(n^{\cO(\log\log n)})$, Set Cover is hard to approximate by a factor better than $(1-\varepsilon)\ln Q$, where $Q$ is the number of elements to be covered.
+
+
+
+
+Now let us relax the assumption that $\rlzprior$ is
+deterministic. In this case, we may still want to find a non-adaptive
+solution (i.e., a constant policy $\policy_{A}$ that always picks set
+$A$ independently of $\rvrlz$) maximizing $\avgf(\policy_{A})$. If $f$
+is \emph{pointwise} submodular, i.e., $f(A,\rlz)$ is  submodular in
+$A$ for any fixed $\rlz$, the function $f(A)=\avgf(\policy_{A})$ is
+submodular, since nonnegative linear combinations of submodular
+functions remain submodular.  Thus, the greedy algorithm allows us to
+find a near-optimal \emph{non-adaptive} policy. That is, in our sensor placement example, if we are willing to commit to all locations \emph{before} finding out whether the sensors fail or not, the greedy algorithm can provide a good solution to this non-adaptive problem.
+
+However, in practice, we may be more interested in obtaining a
+non-constant policy $\policy$, that \emph{adaptively} chooses items
+based on previous observations (e.g., takes into account which sensors
+are working before placing the next sensor).  In many settings,
+selecting items adaptively offers huge advantages, analogous to the
+advantage of binary search over sequential (linear)
+search\footnote{We provide a well--known example in active learning that illustrates this phenomenon
+  crisply in~\secref{sec:active-learning}; see~\figref{fig:activelearning} on
+  page~\pageref{sec:active-learning}.  We consider the
+  general question of the magnitude of the potential benefits of
+  adaptivity in~\secref{sec:adaptgap} on page~\pageref{sec:adaptgap} .}.  
+Thus, the question is whether there is a natural extension of submodularity to policies. In the following, we will develop such a notion -- \emph{\term submodularity}. 
+
+
+
+\subsection{\Term Monotonicity and Submodularity} 
+The key challenge is to find 
+appropriate generalizations of monotonicity and 
+of the diminishing returns condition
+\eqref{eq:dimreturns}.  We begin by again considering the very special
+case where $\rlzprior$ is deterministic, so that the policies are
+non-adaptive.  In this case a policy $\policy$ simply specifies a
+sequence of items $(e_1, e_2, \ldots, e_r)$ which it selects in order.
+Monotonicity in this context can be characterized as the property that
+``the marginal benefit of selecting an item is always nonnegative,'' meaning that for all such sequences  $(e_1, e_2, \ldots, e_r)$, items $e$ and $1\leq i \leq r$ it holds that $f(\set{e_{j}:j\leq i}\cup\{e\})-f(\set{e_{j}:j\leq i})\geq 0$. 
+Similarly, submodularity can be viewed as the property that
+``selecting an item later never increases its marginal benefit,''
+meaning that for all sequences $(e_1, e_2, \ldots, e_r)$, items
+$e$, and all $i \le r$, 
+$f(\set{e_j : j \le i} \cup \set{e}) - f(\set{e_j : j \le i}) \ge f(\set{e_j : j \le r} \cup \set{e}) - f(\set{e_j : j \le r}) $.
+
+We take these views of monotonicity and submodularity when defining
+their \term analogues, by using an appropriate generalization of the marginal benefit.
+When moving to the general adaptive setting, the challenge is that
+the items' states are now random and only revealed upon selection. A
+natural approach is thus to condition on  observations (i.e., partial
+realizations of selected items), and take the expectation with respect to the items that we consider selecting. 
+Hence, we define our \term monotonicity and submodularity properties in terms of the
+\emph{conditional expected marginal benefit} of an item.
+%
+
+
+\begin{definition}[Conditional Expected Marginal Benefit] \label{def:conditional-marginal-gain}
+Given a partial realization $\prlz$ and an item $e$, the 
+  \emph{conditional expected marginal benefit} of $e$ 
+ conditioned on having observed $\prlz$, denoted $\diff{\prlz}{\elem}$, is 
+\begin{equation}
+   \label{eq:adaptive-derivative-def}
+   \diff{\prlz}{\elem} :=
+ \expctoverrlz{\rlz}{\frac{}{}\!  f(\dom(\prlz) \cup \set{\elem}, \rvrlz) -
+   f(\dom(\prlz), \rvrlz)\ \bigg| \ \rvrlz\sim\prlz}%
+ \end{equation}
+where the expectation is computed with respect to $\rlzmass{\rlz \mid
+  \prlz} = \Pr{\rvrlz = \rlz
+  \mid \rvrlz \sim \prlz}$. 
+Similarly, the \emph{conditional expected marginal benefit of a
+  policy} $\policy$ is 
+\begin{equation}
+   \label{eq:adaptive-derivative-policy-def}
+   \diff{\prlz}{\policy} :=
+ \expctoverrlz{\rlz}{\frac{}{}\!  f(\dom(\prlz) \cup \played{\policy}{\rvrlz}, \rvrlz) -
+   f(\dom(\prlz), \rvrlz)\ \bigg| \ \rvrlz\sim\prlz}\mbox{.}  
+ \end{equation}
+\end{definition}
+ 
+\noindent 
+In our sensor placement example, $\diff{\prlz}{\elem}$
+quantifies the expected amount of additional area covered by placing a
+sensor at location $\elem$, in expectation over the posterior
+distribution 
+$\rlzmassover{\rvrlz(\elem)}{\outcome} := \Pr{\rvrlz(\elem) = \outcome \mid \rvrlz \sim \prlz}$
+of whether the sensor will fail or not, and taking into account the
+area covered by the placed working sensors as encoded by $\prlz$.
+Note that the benefit we have accrued upon observing $\prlz$ (and
+hence after having selected the items in $\dom(\prlz)$) is $\expct{
+  f(\dom(\prlz), \rvrlz)\ \mid \ \rvrlz\sim\prlz}$, which is the
+benefit term subtracted out in \eqnref{eq:adaptive-derivative-def} and
+\eqnref{eq:adaptive-derivative-policy-def}. 
+Similarly, the expected total benefit obtained after observing $\prlz$
+and then selecting $\elem$ is $\expct{f(\dom(\prlz) \cup \set{\elem},
+  \rvrlz)\ \mid \ \rvrlz\sim\prlz}$.  The corresponding benefit for
+running $\policy$ after observing $\prlz$ is slightly more complex.
+Under realization $\rlz \sim \prlz$, the final cumulative benefit will
+be $f(\dom(\prlz) \cup \played{\policy}{\rlz}, \rlz)$.  Taking the
+expectation with respect to $\rlzmass{\rlz \mid \prlz}$ and
+subtracting out the benefit already obtained by $\dom(\prlz)$ then yields
+the conditional expected marginal benefit of $\policy$.
+
+
+We are now ready to introduce our generalizations of monotonicity and submodularity to the adaptive setting:
+
+\begin{definition}[\Term Monotonicity] \label{def:adapt-monotonicity}
+A function $f:2^{\groundset} \times O^{\groundset} \to \NonNegativeReals$
+is \emph{\term monotone} with respect to distribution $\rlzprior$ 
+if the conditional expected marginal benefit of any item is
+nonnegative, i.e., for all $\prlz$ with $\Pr{\rvrlz \sim \prlz} > 0$ and all $e \in \groundset$ 
+we have 
+\begin{equation}\diff{\prlz}{\elem} \ge 0.\label{eq:adapt-monotone}\end{equation}
+%
+\ignore{
+Given two policies $\policy_1, \policy_2$ 
+%
+define $\append{\policy_1}{\policy_2}$ as the policy obtained by running $\policy_1$ to completion, and then running policy 
+ $\policy_2$ as if from a fresh start, ignoring the information
+ gathered\footnote{Technically, if under any realization $\rlz$ policy
+   $\policy_2$ selects an item that
+   $\policy_1$ previously selected, then $\append{\policy_1}{\policy_2}$
+   cannot be written as a function from a set of partial realizations
+   to $\groundset$, i.e., it is not a policy.  This can be amended by
+   allowing partial realizations to be multisets over elements of
+   $\groundset \times \outcomes$, so that, e.g., if $e$ is played
+   twice
+   then $(e, \rlz(e))$ appears twice in
+   $\prlz$.  However, in the interest of readability we will avoid this more cumbersome multiset
+   formalism, and abuse notation slightly by calling
+   $\append{\policy_1}{\policy_2}$ a policy.  This issue arises
+   whenever we run some policy and then run another from a fresh start.}
+ during the running of $\policy_1$. 
+A function $f:2^{\groundset} \times O^{\groundset} \to \NonNegativeReals$
+is \emph{\term monotone} 
+with respect to distribution $\prob{\rlz}$ 
+if for all policies $\policy,\policy'$  it holds that 
+$\avgf(\pi)\leq \avgf( \append{\pi'}{\pi})$, where 
+$\avgf(\policy) := \expctoverrlz{\rlz}{f(\played{\policy}{\rlz}, \rlz)}$
+%
+is defined w.r.t.~$\rlzprior$. 
+} %
+\end{definition}
+
+
+\begin{definition}[\Term Submodularity] \label{def:adapt-submod}
+A function $f:2^{\groundset} \times O^{\groundset} \to \NonNegativeReals$
+is \emph{\term submodular} with respect to distribution $\rlzprior$
+if the conditional expected marginal benefit of any fixed item does not
+increase as more items are selected and their states are observed.
+Formally, $f$ is \term submodular w.r.t. $\rlzprior$
+if for all $\prlz$ and $\prlz'$ such that $\prlz$ is a subrealization of $\prlz'$ (i.e., $\prlz
+  \subseteq \prlz'$), and for all $\elem \in \groundset \setminus \dom(\prlz')$, we have 
+\begin{equation} \label{eqn:adapt-submod}
+\diff{\prlz}{\elem} \ge \diff{\prlz'}{\elem}.
+\end{equation}
+\end{definition}
+
+
+From the decision tree perspective, the condition 
+$\diff{\prlz}{\elem} \ge \diff{\prlz'}{\elem}$ amounts to saying that
+for any decision tree $T$, if we are at a node $v$ in $T$ which selects an item $\elem$, and compare the
+expected marginal benefit of $\elem$ selected at $v$ with the expected marginal benefit
+$\elem$ would have obtained if it were selected at an ancestor of
+$v$ in $T$, then the latter must be no smaller than the former.
+Note that when comparing the two expected marginal benefits, there is
+a difference in both the set of items previously selected
+(i.e., $\dom(\prlz)$ vs. $\dom(\prlz')$) and in the distribution over
+realizations (i.e., $\rlzmass{\rlz \mid \prlz}$ vs. $\rlzmass{\rlz \mid \prlz'}$).  
+It is also worth emphasizing that \term
+submodularity is defined relative to the distribution $\rlzprior$ over
+realizations; it is possible that $f$ is
+\term submodular with respect to one distribution, but not with
+respect to another.
+
+
+
+
+%
+We will give concrete examples of \term monotone and \term
+submodular functions that arise in the applications introduced in
+\secref{sec:intro}  
+in~\secref{sec:stochastic-maximization},~\secref{sec:stochastic-set-cover},~\secref{sec:viral-marketing},
+and~\secref{sec:active-learning}. 
+%
+%
+In \appendixA, we will explain how the notion of \term submodularity can be extended to handle non-uniform costs (since, e.g., the cost of placing a sensor at an easily accessible location may be smaller than at a location that is hard to get to).
+
+
+\subsection{Properties of \Term Submodular Functions} It can be seen that \term monotonicity and \term
+submodularity enjoy similar closure properties as monotone submodular
+functions.  In particular, if $w_{1},\dots,w_{m}\geq 0$ and
+$f_{1},\dots,f_{m}$ are \term monotone submodular w.r.t.~distribution
+$\rlzprior$, then $f(A,\rlz) = \sum_{i=1}^{m}w_{i} f_{i}(A,\rlz)$ is
+\term monotone submodular w.r.t. $\rlzprior$.  
+Similarly, for a fixed constant $c\geq 0$ and \term monotone
+submodular function $f$, the function $g(E,\rlz)=\min(f(E,\rlz),c)$ is
+\term monotone submodular.
+Thus, \term monotone submodularity is preserved by nonnegative linear combinations and by truncation.
+\Term monotone submodularity is also preserved by 
+restriction, so that if 
+$f:2^{\groundset} \times \outcomes^{\groundset} \to \NonNegativeReals$
+is \term monotone submodular w.r.t. $\rlzprior$, then for any $\elem \in \groundset$, the function 
+$g : 2^{\groundset \setminus \set{\elem}} \times \outcomes^{\groundset} \to \NonNegativeReals$
+defined by $g(A, \rlz) := f(A, \rlz)$ for all $A \subseteq \groundset
+\setminus \set{\elem}$ and all $\rlz$ is also \term submodular w.r.t. $\rlzprior$.
+%
+Finally, if 
+$f:2^{\groundset} \times \outcomes^{\groundset} \to \NonNegativeReals$
+is \term monotone submodular w.r.t. $\rlzprior$ then for each partial
+realization $\prlz$ the conditional function  
+$g(A, \rlz) := f(A \cup \dom(\prlz), \rlz)$
+%
+is \term monotone
+submodular w.r.t. $\rlzmass{\rlz \mid \prlz} := \Pr{\rvrlz = \rlz \mid
+  \rvrlz \sim \prlz}$.
+
+\subsection{What Problem Characteristics Suggest Adaptive
+  Submodularity?}
+\Term submodularity is a diminishing returns property for policies.
+Speaking informally, it can be applied in situations where there is an objective function
+to be optimized does not feature synergies in the benefits of items
+conditioned on observations.   In some cases, the primary objective
+might not have this property, but a suitably chosen proxy of it does, as is
+the case with active learning with persistent noise~\citep{golovin10nips,bellala10modified}.
+We give example applications in \secref{sec:stochastic-maximization}
+through \secref{sec:active-learning}.   It is also worth mentioning
+where \term submodularity is \emph{not} directly applicable.
+An extreme example of synergistic effects between items conditioned on
+observations is the class of ``treasure hunting'' instances used to prove \thmref{thm:hardness}
+on page~\pageref{thm:hardness}, where the (binary) state of certain
+groups of items encode the treasure's location in a complex manner.  Another 
+problem feature which \term submodularity does not directly address is
+the possibility that items selection can alter the underlying realization $\rlz$, as
+is the case for the problem of optimizing policies for general POMDPs.
+
+%
+%
+%
+%
+%

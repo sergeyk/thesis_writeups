@@ -3,3 +3,10 @@
 *.temp
 *.d
 *.fls
+*.pdf
+*.backup
+*.log
+*.bbl
+*.blg
+*.aux
+

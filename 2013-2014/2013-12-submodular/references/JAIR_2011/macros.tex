@@ -1,0 +1,575 @@
+%
+%
+%
+
+%
+%
+\newcommand{\term}[0]{adaptive\xspace}  %
+                                %
+\newcommand{\Term}[0]{Adaptive\xspace} %
+
+%
+%
+\newcommand{\citecf}[1]{{\cite<{\cf}, >{#1}}}
+
+%
+
+\newcommand{\certifyingNS}{self--certifying}
+\newcommand{\certifying}{self--certifying\xspace}
+\newcommand{\Certifying}{Self--Certifying\xspace}
+
+\newcommand{\probname}[0]{Stochastic Submodular Maximization} %
+
+\newcommand{\smushname}[0]{compress\xspace} %
+                                %
+\newcommand{\AppendixA}[0]{The Appendix\xspace}
+%
+\newcommand{\appendixA}[0]{the Appendix\xspace}
+%
+
+
+%
+%
+%
+%
+
+%
+%
+\newcommand{\substitute}[3]{ \ensuremath{{#1}\!\left[{#2}/{#3}\right]} }
+\newcommand{\condfun}[2]{\ensuremath{ {#1}^{#2} }}
+\newcommand{\averaged}[1]{\ensuremath{#1_{\text{avg}}}} %
+                                %
+%
+
+
+
+%
+%
+\newcommand{\entropy}[1]{\ensuremath{\mathbb{H}\paren{#1}}}
+\newcommand{\infogain}[2]{\ensuremath{\mathbb{I}\paren{{#1} ; {#2}}}}
+\newcommand{\support}{\op{support}}
+\newcommand{\depth}{\operatorname{depth}} %
+\newcommand{\perm}{\operatorname{perm}}   %
+\renewcommand{\span}{\operatorname{span}}  
+\newcommand{\indicator}[1]{\ensuremath{\one_{#1}}} 
+\newcommand{\indicatorset}[1]{\ensuremath{\one_{\set{{#1}}}}} 
+
+\newcommand{\event}[0]{{\mathcal{E}}} 
+\newcommand{\instance}[0]{\ensuremath{\mathcal{I}}}
+
+%
+
+
+%
+%
+\newcommand {\costminsum}[1]{\ensuremath{c_{\Sigma}\!\paren{#1}}}
+\newcommand {\costminsumsym}[0]{\ensuremath{c_{\Sigma}}}
+\newcommand{\avgf}[0]{\averaged{f}} %
+                                %
+\newcommand{\prlzf}[1]{\ensuremath{ f_{\prlz}\!\paren{#1} }}
+\newcommand{\prlzfsym}[1]{\ensuremath{ f_{\prlz_{{#1}}} }}
+\newcommand{\avgg}[0]{\averaged{g}} %
+                                %
+\newcommand {\util}[2]{\ensuremath{u\!\paren{{#1}, {#2}}}}
+%
+%
+\newcommand{\avgc}[1]{{c_{\text{avg}}{(#1)}}}
+\newcommand{\cavg}[1]{{c_{\text{avg}}{(#1)}}}
+\newcommand{\acst}[1]{{c_{\text{avg}}{(#1)}}}
+\newcommand{\acstsym}[0]{{c_{\text{avg}}}}
+\newcommand{\prlzcst}[2]{{c_{#1}{(#2)}}}
+\newcommand{\wcst}[1]{{c_{\text{wc}}{(#1)}}}
+\newcommand{\awstsym}[0]{{c_{\text{wc}}}}
+\newcommand{\condcost}[2]{\ensuremath{c\paren{ {#2} \! \mid \! {#1} }  }}
+%
+%
+\newcommand{\diff}[2]{\ensuremath{\Delta \hspace{-0.3mm}\paren{ {#2}\! \mid \! {#1} }  }
+}  
+%
+
+%
+%
+\newcommand{\sequence}{\sigma}
+
+\newcommand {\Tgreedy}{\ensuremath{T^{\text{greedy}}}}
+
+\newcommand{\policy}[0]{\ensuremath{\pi}}
+\newcommand{\greedypolicy}[0]{\ensuremath{\pi^{\text{greedy}}}}
+\newcommand{\piavg}{\policy_{\text{avg}}^*}
+\newcommand{\policycover}{\policy_{\text{avg}}^*}
+\newcommand{\policyproof}{\policy_{\text{proof}}^*}
+
+%
+%
+\newcommand{\strictprune}[2]{\ensuremath{  #1_{[\gets{#2}] }}} %
+\newcommand{\laxprune}[2]{\ensuremath{  #1_{[{#2}\to]}}} %
+\newcommand{\prune}[2]{\ensuremath{  #1_{[{#2}]} }  } %
+\newcommand{\append}[2]{\ensuremath{{#1}@{#2}}} %
+
+\newcommand{\underTree}[2]{\ensuremath{ #1^{-}_{[#2]}   }} %
+\newcommand{\overTree}[2]{\ensuremath{ #1^{+}_{[#2]}   }} %
+\newcommand{\treeCov}[3]{\ensuremath{ #1_{[#2] \cup \set{#3}}   }} %
+\newcommand{\treeSmush}[3]{\ensuremath{ #1_{[#2] \cup \set{#3}}   }} %
+\newcommand{\treeExtend}[3]{\ensuremath{ {#1}\!\# #2_{\set{#3}}   }} %
+%
+
+%
+%
+\newcommand{\node}[0]{\ensuremath{u}}
+\newcommand{\elem}[0]{\ensuremath{e}}
+\newcommand {\groundset}{\ensuremath{E}} %
+\newcommand {\groundsubset}{\ensuremath{A}}%
+                                %
+\newcommand{\outcome}[0]{\ensuremath{o}} %
+\newcommand{\outcomes}[0]{\ensuremath{O}} %
+%
+\newcommand{\mass}[1]{{\color{black}{\ensuremath{p\paren{#1}}}}}
+\newcommand{\rlzmass}[1]{{\color{black}{\ensuremath{p\paren{#1}}}}}
+\newcommand{\rlzmasssym}[0]{{\color{black}{\ensuremath{p}}}}
+\newcommand{\rlzmassover}[2]{{\color{black}{\ensuremath{p_{#1}\!\paren{#2}}}}}
+\newcommand{\rlzprior}[0]{{\color{black}{\ensuremath{p\paren{\rlz}}}}}
+\newcommand{\rlz}[0]{{\color{black}{\ensuremath{\phi}}}} %
+\newcommand{\rvrlz}[0]{{\color{black}{\ensuremath{\Phi}}}} %
+\newcommand{\rlzt}[0]{\ensuremath{\rlz_{\text{true}}}} %
+\newcommand{\rvprlz}[0]{{\color{black}{\ensuremath{\Psi}}}} %
+\newcommand{\prlz}[0]{{\color{black}{\ensuremath{\psi}}}} %
+\newcommand{\prlzsmall}[0]{\ensuremath{\psi}} %
+
+\newcommand{\prlzsub}[2]{\substitute{\prlz}{#1}{#2}}
+\newcommand{\prlzeo}[0]{\prlzsub{\elem}{\outcome}}
+\newcommand{\prlzxo}[0]{\prlzsub{x}{\outcome}}
+%
+\newcommand{\vselim}[0]{\ensuremath{\vs_{\text{elim}}}} 
+
+\newcommand{\rlzset}[0]{\mathcal{R}}
+\newcommand{\prlzset}[0]{\mathcal{P}}
+\newcommand{\htrue}[0]{\ensuremath{h_{\text{true}}}} %
+                                %
+\newcommand{\itrue}[0]{\ensuremath{i_{\text{true}}}} %
+                                %
+%
+
+
+
+\newcommand{\model}[0]{\ensuremath{\mathcal{M}}}
+\newcommand{\distrib}[0]{\ensuremath{\mathcal{D}}}
+
+\newcommand{\quota}[0]{\ensuremath{Q}} %
+\newcommand{\budget}[0]{\ensuremath{k}} %
+\newcommand{\price}[0]{\ensuremath{\theta}} %
+\newcommand{\charge}[1]{\ensuremath{C_{#1}}} %
+
+\newcommand{\progress}[1]{\ensuremath{  \expct{f(\dom({#1}), \rvrlz) \mid
+  \rvrlz \sim {#1}}  }}
+\newcommand{\progressSet}[2]{\ensuremath{  \expct{f({#1}, \rvrlz) \mid
+  \rvrlz \sim {#2}}  }}
+
+
+
+%
+%
+\newcommand{\hypotheses}[0]{\ensuremath{H}} 
+\newcommand{\data}[0]{\ensuremath{X}} 
+\newcommand{\labels}[0]{\ensuremath{L}} 
+\newcommand{\target}[0]{\ensuremath{h^*}} 
+\newcommand{\error}[0]{\operatorname{error}} 
+\newcommand{\prior}[0]{\ensuremath{p_{\hypotheses}}}
+\newcommand{\vs}[0]{\ensuremath{V}\xspace} %
+%
+ \newcommand{\gbs}[0]{GBS\xspace} %
+ \newcommand{\qcost}[2]{\ensuremath{q({#1}, {#2})}} %
+\newcommand{\pcost}[2]{\ensuremath{\left\Vert{#1}\right\Vert_{#2}}} %
+
+\newcommand{\ncost}[2]{\ensuremath{c({#1}, {#2})}} %
+\newcommand{\vsmass}[2]{\ensuremath{\rho({#1}, {#2})}} %
+\newcommand{\pmass}[3]{\ensuremath{\rho({#1}, {#2}; {#3})}} %
+                                %
+\newcommand{\timetosplit}[1]{\ensuremath{t({#1})}}
+\newcommand{\vsmasssymbol}[0]{\ensuremath{\rho}} %
+\newcommand{\played}[2]{\groundset({#1}, {#2})} 
+
+\newcommand{\Tgbs}[0]{\ensuremath{T^{\text{GBS}}}} %
+                                %
+\newcommand{\massleft}[0]{\rho} 
+%
+
+\newcommand{\range}[0]{\operatorname{range}} 
+
+\newcommand{\LHS}[1]{\operatorname{LHS}_{#1}}
+\newcommand{\RHS}[1]{\operatorname{RHS}_{#1}}
+
+%
+%
+\newcommand{\partset}[1]{\dot{#1}}
+\newcommand{\itemparts}[0]{\partset{\groundset}}
+%
+%
+\newcommand{\prt}[2]{{#1}\!\paren{{#2}}}
+\newcommand{\iplayed}[2]{\itemparts({#1}, {#2})} 
+
+%
+
+%
+%
+
+
+\newcommand{\alive}[1]{{A({#1})}} 
+
+%
+\newcommand{\EMSE}{EMSE}
+\newcommand{\MSE}{MSE}
+\newcommand{\numsensors}{\ensuremath{n}}
+\newcommand{\fEMSE}{\hat{f}_{\EMSE}}
+\newcommand{\sensor}{\ensuremath{v}}
+\newcommand{\sensors}{V}
+\newcommand{\kernel}{K}
+\newcommand{\pfail}[1]{p_{\text{fail}}\!\paren{#1} }
+
+%
+\newcommand{\numberof}[0]{\operatorname{rep}}
+\newcommand{\invnumberof}[0]{\operatorname{rep}^{-1}}
+\newcommand{\nmaps}{m}
+\newcommand{\ntreasure}{t}
+\newcommand{\nmatrix}{n}
+\newcommand{\mapsize}{s}
+
+%
+\newcommand{\trace}{\tau}
+\newcommand{\ptrace}[2]{\prlz\paren{{#1}, {#2}}}
+
+\newcommand{\leaves}[0]{\mathcal{L}}
+\newcommand{\parts}[0]{\mathcal{R}}
+\newcommand{\pparts}[0]{\mathcal{P}}
+
+\newcommand{\Xvec}{\mathbf{X}}
+
+\newcommand{\gfloor}{\ensuremath{g^{\floor{k/2}}}}
+ 
+\newcommand{\bound}{\beta}
+\newcommand{\avgbound}{\beta_{\text{avg}}}
+%
+
+%
+%
+\newcommand{\daniel}[1]{\ifthenelse{\boolean{showcomments}}{\textcolor{red}{Daniel: #1}}{}}
+\newcommand{\andreas}[1]{\ifthenelse{\boolean{showcomments}}{\textcolor{red}{Andreas: #1}}{}}
+
+\newcommand{\myskip}{\myvspace{-0mm}}
+
+\newcommand{\cf}{\emph{c.f.}\xspace}
+
+\newcommand{\captionsmall}[1]{\caption{\small #1}}
+\newcommand{\commentout}[1]{}
+
+\newcommand{\family}{{\mathcal{F}}}
+\newcommand{\sets}{\ensuremath{\mathcal{S}}}
+\newcommand{\collection}{\ensuremath{\mathcal{C}}}
+
+\newcommand{\cS}{{\mathcal{S}}}
+\newcommand{\cA}{{\mathcal{A}}}
+\newcommand{\cG}{{\mathcal{G}}}
+\newcommand{\cE}{{\mathcal{E}}}
+\newcommand{\cV}{{\mathcal{V}}}
+\newcommand{\cB}{{\mathcal{B}}}
+\newcommand{\cX}{{\mathcal{X}}}
+\newcommand{\cY}{{\mathcal{Y}}}
+\newcommand{\cH}{{\mathcal{H}}}
+\newcommand{\cU}{{\mathcal{U}}}
+\newcommand{\cW}{{\mathcal{W}}}
+\newcommand{\cC}{{\mathcal{C}}}
+\newcommand{\cO}{{\mathcal{O}}}
+
+\newcommand{\scen}{{\mathcal{I}}}
+
+\newcommand{\balpha}{{\mathbf{\alpha}}}
+\newcommand{\ba}{{\mathbf{a}}}
+\newcommand{\bh}{{\mathbf{h}}}
+\newcommand{\bs}{{\mathbf{s}}}
+\newcommand{\bt}{{\mathbf{t}}}
+\newcommand{\bu}{{\mathbf{u}}}
+\newcommand{\bv}{{\mathbf{v}}}
+\newcommand{\bw}{{\mathbf{w}}}
+\newcommand{\bx}{{\mathbf{x}}}
+\newcommand{\by}{{\mathbf{y}}}
+\newcommand{\bz}{{\mathbf{z}}}
+
+
+%
+%
+
+%
+\newlength{\presec}
+\newlength{\postsec}
+\newlength{\presubsec}
+\newlength{\postsubsec}
+\newlength{\prepara}
+\newlength{\postpara}
+\setlength{\presec}{-0mm}
+\setlength{\postsec}{-0mm}
+\setlength{\presubsec}{-0mm}
+\setlength{\postsubsec}{-0mm}
+\setlength{\prepara}{-0mm}
+\setlength{\postpara}{-0mm}
+
+\newenvironment{Enum}{
+\vspace{-0.5em}
+\begin{enumerate}
+   \setlength{\itemsep}{0.25em}%
+  \setlength{\parskip}{0em}
+  \setlength{\parsep}{0em}}
+{\end{enumerate}\vspace{-0.5em}}
+
+\newcounter{myLISTctr}
+\newcommand{\initOneLiners}{%
+    \setlength{\itemsep}{0pt}
+    \setlength{\parsep }{0pt}
+    \setlength{\topsep }{0pt}
+%
+}
+\newenvironment{OneLiners}[1][\ensuremath{\bullet}]
+    {\begin{list}
+        {#1}
+        {\initOneLiners}}
+    {\end{list}}
+
+
+\newenvironment{proofof}[1]{
+\noindent{\bf Proof of {#1}:}}
+{\hfill$\blacksquare$
+}
+
+\newcommand{\ignore}[1]{}
+
+\def \etal {et al.\ }
+\def \argmax {\mathop{\rm arg\,max}}
+\def \argmin {\mathop{\rm arg\,min}}
+
+\newcommand{\ith}{\ensuremath{i^{\mathrm{th}}}\xspace}
+\newcommand{\jth}{\ensuremath{j^{\mathrm{th}}}\xspace}
+\newcommand{\op}[1]{\operatorname{#1}}
+\newcommand{\one}{\mathbf{1}}
+%
+\newcommand{\poly}{\operatorname{poly}}
+\newcommand{\paren} [1] {\ensuremath{ \left( {#1} \right) }}
+\newcommand{\bigparen} [1] {\ensuremath{ \Big( {#1} \Big) }}
+%
+\renewcommand{\Pr}[1]{\ensuremath{\mathbb{P}\left[#1\right] }}
+\newcommand{\prob}[1]{\ensuremath{\mathbb{P}\left[#1\right] }}
+\newcommand{\probsym}[0]{\ensuremath{\mathbb{P}}}
+\newcommand{\probover}[2]{\ensuremath{\mathbb{P}_{#1}\left[#2\right]
+  }}
+\newcommand{\proboverrlz}[2]{\ensuremath{\mathbb{P}\left[#2\right] }}
+\newcommand{\E}[1]{\ensuremath{\mathbb{E}\left[#1\right] }}
+%
+\newcommand{\size}[1]{\ensuremath{\left|#1\right|}}
+\newcommand{\ceil}[1]{\ensuremath{\left\lceil#1\right\rceil}}
+\newcommand{\floor}[1]{\ensuremath{\left\lfloor#1\right\rfloor}}
+%
+\newcommand{\tuple}[1]{\ensuremath{\langle #1 \rangle}}
+\newcommand{\func}[3]{\ensuremath{#1 : #2 \rightarrow #3}}
+\newcommand{\problem} [1] {{\sc #1}}
+\renewcommand{\implies}[0]{\ensuremath{\Rightarrow}}
+%
+\newcommand{\PositiveIntegers}{\ensuremath{\mathbb{Z^+}}}
+\newcommand{\integers}{\ensuremath{\mathbb{Z}}}
+\newcommand{\nats}{\ensuremath{\mathbb{N}}}
+\newcommand{\reals}{\ensuremath{\mathbb{R}}}
+
+%
+\newcommand{\littleO}[1]{\ensuremath{o\paren{#1}}}
+\newcommand{\bigO}[1]{\ensuremath{O\paren{#1}}}
+\newcommand{\bigTheta}[1]{\ensuremath{\Theta\paren{#1}}}
+\newcommand{\bigOmega}[1]{\ensuremath{\Omega\paren{#1}}}
+
+%
+\newcommand{\class} [1] {\textrm{#1}} %
+\renewcommand{\P} {\class{P}}
+\newcommand{\NP} {\class{NP}}
+
+%
+
+\newcommand{\compactdispmath}[1]{\[ \vspace{-1mm} {#1} \vspace{-0mm}  \]}
+
+
+%
+%
+%
+%
+%
+%
+\newcommand{\roundindex}{\ensuremath{t}}
+\newcommand{\partitionindex}{\ensuremath{k}}
+
+\newcommand{\fullversion}{extended version\xspace}
+
+\newcommand{\features}{\ensuremath{v}}
+\newcommand{\NumFeatures}{\ensuremath{m}}
+\newcommand{\NumRounds}{\ensuremath{T}}
+
+\newcommand{\colorindex}{\ensuremath{c}}
+\newcommand{\Color}{\ensuremath{c}}
+\newcommand{\Colors}{\ensuremath{\bracket{\NumColors}}}
+\newcommand{\Colorvec}{\ensuremath{ \vec{c} }}
+
+%
+\renewcommand{\c}{c}
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+%
+
+
+\newcommand{\assignment}{S}  %
+%
+%
+
+%
+
+
+\newcommand {\groundsettimespartitions}{\ensuremath{\groundset\times\bracket{\NumPartitions}}} %
+\newcommand {\matroidgroundset}{\ensuremath{\mathcal{X}}}
+ %
+\newcommand {\listgroundset} {\ensuremath{U}}
+\newcommand{\OPT}{\textsf{OPT}}
+\newcommand{\NULL}{\textsc{null}}
+
+\newcommand{\obj}{\ensuremath{f}} %
+
+\newcommand{\matroid}{\ensuremath{\mathcal{M}}}
+
+%
+
+\newcommand{\setoflist}[1]{\ensuremath{\operatorname{set}({#1})}}
+\newcommand{\listofset}[1]{\ensuremath{\operatorname{list}({#1})}}
+\newcommand {\ctr} {click-through-rate\xspace}
+\newcommand {\ctrs} {click-through-rates\xspace}
+
+%
+
+
+%
+\newcommand{\omitproof}[1]{}
+
+\newcommand{\bracket}[1]{\left[#1\right]}
+\newcommand{\Esub}[2]{\mathbb{E}_{#1}\bracket{#2}}
+\newcommand{\sample}{\textsf{sample}}
+
+\newcommand{\Alg}{\ensuremath{\mathcal{A}}}
+\newcommand{\AllRows}{\ensuremath{\mathcal{R}_{\bracket{\J}}}}
+
+\newcommand {\feasible} {\mathcal{F}}
+\newcommand{\LocallyGreedy}{{\bf LocallyGreedy}\xspace}
+\newcommand{\NonNegativeReals}{\ensuremath{\mathbb{R}_{\ge 0}}}
+\newcommand{\NonNegativeIntegers}{\ensuremath{\mathbb{Z}_{\ge 0}}}
+
+\newcommand{\NumColors}{\ensuremath{C}}
+\newcommand{\NumPartitions}{\ensuremath{K}}
+%
+\newcommand{\OfflineGreedy}{{\sc TabularGreedy}\xspace}
+\newcommand{\OnlineGreedy}{{\sc TGbandit}\xspace}
+\newcommand{\Partition}{\ensuremath{P}}
+\newcommand{\Regret}{\ensuremath{r}}
+\newcommand{\Row}{\ensuremath{R}}
+\newcommand{\Rows}{\ensuremath{\mathcal{R}}}
+\newcommand{\SubGreedy}{{\bf SubGreedy}\ }
+
+
+
+%
+\vfuzz2pt %
+\hfuzz2pt %
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+%
+%
+%
+%
+
+%
+\DeclareMathOperator{\pr}{Pr} \DeclareMathOperator{\dist}{Dist}
+\DeclareMathOperator{\dom}{dom}
+\newcommand{\expct}[1]{\mathbb{E}\left[#1\right]}
+\newcommand{\expctover}[2]{\mathbb{E}_{#1}\!\left[#2\right]}
+\newcommand{\expctoverrlz}[2]{\mathbb{E}\left[#2\right]}
+
+\newcommand{\norm}[1]{\left\Vert#1\right\Vert}
+\newcommand{\abs}[1]{\left\vert#1\right\vert}
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\Real}{\mathbb R}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\To}{\longrightarrow}
+\newcommand{\BX}{\mathbf{B}(X)}
+%
+%
+%
+\DeclareMathOperator{\cP}{P} \DeclareMathOperator{\cNP}{NP}
+\DeclareMathOperator{\DTIME}{DTIME}
+\newcommand{\maxmarg}{{P}^{max}}
+
+\newcommand{\rew}{\mathfrak{R}}
+
+\newcommand{\hpts}{\hat{p}_{t,\bs}}
+\newcommand{\hps}{\hat{p}_\bs}
+\newcommand{\hp}{\hat{p}}
+
+
+%
+
+\newcommand{\denselist}{
+    \itemsep -2pt\topsep-8pt\partopsep-8pt
+}
+\newcommand{\defref}[1]{Definition~\ref{#1}}
+\newcommand{\tableref}[1]{Table~\ref{#1}}
+\newcommand{\figref}[1]{Fig.~\ref{#1}}
+\newcommand{\eqnref}[1]{Eq.~(\ref{#1})}
+\newcommand{\secref}[1]{\S\ref{#1}}
+\newcommand{\thmref}[1]{Theorem~\ref{#1}}
+\newcommand{\corref}[1]{Corollary~\ref{#1}}
+\newcommand{\propref}[1]{Proposition~\ref{#1}}
+\newcommand{\lemref}[1]{Lemma~\ref{#1}}
+\newcommand{\algref}[1]{Algorithm~\ref{#1}}
+
+
+%
+%
+%
+
+%
+%
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+

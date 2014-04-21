@@ -1,0 +1,83 @@
+%
+\section{Hardness of Approximation} \label{sec:hardness}
+%
+In this paper, we have developed the notion of \term submodularity,
+which characterizes when certain adaptive stochastic optimization
+problems are well-behaved in the sense that a simple greedy policy
+obtains a constant factor or logarithmic factor approximation to the
+best policy.  
+
+
+In contrast, we can also show that without \term submodularity, the adaptive stochastic
+optimization problems~\eqref{eq:stochmax},~\eqref{eq:stochcover}, and~\eqref{eq:minsumcover} are extremely inapproximable, even with (pointwise) \emph{modular} objective functions (i.e., those where for each $\rlz$, $f:2^{\groundset}\times \outcomes^{\groundset}\rightarrow\mathbb{R}$ is modular/linear in the first argument): 
+We cannot hope to achieve an $\cO(|\groundset|^{1-\varepsilon})$
+approximation ratio for these problems, unless the polynomial hierarchy
+collapses down to $\Sigma^P_2$. 
+
+\begin{theorem} \label{thm:hardness}
+For all (possibly non-constant) $\beta \ge 1$, 
+no polynomial time algorithm for Adaptive Stochastic
+Maximization with a budget of $\beta k$ items
+can approximate the reward of an optimal policy with a budget of only $k$ items
+to within a
+multiplicative factor of $\cO(|\groundset|^{1-\varepsilon}/\beta)$ for any
+$\varepsilon > 0$, unless $\class{PH} = \Sigma^P_2$. This holds even
+for pointwise modular $f$.
+\end{theorem}
+
+
+
+%
+We provide the proof of \thmref{thm:hardness} in Appendix~\ref{sec:proof-approx-hardness}.
+Note that by setting $\beta = 1$, we obtain $\cO(|\groundset|^{1-\varepsilon})$
+hardness for Adaptive Stochastic Maximization.  
+It turns out that 
+in the instance distribution we construct in the
+proof of Theorem~\ref{thm:hardness} the
+optimal policy covers every realization (i.e., always finds the
+treasure) using a budget of 
+$k = \cO(|\groundset|^{\varepsilon/2})$ 
+items.
+Hence if $\class{PH} \neq \Sigma^P_2$ then 
+any randomized polynomial time algorithm wishing to cover this
+instance must have a budget 
+$\beta = \Omega(|\groundset|^{1-\varepsilon})$ times larger than the
+optimal policy, in order to ensure the ratio of rewards, which is
+$\Omega(|\groundset|^{1-\varepsilon}/\beta)$, equals one.
+This yields the following corollary.
+
+\begin{corollary} \label{thm:coverage-hardness}
+%
+No polynomial time algorithm for Adaptive Stochastic Min
+Cost Coverage
+can approximate the cost of an optimal policy 
+to within a multiplicative factor of $\cO(|\groundset|^{1-\varepsilon})$ for any
+$\varepsilon > 0$, unless $\class{PH} = \Sigma^P_2$. This holds even for pointwise modular $f$.
+\end{corollary}
+
+Furthermore, since in the instance distribution we construct the
+optimal policy $\policy^*$ covers every realization using a budget of $k$, it has 
+$\costminsum{\policy^*} \le k$.  Moreover, 
+since we have shown that under our
+complexity theoretic assumptions, any polynomial time randomized
+policy $\policy$ with budget $\beta k$ achieves at most
+$o(\beta / |\groundset|^{1-\varepsilon})$ of the (unit) value obtained by the
+optimal policy with budget $k$, it follows that 
+$\costminsum{\policy} = \Omega(\beta k)$.  Since we require $\beta =
+\Omega(|\groundset|^{1-\varepsilon})$ to cover any set of
+realizations constituting, e.g., half of the probability mass, we obtain the following corollary.
+
+\begin{corollary} \label{thm:min-sum-hardness}
+%
+No polynomial time algorithm for Adaptive Stochastic Min-Sum Cover
+can approximate the cost of an optimal policy 
+to within a multiplicative factor of $\cO(|\groundset|^{1-\varepsilon})$ for any
+$\varepsilon > 0$, unless $\class{PH} = \Sigma^P_2$. This holds even for pointwise modular $f$.
+\end{corollary}
+
+
+%
+%
+%
+%
+%

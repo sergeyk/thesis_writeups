@@ -1,0 +1,800 @@
+\section{The Adaptive Greedy Policy} \label{sec:the-greedy-policy}
+
+The classical non-adaptive greedy algorithm~\eqref{eq:greedyrule} has a natural generalization to the adaptive setting.
+The \emph{greedy policy} $\greedypolicy$ tries, at each iteration, to
+myopically increase the expected objective value, given its current
+observations.
+That is, suppose 
+$f:2^{\groundset} \times \outcomes^{\groundset} \to \NonNegativeReals$ is the objective, and 
+ $\prlz$ is the partial realization indicating the states of items selected so
+far. 
+Then the greedy policy will select the item $\elem$ maximizing the
+expected increase in value, conditioned on the observed states of
+items it has
+already selected (i.e., conditioned on $\rvrlz\sim\prlz$).  That is, it
+will select $\elem$ to maximize the conditional expected
+marginal benefit $\diff{\prlz}{\elem}$ as defined in \eqnref{eq:adaptive-derivative-def}. 
+\looseness -1 
+Pseudocode of the adaptive greedy algorithm is given in
+Algorithm~\ref{alg:greedy}.  The only difference to the classic,
+non-adaptive greedy algorithm studied by \citet{nemhauser78}, is
+Line~\ref{ln:adapt}, where an observation $\rvrlz(\elem^{*})$ of the
+selected item $\elem^{*}$ is obtained. Note that the algorithms
+in this section are presented for Adaptive Stochastic Maximization.
+For the coverage objectives, we simply keep selecting items as prescribed by
+$\greedypolicy$ until achieving the quota on objective value (for the
+min-cost objective) or until we have selected every item (for the
+min-sum objective).
+
+\subsection{Incorporating Item Costs}  The adaptive greedy algorithm can be naturally modified
+to handle non-uniform item costs by replacing its selection rule by
+$$\elem^{*}\in\argmax_{e} \frac{\diff{\prlz}{\elem}}{c(\elem)}.$$
+In the following, we will focus on the uniform cost case
+($c \equiv 1$), and defer the analysis with costs to \appendixA.
+
+\looseness -1 \subsection{Approximate Greedy Selection} In some applications, finding an item maximizing
+$\diff{\prlz}{\elem}$ may be computationally
+intractable, and the best we can do is find an $\alpha$-approximation
+to the best greedy selection.  This means we find an $\elem'$ such that 
+$$\diff{\prlz}{\elem'} \ge \frac{1}{\alpha} \max_{\elem}
+\diff{\prlz}{\elem}.$$  We call a policy which always
+selects such an item an \emph{$\alpha$-approximate greedy policy}.
+
+
+
+%
+\begin{algorithm}
+ \KwIn{Budget $k$; ground set $\groundset$; distribution $\rlzprior$;
+   function $f$.}  
+\KwOut{Set $A \subseteq \groundset$ of size $k$}
+\Begin{
+\lnl{ln:ag1}   $\groundsubset\leftarrow\emptyset$; $\prlz\leftarrow\emptyset$\;
+\lnl{ln:ag2}   \For{$i=1$ \KwTo $k$}{
+\lnl{ln:ag3}       \lForEach{ $\elem\in\groundset\setminus \groundsubset$}{
+      	compute $\diff{\prlz}{\elem} =
+\expctoverrlz{\rvrlz}{f(\groundsubset \cup \set{\elem}, \rvrlz) - f(\groundsubset, \rvrlz)\ | \ 
+\rvrlz\sim\prlz
+} $    
+       }\;
+\lnl{ln:ag5}       Select $\elem^{*}\in\argmax_{e}
+\diff{\prlz}{\elem}$\;  
+\lnl{ln:ag6}    Set $\groundsubset\leftarrow \groundsubset\cup\{\elem^{*}\}$\;
+\lnl{ln:adapt} Observe $\rvrlz(\elem^{*})$;    Set $\prlz\leftarrow\prlz\cup\set{(\elem^{*},\rvrlz(\elem^{*}))}$\;
+   }
+ } \label{alg:greedy} \caption{The adaptive greedy
+algorithm, which implements the greedy policy.}
+\end{algorithm}
+
+
+\subsection{Robustness \& Approximate Greedy Selection}
+\label{sec:robustness}
+As we will show, $\alpha$-approximate greedy policies have 
+performance guarantees on several problems.
+The fact that these performance guarantees of greedy policies are
+robust to approximate greedy selection suggests a particular
+robustness guarantee against incorrect priors $\rlzprior$.
+Specifically, if our incorrect prior $\rlzmasssym'$ is such that when we evaluate
+$\diff{\prlz}{\elem}$ we err by a multiplicative factor of at most
+$\alpha$, then when we compute the greedy policy with respect to
+$\rlzmasssym'$ we are actually implementing an $\alpha$-approximate
+greedy policy (with respect to the true prior), and hence obtain the
+corresponding guarantees.  For example, a sufficient condition for
+erring by at most a multiplicative factor of $\alpha$ is 
+that there exists $c \le 1$ and $d \ge 1$ with $\alpha = d/c$ such that 
+ $c\,\rlzmass{\rlz} \le \rlzmasssym'\paren{\rlz} \le
+ d\,\rlzmass{\rlz}$ for all $\rlz$, where $\rlzmasssym$ is the true prior.
+
+\subsection{Lazy Evaluations and the Accelerated Adaptive Greedy
+  Algorithm} 
+The definition of \term submodularity 
+allows us to implement an 
+``accelerated'' version of the adaptive greedy algorithm using lazy evaluations
+of marginal benefits as originally suggested for the
+non-adaptive case by~\citet{minoux78}.
+The idea is as follows.
+Suppose we run $\greedypolicy$ under some fixed realization $\rlz$,
+and select items $\elem_1, \elem_2, \ldots, \elem_k$.
+Let $\prlz_i := \set{(\elem_j, \rlz(\elem_j) : j \le i)}$ be the
+partial realizations observed during the run of $\greedypolicy$.
+%
+The adaptive greedy algorithm computes $\diff{\prlz_i}{\elem}$ for all $\elem \in \groundset$ and
+$0 \le i < k$, unless $\elem \in \dom(\prlz_i)$.
+Naively, the algorithm thus needs to compute $\Theta(|\groundset| k)$ marginal benefits (which can be expensive to compute).
+The key insight is that 
+$i \mapsto \diff{\prlz_i}{\elem}$ is nonincreasing for all $\elem \in
+\groundset$, because of the \term submodularity of the
+objective.
+Hence, if when deciding which item to select as $e_i$ we know
+$ \diff{\prlz_j}{\elem'} \le  \diff{\prlz_i}{\elem}$ for some items $\elem'$ and
+$\elem$ and $j < i$, then we may conclude $\diff{\prlz_i}{\elem'} \le \diff{\prlz_i}{\elem}$ and hence 
+eliminate the need to compute $\diff{\prlz_i}{\elem'}$. 
+The accelerated version of the adaptive greedy algorithm exploits this
+observation in a principled manner, by computing $\diff{\prlz}{\elem}$
+for items $\elem$ in decreasing order of the upper bounds known on
+them, until it finds an item whose value is at least as great as the upper bounds of
+all other items.  Pseudocode of this version of the adaptive greedy algorithm is given in Algorithm~\ref{alg:acc-greedy}.
+%
+
+
+In the non-adaptive setting, the use of lazy evaluations has been shown
+to significantly reduce running times in practice~\citep{leskovec07}.  
+We evaluated the naive and accelerated implementations of the
+adaptive greedy algorithm on two sensor selection problems, and obtained
+speedup factors that range from roughly $4$ to $40$ for those problems.
+See~\secref{sec:experiments} on page~\pageref{sec:experiments} for details.  
+
+
+ 
+\begin{algorithm}
+ \KwIn{Budget $k$; ground set $\groundset$; distribution $\rlzprior$;
+   function $f$.}  
+\KwOut{Set $A \subseteq \groundset$ of size $k$}
+\Begin{
+\lnl{ln:acc1}   $\groundsubset\leftarrow\emptyset$; $\prlz\leftarrow\emptyset$;
+  Priority Queue $Q \leftarrow \textsc{empty\_queue}$\;
+\lnl{ln:acc3}   \lForEach{ $\elem\in\groundset$}{$Q.\op{insert}(\elem, +\infty)$}\;
+%
+\lnl{ln:acc4}   \For{$i=1$ \KwTo $k$}{
+\lnl{ln:acc5}        $\delta_{\max} \leftarrow -\infty$; $\elem_{\max} \leftarrow \NULL$\;
+\lnl{ln:acc6}        \While{ $\delta_{\max} < Q.\op{maxPriority}(\, )$ }{
+\lnl{ln:acc7}          $\elem \leftarrow Q.\op{pop}(\, )$\;
+\lnl{ln:acc8}          $\delta \leftarrow \diff{\prlz}{\elem}  =
+          \expctoverrlz{\rvrlz}{f(\groundsubset \cup \set{\elem}, \rvrlz) -
+            f(\groundsubset, \rvrlz)\ | \ \rvrlz\sim\prlz}  $\;
+\lnl{ln:acc9}          $Q.\op{insert}(\elem, \delta)$\;
+          %
+\lnl{ln:acc9b}          \If{ $\delta_{\max} < \delta$ }{
+\lnl{ln:acc10}            $\delta_{\max} \leftarrow \delta$; $\elem_{\max} \leftarrow \elem$\; 
+          }
+        }
+\lnl{ln:acc11}        $A \leftarrow A \cup \set{\elem_{\max}}$; $Q.\op{remove}(\elem_{\max})$\;
+        \lnl{ln:acc-adapt} Observe $\rvrlz(\elem_{\max})$;    Set $\prlz\leftarrow\prlz\cup\set{(\elem_{\max},\rvrlz(\elem_{\max}))}$\;
+   }
+ }
+ \label{alg:acc-greedy} 
+\caption{The accelerated version of the adaptive greedy
+algorithm.  Here, $Q.\op{insert}(\elem, \delta)$ inserts $\elem$ with
+priority $\delta$,  $Q.\op{pop}(\, )$ removes and returns the
+item with greatest priority, $Q.\op{maxPriority}(\, )$ returns the
+maximum priority of the elements in $Q$, and $Q.\op{remove}(\elem)$
+deletes $\elem$ from $Q$.}
+\end{algorithm}
+
+
+%
+%
+\section{Guarantees for the Greedy Policy} \label{sec:greedy}
+%
+
+
+
+%
+\looseness -1 In this section we show that if the objective function is \term
+submodular with respect to the probabilistic model of the
+environment in which we operate, then the greedy policy inherits
+precisely the performance guarantees of the greedy  
+%
+algorithm for classic (non-adaptive) submodular maximization and submodular coverage
+problems, such as Maximum $k$-Cover and Minimum
+Set Cover, as well as min-sum submodular
+coverage problems, such as Min-Sum Set Cover.
+In fact, we will show that this holds true more generally: 
+$\alpha$--approximate greedy policies inherit precisely the performance guarantees of 
+$\alpha$--approximate greedy algorithms for these classic problems. These guarantees suggest that \term submodularity is an 
+appropriate generalization of submodularity to policies.  In this section
+we focus on the unit cost case (i.e., every item has the same cost).  In \appendixA we
+provide the proofs omitted in this section, and 
+show how our results extend to non-uniform item costs if we greedily
+maximize the expected benefit/cost ratio.
+
+
+\subsection{The Maximum Coverage Objective} \label{ssec:max-cover-objective}
+
+In this section we consider the maximum coverage objective, where the
+goal is to select $k$ items adaptively to maximize their expected
+value.  The task of maximizing expected value subject to more complex 
+constraints, such as matroid constraints and intersections of matroid
+constraints, is considered in the work of~\citet{golovin11matroid_arxiv}. 
+Before stating our result, we require the following definition.
+
+\begin{definition}[Policy Truncation] \label{def:policy-truncation}
+  For a policy $\policy$, define the \emph{level-$k$-truncation}
+  $\prune{\policy}{k}$ of $\policy$ to be the policy obtained by
+  running $\policy$ until it terminates or until it selects $k$ items,
+  and then terminating.  Formally, 
+  $\dom(\prune{\policy}{k}) = \set{\prlz \in \dom(\policy)\  : \
+    |\prlz| < k} $, and $\prune{\policy}{k}(\prlz) = \policy(\prlz)$
+  for all $\prlz \in \dom(\prune{\policy}{k})$.
+\end{definition}
+
+
+\looseness -1 We have the following result, which generalizes the 
+classic result of the work of~\citet{nemhauser78} that the greedy algorithm
+achieves a $(1-1/e)$-approximation to the problem of 
+maximizing monotone submodular functions under a
+cardinality constraint.  By setting $\ell = k$ and $\alpha = 1$ in
+\thmref{thm:max-cover}, we see 
+that the greedy policy which selects $k$ items adaptively obtains at
+least $(1-1/e)$ of the value of the optimal policy that selects $k$ items adaptively,
+measured with respect to $\avgf$.
+For a proof see
+\thmref{thm:max-cover-with-costs} in
+Appendix~\ref{sec:proofs-max-cover}, 
+which generalizes \thmref{thm:max-cover} to nonuniform item costs.
+
+
+\begin{theorem} \label{thm:max-cover}
+Fix any $\alpha \ge 1$.
+If $f$ is \term monotone and \term submodular with respect to the
+distribution 
+%
+$\rlzprior$, and $\policy$ is an
+$\alpha$-approximate greedy policy, then for all policies $\policy^*$ and positive
+integers $\ell$ and $k$, 
+\[
+\avgf(\prune{\policy}{\ell}) > \paren{1 - e^{-\ell/\alpha k}}
+\avgf(\prune{\policy^*}{k}) 
+\mbox{.}
+\]
+In particular, with $\ell = k$ this implies any $\alpha$-approximate
+greedy policy achieves a $\paren{1 - e^{-1/\alpha}}$ approximation to
+the expected reward of the best
+policy, if both are terminated after running for an equal number of steps. 
+\end{theorem}
+
+
+
+
+If the greedy rule can be implemented only with small \emph{absolute} error rather than small \emph{relative} error, i.e., $\diff{\prlz}{\elem'} \ge  \max_{\elem}
+\diff{\prlz}{\elem}-\varepsilon$, an argument similar to that used to
+prove~\thmref{thm:max-cover}
+shows that 
+\[
+\avgf(\prune{\policy}{\ell}) \ge \paren{1 - e^{-\ell/k}}
+\avgf(\prune{\policy^*}{k}) - \ell\varepsilon
+\mbox{.}
+\]
+This is important, since small absolute error can always be achieved
+(with high probability) whenever $f$ can be evaluated efficiently, and
+sampling $\rlzmass{\rlz\mid\prlz}$ is efficient. In this case, we can approximate
+\[
+\diff{\prlz}{\elem} 
+\approx \frac{1}{N}\sum_{i=1}^{N}\bigl[f(\dom(\prlz) \cup \set{\elem}, \rlz_{i}) - f(\dom(\prlz), \rlz_{i})\bigr]\mbox{,}     
+\]
+where $\rlz_{i}$ are sampled i.i.d.~from $\rlzmass{\rlz\mid\prlz}$.
+
+
+
+\subsubsection{Data Dependent Bounds} For the maximum coverage objective, \term submodular functions have
+another attractive feature: they allow us to obtain data dependent
+bounds on the optimum, in a manner similar to the bounds for the non-adaptive case \citep{minoux78}.
+Consider the non-adaptive problem of maximizing a monotone submodular
+function $f:2^{\groundsubset} \to \NonNegativeReals$ subject to the
+constraint $|A| \le k$.  Let $A^*$ be an optimal solution, 
+%
+ and fix any $A \subseteq \groundset$.  Then 
+\begin{equation}
+  \label{eq:data-dependent-bound}
+   f(A^*) \le f(A) + \max_{B : |B| \le k} \sum_{e \in B} \paren{ f(A
+     \cup \set{e}) - f(A)  } 
+\end{equation}
+because setting $B = A^*$ we have 
+$f(A^*) \le f(A \cup B) \le  f(A) + \sum_{e \in B} \paren{ f(A
+     \cup \set{e}) - f(A)  }$.
+Note that unlike the original objective, we can easily compute 
+$\max_{B : |B| \le k} \sum_{e \in B} \paren{ f(A \cup \set{e}) - f(A)
+} $ by computing $\delta(e) := f(A \cup \set{e}) - f(A)$ for each
+$e$, and summing the $k$ largest values.  Hence we can quickly compute
+an upper bound on our distance from the optimal value, $f(A^*) - f(A)$. In practice, such data-dependent bounds can be much tighter than the problem-independent performance guarantees of \citet{nemhauser78} for the greedy algorithm \citep{leskovec07}. Further note that these bounds hold for \emph{any} set $A$, not just sets selected by the greedy algorithm.
+
+
+These data dependent bounds have the following analogue for \term monotone
+submodular functions.  See
+Appendix~\ref{sec:costs-data-dependent-bounds} for a proof.
+
+%
+\begin{lemma}[The Adaptive Data Dependent Bound] \label{lem:rate-equation}
+Suppose we have made observations $\prlz$ after
+selecting $\dom(\prlz)$.  Let $\policy^*$ be any policy such that 
+$|\played{\policy^*}{\rlz}| \le k$ for all $\rlz$.  
+Then for \term monotone submodular $f$
+\begin{equation}
+  \label{eq:data-dependent-bound-adaptive}
+\diff{\prlz}{\policy^*} \ \le \ \max_{A \subseteq \groundset, |A| \le
+  k} \ \sum_{e \in A} \diff{\prlz}{e}.
+\end{equation}
+%
+\end{lemma}
+Thus, after running \emph{any} policy $\policy$, we can efficiently compute a bound on the additional benefit that the optimal solution $\policy^{*}$ could obtain beyond the reward of $\policy$. We do that by computing the conditional expected marginal benefits for all elements $e$, and summing the $k$ largest of them. Note that these bounds can be computed on the fly when running the greedy algorithm, in a similar manner as discussed by \citet{leskovec07} for the non-adaptive setting.
+
+
+%
+\ignore{
+%
+\begin{proof}
+Let $\beta := \expctoverrlz{\rlz}{f(\played{\policy^*}{\rlz} \cup \dom(\prlz), \rlz ) \ \mid
+     \ \rlz  \sim \prlz }  -  \expctoverrlz{\rlz}{f(\dom(\prlz), \rlz ) \ \mid
+     \ \rlz  \sim \prlz } $.  We will prove
+$\beta \le \max_{A : |A| \le k} \sum_{e \in A} \diff{\prlz}{e}$.
+Order the items in $\dom(\prlz)$ arbitrarily, and 
+consider the policy $\policy$ that for each $e \in \dom(\prlz)$ in
+order selects $e$, terminating if $\rlz(e) \neq \prlz(e)$ and
+proceeding otherwise, and, should it succeed in selecting all of
+$\dom(\prlz)$ without terminating (which occurs iff $\rlz \sim
+\prlz$), then proceeds to run $\policy^*$ as if from a fresh start,
+forgetting the observations in $\prlz$. 
+In this case, $\beta$ equals
+the expected marginal benefit of running the $\policy^*$ portion of
+$\policy$ conditioned on $\rlz \sim \prlz$.
+For all $e \in \groundset$, let $w(e) = \Pr{e \in
+  \played{\policy}{\rlz} \ \mid \ \rlz \sim \prlz}$
+be the probability that $e$ is selected when running $\policy$, 
+conditioned on $\rlz \sim \prlz$.
+Whenever some $e \in \groundset \setminus \dom(\prlz)$ is selected by $\policy$, the current partial realization
+$\prlz'$ contains $\prlz$ as a subrealization; hence \term
+submodularity implies $\diff{\prlz'}{e} \le \diff{\prlz}{e}$.
+It follows that the total contribution of $e$ to $\beta$
+is upper
+bounded by $w(e) \cdot \diff{\prlz}{e}$.
+Summing over $e  \in \groundset \setminus \dom(\prlz)$, 
+%
+we get a bound of 
+$\beta  \le \sum_{e  \in \groundset \setminus
+     \dom(\prlz)} w(e) \diff{\prlz}{e}$.
+Since $\policy^*$ selects at most $k$ items under any realization, 
+we have $\sum_{e  \in \groundset \setminus \dom(\prlz)} w(e) \le k$, and since each $w(e)$ is a probability, 
+$0 \le w(e) \le 1$.  Optimizing $w$ to maximize $\sum_{e  \in \groundset \setminus \dom(\prlz)} w(e) \diff{\prlz}{e}$ under
+these constraints, 
+we obtain a value of $\max_{A : A \subseteq \groundset \setminus
+  \dom(\prlz), |A| \le k} \sum_{e \in A} \diff{\prlz}{e}$, as
+can be proved by a simple exchange argument.
+This is clearly upper bounded by $\max_{|A| \le k} \sum_{e \in A}
+\diff{\prlz}{e}$; in fact the two bounds are equal. 
+\end{proof}
+%
+} %
+%
+
+\subsection{The Min Cost Cover Objective} \label{sec:min-cost-cover}
+%
+Another natural objective is to minimize the number of items selected
+while ensuring that a sufficient level of value is obtained.  This
+leads to the \emph{Adaptive Stochastic Minimum Cost Coverage} problem
+described in~\secref{sec:problem-statment}, namely  
+$\policy^{*}\in\argmin_{\policy} \acst{\policy}\text{ such that }
+f(\played{\policy}{\rlz},\rlz)\geq \quota\text{ for all }\rlz$.  Recall that 
+$\acst{\policy}$ is the expected cost of $\policy$, which in the unit
+cost case equals the expected number of items
+selected by $\policy$, i.e., $\acst{\policy}:=\expctoverrlz{\rvrlz}{|\played{\policy}{\rvrlz}|}$.
+%
+If the objective is \term monotone submodular, 
+this is an adaptive version of the Minimum Submodular Cover problem
+(described on line~(\ref{eq:detcover}) in
+\secref{sec:submod-background}).  Recall that the greedy algorithm is known to give a
+$(\ln(\quota)+1)$-approximation for Minimum Submodular Cover
+assuming the coverage function is integer-valued in addition to being monotone submodular~\citep{wolsey82}. 
+Adaptive Stochastic Minimum Cost Coverage is also related
+to the \emph{(Noisy) Interactive Submodular Set Cover} problem studied by
+\citet{guillory10interactive,guillory2011-noisy-interactive-submod-cover}, 
+which considers the worst-case setting
+(i.e., there is no distribution over states; instead states are
+realized in an adversarial manner). 
+Similar results for active learning have been proved
+by~\citet{kosaraju99} and~\citet{dasgupta04}, as we discuss in more detail in~\secref{sec:active-learning}.
+
+We assume throughout this section that there exists a quality
+threshold $Q$ such that $f(\groundset, \rlz) = Q$ for all $\rlz$, and
+for all $S \subseteq \groundset$ and all $\rlz$, $f(S, \rlz) \le Q$. Note that, as discussed in Section~\ref{sec:term-submodularity}, if we replace $f(S,\rlz)$ by a new function $g(S,\rlz)=\min(f(S,\rlz),Q')$ for some constant $Q'$, $g$ will be \term submodular if $f$ is. Thus, if $f(\groundset,\rlz)$ varies across realizations, we can instead use the greedy algorithm on the function truncated at some threshold $Q'\leq \min_{\rlz}f(\groundset,\rlz)$ achievable by all realizations.
+
+
+In contrast to Adaptive Stochastic Maximization, for the coverage
+problem additional subtleties arise. 
+In particular,  it is not enough 
+that a policy $\policy$ achieves value $Q$ for the true realization; 
+in order for $\policy$ to terminate, it also requires a proof of this
+fact.  Formally, we require that $\policy$ \emph{covers} $f$:
+
+\begin{definition}[Coverage]\label{def:coverage}
+Let $\prlz = \prlz(\policy, \rlz)$ be the partial realization encoding all
+ states observed during the execution of $\policy$ under realization
+ $\rlz$.
+Given $f:2^{\groundset} \times \outcomes^{\groundset} \to
+\reals$, we say a policy 
+$\policy$ \emph{covers} $\rlz$ \emph{with respect to} $f$
+if
+$f(\dom(\prlz), \rlz') = f(\groundset, \rlz')$
+for all $\rlz' \sim \prlz$.
+We say that $\policy$ \emph{covers} $f$ if it covers every realization
+with respect to $f$.
+\end{definition}
+
+Coverage is defined in such a way that upon terminating, 
+$\policy$ might not know which realization 
+is the true one, but has
+guaranteed that it has achieved the maximum reward in every possible
+case (i.e., for every realization consistent with its observations).  We obtain results for both the average and worst-case cost objectives.
+
+\subsubsection{Minimizing the Average Cost}
+
+Before presenting our approximation guarantee for the Adaptive Stochastic Minimum Cost Coverage, 
+we introduce a special class of instances, called \emph{\certifying} instances.
+We make this distinction because 
+the greedy policy has stronger performance guarantees for 
+\certifying instances, and such instances arise naturally in 
+applications.  
+For example, the Stochastic Submodular Cover and Stochastic Set Cover
+instances in \secref{sec:stochastic-set-cover}, the Adaptive Viral Marketing instances in 
+\secref{sec:viral-marketing}, and the Pool-Based Active Learning instances
+in \secref{sec:active-learning} are all \certifying.
+
+\begin{definition}[\Certifying Instances]
+An instance of Adaptive Stochastic Minimum Cost Coverage is
+\emph{\certifying} if whenever a policy achieves the maximum possible
+value for the true realization it immediately has a proof of this
+fact.
+Formally, an instance $(f, \rlzprior)$ is \certifying if 
+for all $\rlz, \rlz'$, and $\prlz$ such that $\rlz \sim \prlz$ and $\rlz'
+\sim \prlz$, we have 
+$f(\dom(\prlz), \rlz) = f(\groundset, \rlz)$ if and only if 
+$f(\dom(\prlz), \rlz') = f(\groundset, \rlz')$.
+\end{definition}
+
+One class of \certifying instances which commonly arise are those in which 
+$f(A, \rlz)$ depends only on the state of items in $A$, and in which
+there is a uniform maximum amount of reward that can be obtained
+across realizations. 
+Formally, we have the following observation.
+
+\begin{proposition}
+\label{prop:certifying}
+Fix an instance $(f, \rlzprior)$.
+If there exists $\quota$ such that $f(\groundset, \rlz) = \quota$ for
+all $\rlz$ and there exists some $g:2^{\groundset \times \outcomes} \to
+\NonNegativeReals$ such that $f(A, \rlz) = g\paren{ \set{(\elem,
+    \rlz(\elem)) : \elem \in A}}$ for all $A$ and $\rlz$,
+then $(f, \rlzprior)$ is \certifying.
+\end{proposition}
+
+\begin{proof}
+Fix $\rlz, \rlz'$, and $\prlz$ such that $\rlz \sim \prlz$ and $\rlz'
+\sim \prlz$.  Assuming the existence of $g$ and treating $\prlz$ as a relation, we have 
+$f(\dom(\prlz), \rlz) = g(\prlz) = f(\dom(\prlz), \rlz')$.
+Hence $f(\dom(\prlz), \rlz) = \quota = f(\groundset, \rlz)$ if and only if 
+$f(\dom(\prlz), \rlz') = \quota = f(\groundset, \rlz') $.
+\end{proof}
+
+%
+\noindent
+For our results on minimum cost coverage, we also need a stronger  monotonicity condition:
+
+\begin{definition}[Strong \Term Monotonicity] \label{def:SSM}
+A function $f:2^{\groundset} \times \outcomes^{\groundset} \to
+\reals$ is \emph{strongly adaptive monotone} with respect to
+$\rlzprior$ if, informally ``selecting more items never hurts'' with respect to the expected reward.
+Formally, for all $\prlz$, all $\elem \notin \dom(\prlz)$, and all
+possible outcomes $\outcome \in \outcomes$ such that 
+$\prob{\rvrlz(\elem) = \outcome \  \mid \ \rvrlz \sim \prlz  } > 0$,
+we require 
+\begin{equation} \label{eqn:strong-adapt-monotonicity}
+\expctoverrlz{\rvrlz}{f(\dom(\prlz), \rvrlz) \ \mid \ \rvrlz \sim \prlz} \le 
+\expctoverrlz{\rvrlz}{f(\dom(\prlz) \cup \set{\elem}, \rvrlz) \ \mid \ \rvrlz \sim
+  \prlz, \rvrlz(\elem) = \outcome}\mbox{.}   
+\end{equation}
+\end{definition}
+%
+
+%
+Strong \term monotonicity implies
+\term monotonicity, as the latter means that ``selecting more items
+never hurts in expectation,'' i.e., 
+$$\expctoverrlz{\rvrlz}{f(\dom(\prlz), \rvrlz) \ \mid \ \rvrlz \sim \prlz} \le 
+\expctoverrlz{\rvrlz}{f(\dom(\prlz) \cup \set{\elem}, \rvrlz) \ \mid \ \rvrlz \sim
+  \prlz}.$$
+We now state our main result for the  average case cost $\acst{\pi}$:
+
+\begin{theorem} \label{thm:min-set-cover-avg-generalized}
+Suppose $f:2^{\groundset} \times \outcomes^{\groundset} \to
+\NonNegativeReals$ is \term submodular and strongly adaptive
+monotone with respect to $\rlzprior$ and there exists $Q$ such that 
+$f(\groundset, \rlz) = Q$ for all $\rlz$.
+Let $\eta$ be any value such that 
+$f(S, \rlz) > Q - \eta$ implies $f(S, \rlz) = Q$ for all $S$ and
+$\rlz$.
+Let $\delta = \min_{\rlz} \rlzprior$ be the minimum probability of
+any realization. 
+Let
+$\policycover$ be an optimal policy
+minimizing the expected number of items selected 
+to guarantee every realization is covered.
+Let $\policy$ be an $\alpha$-approximate
+greedy policy. 
+Then in general 
+\[
+\acst{\policy} \le  \alpha\,
+\acst{\policycover}\paren{\ln \paren{\frac{Q}{\delta \eta}} + 1} 
+\]
+and for \certifying instances 
+\[
+\acst{\policy} \le  \alpha\,
+\acst{\policycover}\paren{\ln \paren{\frac{Q}{\eta}} + 1} 
+\mbox{.}
+\]
+Note that if $\range(f) \subset \integers$, then $\eta = 1$ is a valid
+choice, and then for general and \certifying instances we have 
+$\acst{\policy} \le  \alpha\,\acst{\policycover}\paren{\ln (Q/\delta) + 1}$
+and $\acst{\policy} \le
+\alpha\,\acst{\policycover}\paren{\ln (Q) + 1}$, respectively.
+\end{theorem}
+
+\subsubsection{Minimizing the Worst-Case Cost}
+
+For the worst-case cost $\wcst{\policy} := \max_{\rlz}{|\played{\policy}{\rlz}|}$, strong \term monotonicity is not required;
+\term monotonicity suffices.  We obtain the following result.
+
+ 
+\begin{theorem} \label{thm:min-set-cover-wc-generalized}
+Suppose $f:2^{\groundset} \times \outcomes^{\groundset} \to
+\NonNegativeReals$ 
+is \term monotone and \term submodular
+with respect to $\rlzprior$, and 
+let $\eta$ be any value such that 
+$f(S, \rlz) > f(\groundset, \rlz) - \eta$ implies $f(S, \rlz) =
+f(\groundset, \rlz)$ for all $S$ and $\rlz$. 
+Let $\delta = \min_{\rlz} \rlzprior$ be the minimum probability of
+any realization. 
+Let $\policy_{wc}^{*}$ be the optimal policy
+minimizing the worst-case number of queries 
+to guarantee every realization is covered.  Let $\policy$ be an $\alpha$-approximate
+greedy policy.   
+Finally, let $Q := \expctoverrlz{\rlz}{f(\groundset, \rlz)}$ be the
+maximum possible expected reward.
+Then 
+\[
+ \wcst{\policy} \le \alpha \, \wcst{\policy_{wc}^*}\,
+ \paren{\ln \paren{\frac{Q}{\delta \eta}} +1}
+\mbox{.}
+\]
+\end{theorem}
+\noindent 
+The proofs of
+Theorems~\ref{thm:min-set-cover-avg-generalized}
+and~\ref{thm:min-set-cover-wc-generalized} are given in
+Appendix~\ref{sec:proofs-min-cost-cover}.
+
+Thus, even though \term submodularity is defined w.r.t.~a particular
+distribution, perhaps surprisingly, the adaptive greedy algorithm is
+competitive even in the case of  adversarially chosen realizations,
+against a policy optimized to minimize the worst-case
+cost. \thmref{thm:min-set-cover-wc-generalized} therefore suggests
+that if we do not have a strong prior, we can obtain the strongest
+guarantees if we choose a distribution that is ``as uniform as
+possible'' (i.e., maximizes $\delta$) while still guaranteeing
+adaptive submodularity. 
+
+\subsubsection{Discussion} Note that the approximation factor for \certifying instances 
+in~\thmref{thm:min-set-cover-avg-generalized}
+reduces to the $(\ln(Q)+1)$-approximation
+guarantee for the greedy algorithm for Set Cover instances with $Q$
+elements, in the case of a deterministic distribution $\rlzprior$.  
+Moreover,  with a deterministic distribution $\rlzprior$
+there is no distinction between average-case and
+worst-case cost.
+Hence, an immediate corollary of the result of
+\citet{feige98threshold} mentioned in \secref{sec:term-submodularity}
+is that for every constant $\epsilon > 0$
+there is
+no polynomial time
+$(1-\epsilon)\ln \paren{Q/\eta}$ approximation algorithm for
+\certifying instances of 
+Adaptive Stochastic Min Cost Cover, under either the $\acst{\cdot}$ or 
+the $\wcst{\cdot}$ objective, 
+unless $\NP\subseteq
+\text{DTIME}(n^{\cO(\log\log n)})$.
+It remains open to determine whether or not 
+Adaptive Stochastic Min Cost Cover with the worst-case cost objective 
+admits a $\ln \paren{Q/\eta}+1$ approximation for \certifying instances
+via a polynomial time algorithm, 
+and in particular whether the greedy policy has such an approximation guarantee.
+However, in \lemref{lem:approx-hardness-for-c_avg} we show that Feige's result also implies
+there is no $(1-\epsilon)\ln \paren{Q/\delta\eta}$ polynomial time approximation
+algorithm for general (non self-certifying) instances of 
+Adaptive Stochastic Min Cost Cover under either objective, unless $\NP\subseteq
+\text{DTIME}(n^{\cO(\log\log n)})$.  In that sense, each of the three results
+comprising \thmref{thm:min-set-cover-avg-generalized} and
+\thmref{thm:min-set-cover-wc-generalized} are best-possible under reasonable complexity-theoretic assumptions.  
+%
+As we show in Section~\ref{sec:active-learning}, our result for the
+average-case cost of greedy policies for \certifying instances 
+ also matches (up to constant factors) results on hardness of approximating
+the optimal policy in the special case of active learning, also known
+as the \emph{Optimal Decision Tree} problem.
+
+
+\ignore{
+Equation~(\ref{eq:time-to-split}) applied to $\policy =
+\policy^*$ and $\prlz = \prlz_i$,
+and Theorem~\ref{thm:max-cover} imply that after 
+$\timetosplit{\prlz}$ rounds, \gbs has reduced the probability
+mass of the unverified version space by a factor of at least 
+$\beta := 1 - \frac{1}{2}\paren{1 -  \frac{1}{e}} =
+\frac{1}{2}\paren{1 + \frac{1}{e}}$, so that 
+$\expct{\prior(V_{i+1})} \le \beta \cdot \expct{\prior(V_{i})}$.  
+After $i = \log_{1/\beta}(1/\min_h \prior(h))$ such stages, 
+$\expct{\prior(V_{i+1})} \le \min_h \prior(h)$.
+Since every query always removes at least one hypothesis, and hence 
+reduces the probability mass of the unverified version space by at least  
+$\min_h \prior(h)$, it follows that in expectation only one more query
+is required.  Thus if we can bound the expected number of queries in each
+stage by $q$, we obtain a bound of 
+$\qcost{\Tgbs}{\hypotheses} \le q \log_{1/\beta}(1/\min_h \prior(h)) + 1$.
+Thus, to complete the proof we show that the expected number of
+queries in each stage $i$, namely $2 \qcost{T^*}{\vs_i}$, is at most $2 \qcost{T^*}{\hypotheses}$, by
+induction on the stage number.  Actually we will prove a slightly stronger 
+induction hypothesis.
+More specifically, fix an unverified version space $\vs_i$, and let $\vs_{i+1}$ be
+the random unverified version space that results from running $\Tgbs$ for 
+$2 \qcost{T^*}{\vs_i}$ rounds on hypothesis space $\vs_i$.
+We will now prove $\expct{\qcost{T^*}{\vs_{i+1}}} \le \qcost{T^*}{\vs_i}$.
+
+Note each query $x$ partitions the unverified version space $\vs$.
+%
+After $2 \qcost{T^*}{\vs_i}$ rounds of $\Tgbs$, 
+let $\set{A_1, \ldots, A_r}\cup\set{B}$ be a partition of $\vs_i$ such
+that $\vs_{i+1}$ must be an element of $\set{A_1, \ldots, A_r}$, and
+$B$ contains all hypotheses that were proved to be the target and
+verified in stage
+$i$.  Then 
+
+\end{proof}
+
+
+\[
+\begin{aligned}{}
+\expct{\qcost{T^*}{\vs_{i+1}}\ |\ \vs_i }  & = & \sum_{j=1}^r \prob{\vs_{i+1} =
+  A_j} \qcost{T^*}{A_j}  & = & \sum_{j=1}^r \frac{\prior(A_j)}{\prior(\vs_{i})} \cdot \qcost{T^*}{A_j}  \phantom{aaaaaaaa}\\
+  & = &\sum_{j=1}^r \sum_{h \in A_j} \frac{\prior(h)}{\prior(\vs_i)} 
+  \qcost{T^*}{\set{h}}  & \le & \sum_{h \in \vs_i} \frac{\prior(h)}{\prior(\vs_i)} 
+  \qcost{T^*}{\set{h}} \phantom{aaaaaaaaa} \\
+ & = & \qcost{T^*}{\vs_i} \phantom{aaaaaaaaaaaaaaa}  & & \\
+\end{aligned}
+\]
+
+The third equality holds because $\qcost{T^*}{A_j}
+= \sum_{h \in A_j} \frac{\prior(h)}{\prior(A_j)}
+\qcost{T^*}{\set{h}}$.
+From this, we note that each stage requires at most
+$\qcost{T^*}{\hypotheses}$ queries in expectation, so \gbs requires at
+most $\qcost{\Tgbs}{\hypotheses} \le \qcost{T^*}{\hypotheses} \log_{1/\beta}(1/\min_h
+\prior(h)) + 1$.
+Since the verification step adds another query, we ultimately obtain
+a query bound of 
+\[
+\qcost{\Tgbs}{\hypotheses} \le (\OPT + 1)\log_{1/\beta}(1/\min_h
+\prior(h)) + 1
+\]
+for the original problem, where $\beta = \frac{1}{2}\paren{1 +
+  \frac{1}{e}}$.
+To improve this to an $\cO(\log |\hypotheses|)$-approximation using the
+observation of~\citet{kosaraju99}, call a tree policy $T$
+\emph{reasonable} if it eliminates at least one hypotheses from its
+unverified version space in each query.  We claim that the cost (expected number of
+queries) for any reasonable tree $T$ with respect to the incorrect modified prior 
+$\prior'(h) \propto \max\set{\prior(h), 1/|\hypotheses|^{3}}$ is
+within a multiplicative factor of $1 \pm 1/ |\hypotheses|$ of its cost
+under the correct prior.  The $1 - 1/ |\hypotheses|$ comes from the
+fact that it is a lower bound on $\prior'(h)/\prior(h)$ for all
+$h$, and the $1 + 1/|\hypotheses|$ upper bound comes from the fact
+that the hypotheses with $\prior'(h) > \prior(h)$ can contribute at
+most $|\hypotheses|^{-2}$ probability in total, each of these requires
+at most $|\hypotheses|$ queries to handle by the reasonableness of
+$T$, and so the total increase in cost is $|\hypotheses|^{-1}$.
+Hence using the modified prior means we degrade the approximation
+factor by a factor of at most $1 + 1/|\hypotheses|$, while increasing
+$\min_h \prior(h)$ to $1/|\hypotheses|^{3}$.
+\end{proof}
+} %
+
+
+%
+\subsection{The Min-Sum Cover Objective} \label{sec:min-sum-cover}
+%
+\newcommand{\msgs}{U} %
+\newcommand{\mse}{u} %
+
+Yet another natural objective is the \emph{min-sum} objective, in
+which an unrealized reward of $x$ incurs a cost of $x$ in each time
+step, and the goal is to minimize the total cost incurred.
+\subsubsection{Background on the Non-adaptive Min-Sum Cover Problem}
+In the non-adaptive setting, perhaps the simplest form of a coverage
+problem with this objective is the \emph{Min-Sum Set Cover}
+problem~\citep{feige04} in which the input is a set system $(\msgs, \cS)$, the output
+is a permutation of the sets $\tuple{S_1, S_2, \ldots, S_m}$, and the
+goal is to minimize the sum of element \emph{coverage times}, where the
+coverage time of $\mse$ is the index of the first set that contains
+it (e.g., it is $j$ if $\mse \in S_j$ and $\mse \notin S_{i}$ for all $i <
+j$).  In this problem and its generalizations 
+the min-sum objective is useful in modeling processing costs in
+certain applications, for example in ordering diagnostic tests to
+identify a disease cheaply~\citep{kaplan05}, in ordering multiple filters to be applied to
+database records while processing a query~\citep{munagala05}, or in ordering multiple
+heuristics to run on boolean satisfiability instances as a means to
+solve them faster in practice~\citep{streeter08}.
+A particularly expressive generalization of min-sum set cover has been
+studied under the names \emph{Min-Sum Submodular Cover}~\citep{streeter08} and 
+$L_1$-\emph{Submodular Set Cover}~\citep{golovin08}.
+The former paper extends the greedy algorithm to a natural online variant of the
+problem, while the latter studies a parameterized family of
+$L_p$-\emph{Submodular Set Cover} problems in which the objective is
+analogous to minimizing the $L_p$ norm of the coverage times for 
+Min-Sum Set Cover instances.
+In the Min-Sum Submodular Cover problem, there is a monotone submodular function $f:2^{\groundset}
+\to \NonNegativeReals$ defining the reward obtained from a collection
+of elements\footnote{To encode Min-Sum Set Cover instance
+  $(\msgs, \cS)$, let $\groundset := \cS$ and $f(A) := |\cup_{e \in A} e|$, where each $e \in \groundset$ is a subset of
+elements in $\msgs$.}.  
+There is an integral cost $c(e)$ for each element, and the output is a
+sequence of all of the elements $\sequence = \tuple{e_1, e_2, \ldots, e_n}$.
+For each $t \in \NonNegativeReals$, we define the set of elements in
+the sequence $\sequence$ within a budget of $t$:
+\[
+\prune{\sequence}{t} := \set{e_i : \sum_{j \le i} c(e_j) \le t }.
+\]
+The cost we wish to minimize is then 
+\begin{equation}
+  \label{eqn:min-sum-obj1}
+  \costminsum{\sequence} := \sum_{t = 0}^{\infty} \paren{f(\groundset) - f(\prune{\sequence}{t})}.
+\end{equation}
+\citet{feige04} proved that for Min-Sum Set cover, the greedy
+algorithm achieves a $4$-approximation to the minimum cost, and also
+that this is optimal in the sense that no polynomial time algorithm can achieve a
+$(4-\epsilon)$-approximation, for any $\epsilon > 0$, unless $\P = \NP$.
+Interestingly, the greedy algorithm also achieves a $4$-approximation
+for the more general Min-Sum Submodular Cover problem as
+well~\citep{streeter08,golovin08}.
+
+
+\subsubsection{The Adaptive Stochastic Min-Sum Cover Problem} In this
+article, we extend the result of \citet{streeter08} and \citet{golovin08} to an
+adaptive version of Min-Sum Submodular Cover. 
+For clarity's sake we will consider the unit-cost case here (i.e., $c(e) = 1$ for all
+$e$);  we show how to extend \term submodularity to handle general
+costs in \appendixA.
+In the adaptive version of the problem, $\prune{\policy}{t}$ plays the role of
+$\prune{\sequence}{t}$, and $\avgf$ plays the role of $f$.  The goal is to
+find a policy $\policy$ minimizing 
+\begin{equation}
+  \label{eqn:min-sum-obj2}
+  \costminsum{\policy} := \sum_{t =
+    0}^{\infty} \paren{\expctoverrlz{\rvrlz}{f(\groundset, \rvrlz)} -
+      \avgf(\prune{\policy}{t})} = \sum_{\rlz} \rlzprior \sum_{t =
+    0}^{\infty} \paren{f(\groundset, \rlz) - f(\groundset(\prune{\policy}{t},
+  \rlz), \rlz)}.
+\end{equation}
+We call this problem the \emph{Adaptive Stochastic Min-Sum Cover} problem.
+The key difference between this objective and the minimum cost
+cover objective is that here, the cost at each step is only the fractional
+extent that we have not covered the true realization, whereas in the 
+minimum cost cover objective we are charged in full in each step until
+we have completely covered the true realization (according to
+\defref{def:coverage}). 
+We prove the following result for the Adaptive Stochastic Min-Sum Cover problem with arbitrary item costs in Appendix~\ref{sec:proofs-min-sum-cover}.
+
+\begin{theorem}\label{thm:min-sum-set-cover}
+Fix any $\alpha \ge 1$.
+If $f$ is \term monotone and \term submodular with respect to the
+distribution $\rlzprior$, $\policy$ is an
+$\alpha$-approximate greedy policy with respect to the item costs, and $\policy^*$ is any policy,
+then $\costminsum{\policy} \le 4 \alpha \, \costminsum{\policy^*}$. 
+%
+%
+%
+%
+\end{theorem}
+
+
+
+%
+%
+%
+%
+%

@@ -1,0 +1,95 @@
+
+%
+
+\newcommand{\gimmespace}{\phantom{$\paren{\frac{\sum }{2}}$}}
+
+
+\begin{table}[p]
+\subsection{A Symbol Table} \label{sec:symbols} \vspace{1em}
+  \begin{tabular}{|l|p{5in}|}
+\hline
+$\groundset$, $\elem \in \groundset$ & Ground set of items, and an individual item. \\
+\hline
+$\outcomes$, $\outcome \in \outcomes$ & States an item may be in, or outcomes of selecting an item, and an individual state/outcome. \\
+\hline
+$\rlz$ & A realization, i.e., a function from items to states. \\
+\hline
+$\prlz$ & A partial realization, typically encoding the current set of observations;\\
+ &  each $\prlz \subset \groundset \times \outcomes$ is a partial
+ mapping from items to states. \\
+\hline
+$\rvrlz, \rvprlz$ & A random realization and a random partial
+realization, respectively.\\
+%
+\hline
+$\sim$ & The consistency relation: $\rlz \sim \prlz$ means $\prlz(e) = \rlz(e)$ for all $e \in \dom(\prlz)$.\\
+\hline
+$\rlzmasssym$ & The probability distribution on realizations.\\
+\hline
+$\rlzmasssym(\rlz \mid \prlz)$ & The conditional distribution on realizations: $\rlzmasssym(\rlz \mid \prlz) :=
+\prob{\rvrlz = \rlz \mid \rvrlz \sim \prlz}$.\\
+\hline
+$\policy$ & A policy, which maps partial realizations to items. \\
+\hline
+$\played{\policy}{\rlz}$ & The set of all items selected by $\policy$ when run
+under realization $\rlz$. \\
+\hline
+$\diff{\prlz}{\elem}$ & The conditional expected marginal benefit of $e$ conditioned on $\prlz$: \\
+                              & $\diff{\prlz}{\elem} := \expct{f(\dom(\prlz) \cup \set{\elem}, \rvrlz) -
+   f(\dom(\prlz), \rvrlz)\ | \ \rvrlz\sim\prlz}$. \\
+\hline
+$\diff{\prlz}{\policy}$ & The conditional expected marginal benefit of
+policy $\policy$ conditioned on $\prlz$: \\
+                              & $\diff{\prlz}{\policy} :=
+                              \expct{f(\dom(\prlz) \cup \played{\policy}{\rvrlz}, \rvrlz) -
+   f(\dom(\prlz), \rvrlz)\ | \ \rvrlz\sim\prlz}$. \\
+\hline
+$\substitute{\prlz}{\elem}{\outcome}$ & Shorthand for $\prlz \cup \set{(\elem, \outcome)}$.\\
+\hline
+$\budget$ & Budget on the cost of selected item sets.\\
+\hline
+$\prune{\policy}{k}$ & A truncated policy.  See Definition~\vref{def:policy-truncation} (unit costs) and Definition~\vref{def:policy-truncation-with-costs}. \\
+\hline
+$\strictprune{\policy}{k}$ & A strictly truncated policy.  See Definition~\vref{def:strict-prune}.\\
+\hline
+$\laxprune{\policy}{k}$ & A laxly truncated policy.  See Definition~\vref{def:lax-prune}.\\
+\hline
+$\append{\policy}{\policy'}$ & Policies $\policy$ and $\policy'$ concatenated together.  See Definition~\vref{def:policy-concatenation}.\\
+\hline
+$f$ & An objective function, of type $f:2^{\groundset} \times \outcomes^{\groundset} \to \NonNegativeReals$ unless stated otherwise.\\
+\hline
+$\avgf$ & Average benefit: $\avgf(\policy) := \expct{f(\played{\policy}{\rvrlz}, \rvrlz)}$.\\
+\hline
+$c$ & Item costs $c:\groundset \to \nats$.  Extended to sets via $c(S) := \sum_{e \in S} c(e)$. \\
+\hline
+$\acstsym$ &  Average cost of a policy: $\acst{\policy} := \expct{c(\played{\policy}{\rvrlz})}$.\\
+\hline
+$\awstsym$ &  Worst-case cost of a policy: $\wcst{\policy} := \max_{\rlz}{c(\played{\policy}{\rlz})}$.\\
+\hline
+$\costminsumsym$ &  Min-sum cost of a policy: $\costminsum{\policy} := \sum_{t =  0}^{\infty} \paren{\expct{f(\groundset, \rvrlz)} -
+      \avgf(\strictprune{\policy}{t})}.$ \\
+\hline
+$\condcost{\prlz}{\policy}$ & Conditional average policy cost:
+$\condcost{\prlz}{\policy} :=
+\expct{c(\played{\policy}{\rvrlz})  \mid  \rvrlz \sim  \prlz}$. \ignore{\gimmespace} \\
+\hline
+$\alpha$ & Approximation factor for greedy optimization in an $\alpha$-approximate greedy policy.\\
+\hline
+$\quota$ & Benefit quota.  Often $\quota = \expct{f(\groundset, \rvrlz)}$.\\
+\hline
+$\eta$ & Coverage gap: $\eta = \sup \set{ \eta'  :  f(S, \rlz) > Q
+  - \eta' \text{ implies }f(S, \rlz) \ge Q \text{ for all }S, \rlz }$.\\
+\hline
+$\indicator{P}$ & The indicator for proposition $P$, which equals one if $P$ is true and
+zero if $P$ is false.\\
+\hline    
+\end{tabular}
+ \caption{Important symbols and notations used in this article}  \label{table:symbol-table}
+\end{table}
+
+%
+
+%
+%
+%
+%

@@ -1,0 +1,218 @@
+\documentclass[11pt]{article}
+%
+%
+\usepackage{jair}
+\usepackage{theapa}
+%
+
+\usepackage{amsmath}
+
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+%
+\usepackage{subfigure}
+\usepackage[boxed,noend]{algorithm2e}
+\usepackage{xspace}
+\usepackage{ifthen}
+%
+                                     %
+                                     %
+                                     %
+
+\usepackage{times}
+\usepackage{color}
+
+\usepackage{bbm}
+\usepackage{stmaryrd}
+\usepackage{varioref}
+
+%
+\usepackage{xtab}
+
+%
+
+
+
+
+
+%
+\newcommand{\ourtitle}{\Term Submodularity: Theory and Applications in
+  Active Learning and Stochastic Optimization}
+\newcommand{\condensedtitle}{\Term Submodularity: Theory and Applications}
+
+%
+%
+
+
+%
+
+
+\jairheading{42}{2011}{427-486}{1/11}{11/11}
+\ShortHeadings{\condensedtitle}{Golovin \& Krause}
+\firstpageno{427}
+
+
+%
+%
+
+%
+%
+%
+\newboolean{istechrpt}
+\setboolean{istechrpt}{true}  %
+                                          %
+\newboolean{isArxiv}          %
+\setboolean{isArxiv}{false}   %
+%
+\newcommand{\TechReportOnly}[1]{\ifthenelse{\boolean{istechrpt}}{#1}{}}
+\newcommand{\COLTonly}[1]{\ifthenelse{\boolean{istechrpt}}{}{#1}}
+\newcommand{\ArxivOnly}[1]{\ifthenelse{\boolean{isArxiv}}{#1}{}}
+%
+%
+%
+\newboolean{showcomments}
+\setboolean{showcomments}{false}
+%
+
+
+%
+\input{macros}
+%
+%
+%
+%
+%
+\newcommand{\citep}[1]{{\cite{#1}}}
+\newcommand{\citet}[1]{{\citeA{#1}}}
+%
+%
+
+ \newtheorem{theorem}{Theorem}[section]
+ %
+ \newtheorem{corollary}[theorem]{Corollary}
+ \newtheorem{lemma}[theorem]{Lemma}
+ \newtheorem{proposition}[theorem]{Proposition}
+ %
+ \newtheorem{example}[theorem]{Example}
+ %
+ \newtheorem{definition}[theorem]{Definition}
+ %
+ \newtheorem{rem}[theorem]{Remark}
+
+
+\begin{document}
+
+
+
+%
+  \title{\ourtitle}
+  \author{
+     \name \!Daniel Golovin  
+     \email {dgolovin@caltech.edu}\\
+     \addr California Institute of Technology\\
+     Pasadena, CA 91125, USA
+    \AND
+     \name Andreas Krause 
+     \email {krausea@ethz.ch}\\                    
+     \addr Swiss Federal Institute of Technology\\
+     8092 Zurich, Switzerland 
+     }
+
+%
+
+\maketitle
+
+%
+%
+
+\input{abstract}
+
+
+%
+%
+%
+%
+
+
+
+
+%
+\input{intro}
+%
+
+%
+\input{probstat}
+%
+
+%
+\input{termSubmodularity}
+%
+
+
+%
+\input{greedyAlgorithm}
+%
+
+%
+\input{maxCover}
+%
+
+%
+\input{stochasticCoverage}
+%
+
+%
+\input{viralMarketing}
+%
+
+%
+\input{activeLearning}
+%
+
+
+%
+\input{experiments}
+%
+
+%
+\input{adaptgap}
+%
+
+%
+\input{hardness}
+%
+
+%
+\input{related-work}
+%
+
+%
+\input{conclusions}
+%
+
+
+%
+\subsection*{Acknowledgments}
+An extended abstract of this work appeared in COLT 2010~\citep{golovin10colt}. We wish to thank the anonymous referees for their helpful suggestions. 
+This research was partially supported by ONR grant N00014-09-1-1044,
+NSF grant CNS-0932392, NSF grant IIS-0953413, DARPA MSEE grant FA8650-11-1-7156, a gift by Microsoft Corporation, an Okawa Foundation Research Grant, and by the Caltech Center for the Mathematics of Information. We wish to thank Vitaly Feldman and Jan Vondr\'{a}k for providing a particularly elegant proof of~\lemref{lem:price-integral}.
+%
+
+
+%
+\appendix
+\input{appendix}
+%
+%
+\vskip 0.2in
+\bibliography{jair}
+\bibliographystyle{theapa}
+
+\end{document}
+%
+%
+%
+%
+%

@@ -1,0 +1,212 @@
+\documentclass{article}
+
+%
+\usepackage{jmlr2arxiv}
+
+%
+%
+%
+%
+%
+%
+%
+%
+
+\usepackage{amsmath}
+
+%
+\usepackage{amsfonts}
+%
+%
+%
+\usepackage{subfigure}
+\usepackage[boxed,noend]{algorithm2e}
+\usepackage{xspace}
+\usepackage{ifthen}
+\usepackage{microtype}
+\usepackage{times}
+\usepackage{color}
+
+\usepackage{bbm}
+\usepackage{stmaryrd}
+\usepackage{varioref}
+
+%
+\usepackage{xtab}
+
+\usepackage[linkbordercolor={0 1 0},pdftex]{hyperref}
+%
+
+\jmlrheading{Volume??}{2012}{pages??}{??/??}{??/??}{Daniel Golovin
+  and Andreas Krause}
+
+
+%
+\newcommand{\ourtitle}{\Term Submodularity: Theory and Applications in
+  Active Learning and Stochastic Optimization}
+\newcommand{\condensedtitle}{\Term Submodularity: Theory and Applications}
+
+%
+%
+
+
+%
+
+\ShortHeadings{\condensedtitle}{Golovin and Krause}
+\firstpageno{1}
+
+
+%
+%
+
+%
+%
+%
+\newboolean{istechrpt}
+\setboolean{istechrpt}{true}  %
+                                          %
+\newboolean{isArxiv}          %
+\setboolean{isArxiv}{true}   %
+%
+\newcommand{\TechReportOnly}[1]{\ifthenelse{\boolean{istechrpt}}{#1}{}}
+\newcommand{\COLTonly}[1]{\ifthenelse{\boolean{istechrpt}}{}{#1}}
+\newcommand{\ArxivOnly}[1]{\ifthenelse{\boolean{isArxiv}}{#1}{}}
+%
+%
+%
+\newboolean{showcomments}
+\setboolean{showcomments}{false}
+%
+
+
+%
+\input{macros}
+%
+
+
+\begin{document}
+
+
+
+%
+  \title{\ourtitle}
+  \author{
+     \name \!Daniel Golovin  
+     \email {\textcolor{white}{antispam.}golovin@gmail.com}\\
+     \addr California Institute of Technology\\
+     Pasadena, CA 91125, USA
+    \AND
+     \name Andreas Krause 
+     \email {\textcolor{white}{antispam.}krausea@ethz.ch}\\                    
+     \addr ETH Zurich\\
+     8092 Zurich, Switzerland 
+     }
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+\editor{???}
+
+\maketitle
+
+%
+\footnotetext{This work appeared in the Journal of Artificial Intelligence Research~\citep{golovin11jair}, and an
+  eariler extended abstract appeared in the International Conference on Learning Theory~\citep{golovin10colt}.}
+
+\input{abstract}
+
+
+\begin{keywords}
+Adaptive Optimization, Stochastic Optimization, Submodularity, Partial Observability,
+Active Learning, Optimal Decision Trees  
+\end{keywords}
+
+%
+\input{intro}
+%
+
+%
+\input{probstat}
+%
+
+%
+\input{termSubmodularity}
+%
+
+
+%
+\input{greedyAlgorithm}
+%
+
+%
+\input{maxCover}
+%
+
+%
+\input{stochasticCoverage}
+%
+
+%
+\input{viralMarketing}
+%
+
+%
+\input{activeLearning}
+%
+%
+
+
+
+%
+\input{experiments}
+%
+
+%
+\input{adaptgap}
+%
+
+%
+\input{hardness}
+%
+
+%
+\input{related-work}
+%
+
+%
+\input{conclusions}
+%
+
+
+%
+\subsection*{Acknowledgments}
+This research was partially supported by ONR grant N00014-09-1-1044,
+NSF grant CNS-0932392, NSF grant IIS-0953413, DARPA MSEE grant FA8650-11-1-7156, a 
+gift by Microsoft Corporation, an Okawa Foundation Research Grant, and by the Caltech Center for the Mathematics of Information.
+We wish to thank Vitaly Feldman and Jan Vondr\'{a}k for providing an elegant proof of~\lemref{lem:price-integral}.
+%
+
+
+
+%
+\bibliography{jair}
+
+%
+\input{appendix}
+%
+
+\end{document}
+%
+%
+%
+%
+%

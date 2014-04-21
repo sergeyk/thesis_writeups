@@ -1,0 +1,40 @@
+%
+\section{Conclusions}
+%
+\label{sec:conclusions}
+Planning under partial observability is a central but notoriously difficult problem in artificial intelligence.
+In this paper, we identified a novel, general class of adaptive optimization problems under uncertainty that are amenable to efficient, greedy (approximate) solution.
+In particular, we introduced the concept of \emph{\term
+  submodularity}, generalizing submodular set functions to adaptive
+policies.  Our generalization is based on a natural adaptive analog of the
+diminishing returns property well understood for set functions.
+In the special case of deterministic
+distributions, \term submodularity reduces to the classical notion of
+submodular set functions. We proved that several guarantees carried by the
+non-adaptive greedy algorithm for submodular set functions generalize
+to a natural adaptive greedy algorithm in the case of \term submodular
+functions\TechReportOnly{, for constrained maximization and certain natural
+coverage problems with both minimum cost and minimum sum objectives}.  We also showed how the adaptive greedy algorithm can be accelerated using lazy evaluations, and how one can compute data-dependent bounds on the optimal solution. 
+We illustrated the usefulness of the concept by
+giving several examples of \term submodular objectives arising in
+diverse AI applications including sensor placement, viral marketing, automated diagnosis and
+pool-based active learning. Proving \term submodularity for these
+problems allowed us to recover existing results in these applications
+as special cases and lead to natural generalizations. 
+Our experiments on real data indicate that adaptive submodularity can
+provide practical benefits, such as significant speed ups  
+and tighter data-dependent bounds.
+We believe that our results provide an interesting step in the
+direction of exploiting structure to solve complex stochastic optimization and planning problems under partial observability. 
+
+
+
+
+
+
+
+%
+%
+%
+%
+%

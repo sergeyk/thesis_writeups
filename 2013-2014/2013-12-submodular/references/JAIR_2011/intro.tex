@@ -1,0 +1,173 @@
+%
+\section{Introduction} \label{sec:intro}
+%
+%
+\looseness -1 In many  problems arising in artificial intelligence one
+needs to adaptively make a sequence of decisions, taking into account
+observations about the outcomes of past decisions.  Often these
+outcomes are uncertain, and one may only know a probability
+distribution over them.  Finding optimal policies for decision making
+in such partially observable stochastic optimization problems is
+notoriously intractable (see, e.g., \citet{littman98computational}).  A fundamental challenge is to identify classes of planning problems for which simple solutions obtain (near-) optimal performance.
+
+
+In this paper, we 
+introduce the concept of \emph{\term submodularity}, and prove that
+if a partially observable stochastic optimization problem satisfies this property, a simple adaptive greedy
+algorithm is guaranteed to obtain near-optimal solutions. In fact, under reasonable complexity-theoretic assumptions, no polynomial time algorithm is able to obtain better solutions in general.
+\Term
+  submodularity generalizes the classical notion of submodularity\footnote{For
+  an extensive treatment of submodularity, see the books
+  of~\citet{fujishige05} and~\citet{SchrijverB}.}, which has
+been successfully used to develop approximation algorithms for a
+variety of non-adaptive optimization problems. 
+ Submodularity, informally, is an intuitive notion of diminishing
+ returns, which states that adding an element to a small set helps
+ more than adding that same element to a larger (super-)\ set.  A
+ celebrated result of the work of~\citet{nemhauser78} guarantees that for such
+ submodular functions, a simple greedy algorithm, which adds the element that maximally increases the objective value, selects a near-optimal set of $k$ elements.  
+Similarly, it is guaranteed to find a set of near-minimal cost that
+achieves a desired quota of utility~\citep{wolsey82}, using 
+near-minimum average time to do so~\citep{streeter08}.
+Besides guaranteeing theoretical performance bounds, submodularity allows us
+to speed up algorithms without loss of solution quality by using lazy evaluations \citep{minoux78},
+often leading to performance improvements of several orders of
+magnitude \citep{leskovec07}.  Submodularity has been shown to be very useful in a variety of problems in artificial intelligence \citep{krause09ijcaitut}.
+
+The challenge in generalizing
+submodularity to adaptive planning --- where the action taken in each
+step depends on information obtained in the previous steps  --- is that feasible solutions are now
+policies (decision trees or conditional plans) instead of subsets. We propose a natural
+generalization of the diminishing returns property for adaptive
+problems, which reduces to the classical characterization of submodular set
+functions for deterministic distributions. We show how these results
+of~\citet{nemhauser78},~\citet{wolsey82},~\citet{streeter08},
+and~\citet{minoux78} generalize to the adaptive setting.  Hence,
+we demonstrate how \term submodular optimization problems enjoy
+theoretical and practical benefits similar to those of classical,
+nonadaptive submodular problems. We further demonstrate the usefulness
+and generality of the concept by showing how it captures known results
+in stochastic optimization and active learning as special cases,
+admits tighter performance bounds,  leads to natural generalizations
+and allows us to solve new problems for which no performance guarantees were known.
+
+As a first example, consider the problem of deploying (or controlling) a collection of
+sensors to monitor some spatial phenomenon. Each sensor can cover a
+region depending on its sensing range. Suppose we would like to find
+the best subset of $k$ locations to place the sensors.  In this
+application, intuitively, adding a sensor helps more if we have placed
+few sensors so far and helps less if we have already placed many sensors. We can formalize this diminishing returns property using the notion of submodularity --
+the total area covered by the sensors is a submodular function defined
+over all sets of locations.  \citet{krause07nearoptimal} show that
+many more realistic utility functions in sensor placement (such as the
+improvement in prediction accuracy w.r.t.~some probabilistic model)
+are submodular as well. Now consider the following stochastic variant:
+Instead of deploying a fixed set of sensors, we deploy one sensor at a
+time.  With a certain probability, deployed sensors can fail, and our
+goal is to maximize the area covered by the functioning sensors.
+Thus, when deploying the next sensor, we need to take into account
+which of the sensors we deployed in the past failed.  This problem has
+been studied by \citet{AsadpourNS08} for the case where each sensor
+fails independently at random.  In this paper, we show that the
+coverage objective is \term submodular, and use this concept to handle
+much more general settings (where, e.g., rather than all-or-nothing
+failures there are different types of sensor failures of varying severity).
+%
+We also consider a related problem where the goal is to place the minimum number of
+sensors to achieve the maximum possible sensor coverage (i.e., the coverage
+obtained by deploying sensors everywhere), or more generally the
+goal may be to achieve any fixed percentage of the maximum possible
+sensor coverage.  
+Under the first goal, the problem is equivalent to one studied by~\citet{goemans06stochastic}, and 
+generalizes a problem studied by \citet{liu08near}.  As with the
+maximum coverage version, \term submodularity 
+allows us to recover and generalize previous results.
+ 
+
+
+As another example, consider a viral marketing problem, where we are
+given a social network, and we want to influence as many people as
+possible in the network to buy some product. We do that by giving the
+product for free to a subset of the people, and hope that they
+convince their friends to buy the product as well.  Formally, we have
+a graph, and each edge $e$ is labeled by a number $0\leq p_e\leq 1$.  We ``influence'' a subset of nodes in the graph, and for each influenced node, their neighbors get randomly influenced according to the probability annotated on the edge connecting the nodes.  This process repeats until no further node gets influenced.  \citet{kempe03} show that the set function which quantifies the expected number of nodes influenced is submodular.  A natural stochastic variant of the problem is where we pick a node, get to see which nodes it influenced, then adaptively pick the next node based on these observations and so on.  We show that a large class of such adaptive influence maximization problems satisfies \term submodularity.
+
+
+Our third application is in active learning, 
+where we are given an unlabeled data set, and we would like to
+adaptively pick a small set of examples whose labels imply all other
+labels.  The same problem arises in automated diagnosis, where we have
+hypotheses about the state of the system (e.g., what illness a patient has), and would like to perform tests to identify the correct hypothesis.
+In both domains we want to pick examples / tests to shrink the remaining
+version space (the set of consistent hypotheses) as quickly as
+possible. Here, we show that the reduction in version space
+probability mass is
+\term submodular, and use that observation to prove that the adaptive
+greedy algorithm is a near-optimal querying policy, recovering and 
+%
+generalizing  
+results by \citet{kosaraju99} and~\citet{dasgupta04}. Our results for active learning and automated diagnosis are also related to recent results of \citet{guillory10interactive,guillory2011-noisy-interactive-submod-cover} who study generalizations of submodular set cover to an interactive setting.  In contrast to our approach however, \citeauthor{guillory10interactive} analyze worst-case costs, and use rather different technical definitions and proof techniques.
+
+
+We summarize our main contributions below, and provide a more
+technical summary in  Table~\ref{table:results}.
+At a high level, our main contributions are: 
+\begin{itemize}
+\item We consider a particular class of partially observable adaptive stochastic optimization problems, which we prove to be hard to approximate in general.
+\item We introduce the concept of \emph{\term submodularity}, and
+  prove that if a problem instance satisfies this property, a simple
+  adaptive greedy policy performs near-optimally, for both adaptive
+  stochastic maximization and coverage, and also a natural min-sum objective.
+\item We show how \term submodularity can be exploited by allowing the
+  use of an accelerated adaptive greedy algorithm using lazy
+  evaluations, and how we can obtain data-dependent bounds on the optimum.
+\item We illustrate \term submodularity on several realistic problems,
+  including Stochastic Maximum Coverage, Stochastic Submodular Coverage,
+  Adaptive Viral Marketing, and 
+  Active Learning.  For these applications, \term submodularity allows
+  us to recover known results and prove natural generalizations.
+\end{itemize}
+
+%
+%
+\input{resultsTable}
+
+\subsection{Organization} %
+
+\looseness -1 This article is organized as follows.
+In \secref{sec:problem-statment} (page~\pageref{sec:problem-statment}) we set up notation and formally define
+the relevant adaptive optimization problems for general objective
+functions. 
+\emph{For the reader's convenience, we have also provided a reference table of
+important symbols on page~\pageref{table:symbol-table}.}
+In~\secref{sec:term-submodularity} (page~\pageref{sec:term-submodularity}) we review the classical notion of submodularity and introduce the novel 
+\term submodularity property.  In~\secref{sec:the-greedy-policy}
+(page~\pageref{sec:the-greedy-policy}) we introduce
+the adaptive greedy policy, as well as an accelerated variant.
+In~\secref{sec:greedy} (page~\pageref{sec:greedy}) we discuss the theoretical guarantees
+that the adaptive greedy policy enjoys when applied to 
+problems with \term submodular objectives.
+Sections~\ref{sec:stochastic-maximization} through~\ref{sec:active-learning}
+provide examples on how to apply the \term submodular framework to
+various applications, namely Stochastic Submodular Maximization
+(\secref{sec:stochastic-maximization}, page~\pageref{sec:stochastic-maximization}), Stochastic Submodular Coverage
+(\secref{sec:stochastic-set-cover}, page~\pageref{sec:stochastic-set-cover}), 
+Adaptive Viral Marketing (\secref{sec:viral-marketing}, page~\pageref{sec:viral-marketing}), and 
+Active Learning (\secref{sec:active-learning}, page~\pageref{sec:active-learning}).
+In~\secref{sec:experiments} (page~\pageref{sec:experiments}) we report empirical results on two sensor
+selection problems.
+In~\secref{sec:adaptgap} (page~\pageref{sec:adaptgap}) we discuss the adaptivity gap of the problems we
+consider, and in~\secref{sec:hardness} (page~\pageref{sec:hardness}) we prove hardness results
+indicating that problems which are not \term submodular  can be extremely
+inapproximable under reasonable complexity assumptions.
+We review related work in~\secref{sec:related-work} (page~\pageref{sec:related-work}) and provide concluding remarks in
+\secref{sec:conclusions} (page~\pageref{sec:conclusions}).  \AppendixA (page~\pageref{sec:proofs}) gives details of how to incorporate item
+costs and includes all of the proofs omitted from the main text. 
+
+
+
+%
+%
+%
+%
+%

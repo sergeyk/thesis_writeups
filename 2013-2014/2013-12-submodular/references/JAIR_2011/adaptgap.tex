@@ -1,0 +1,77 @@
+\TechReportOnly{
+%
+\section{Adaptivity Gap}\label{sec:adaptgap}
+An important question in adaptive optimization is \emph{how much
+  better} adaptive policies can perform when compared to non-adaptive
+policies.  This is quantified by the \emph{adaptivity gap}, which is the
+worst-case ratio, over problem instances, of the performance of the optimal adaptive policy to the optimal non-adaptive solution.
+\citet{AsadpourNS08} show that in the Stochastic Submodular
+Maximization problem with independent failures (as considered in
+\secref{sec:stochastic-maximization}), the expected value of the
+optimal non-adaptive policy is at most a constant factor $1-1/e$ worse
+than the expected value of the optimal adaptive policy. 
+While we currently do not have lower bounds for the adaptivity gap of the
+general Adaptive Stochastic Maximization problem~\eqref{eq:stochmax},
+we can show that even in the case of \term submodular functions, the
+min-cost cover and min-sum cover versions 
+have large adaptivity gaps, and thus there
+is a large benefit of using adaptive algorithms.  
+In these cases, the adaptivity gap is defined as the worst-case ratio
+of the expected cost of the optimal non-adaptive policy divided by 
+the expected cost of the optimal adaptive policy.
+For the Adaptive Stochastic Minimum Cost Coverage problem~\eqref{eq:stochcover}, \citet{goemans06stochastic} show the special case
+of Stochastic Set Coverage without
+multiplicities has an adaptivity gap of $\Omega(|\groundset|)$.
+Below we exhibit an adaptive stochastic optimization instance with
+adaptivity gap of $\Omega(|\groundset|/\log|\groundset|)$ for the
+Adaptive Stochastic Min-Sum Cover problem~\eqref{eq:minsumcover}, which also happens to
+have the same adaptivity gap for
+Adaptive Stochastic Minimum Cost Coverage.
+
+\begin{theorem}
+Even for \term submodular functions, the adaptivity gap of
+Adaptive Stochastic Min-Sum Cover 
+is $\Omega(n/\log n)$, where $n=|\groundset|$. 
+\end{theorem}
+\begin{proof}
+Suppose $\groundset = \{1,\dots,n\}$. Consider the active learning
+problem where our hypotheses $h:\groundset\rightarrow\set{-1,1}$ are
+threshold functions, i.e., $h(\elem)=1$ if $\elem\geq \ell$ and
+$h(\elem)=-1$ if $\elem<\ell$ for some threshold $\ell$. There is a
+uniform distribution over thresholds $\ell\in\{1,\dots,n+1\}$. In
+order to identify the correct hypothesis with threshold $\ell$, our
+policy must observe at least one of  $\ell-1$ or $\ell$ (and both
+of them if $1<\ell\leq n$).  
+Let $\hat{\policy}$ be an optimal non-adaptive
+policy for this problem.
+Note that $\hat{\policy}$ can be represented as a permutation of
+$\groundset$, because
+observing an element multiple times can only increase the cost
+while providing no benefit over observing it once,
+and each element must eventually be selected to guarantee coverage. 
+For the min-sum cover objective, consider playing $\hat{\policy}$ for
+$n/4$ time steps. Then $\prob{\ell \text{ observed in } n/4 \text{
+    steps}} =n/4(n+1)$.  Likewise 
+$\prob{\ell-1 \text{ observed in } n/4 \text{
+    steps}} =n/4(n+1)$.
+Since at least one of these events must occur to identify the correct
+hypothesis, by a union bound 
+$$ \prob{\hat{\policy} \text{ identifies the correct hypothesis in } n/4 \text{
+    steps}} \quad  \le \quad \frac{n}{2(n+1)} \quad \le \quad  1/2.$$
+Thus a lower bound on the expected cost of $\hat{\policy}$ is $n/8$, since for $n/4$ time
+steps a cost of at least $1/2$ is incurred. Thus, for both the min-cost and min-sum cover objectives the cost of the optimal non-adaptive policy is $\Omega(n)$.
+
+As an example adaptive policy, we can implement a natural binary
+search strategy, which is guaranteed to identify the correct
+hypothesis after $O(\log n)$  steps, thus incurring cost $O(\log n)$, 
+proving an adaptivity gap of $\Omega(n/\log n)$.
+\end{proof}
+
+} %
+
+
+%
+%
+%
+%
+%
