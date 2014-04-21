@@ -1,0 +1,86 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{enumitem}
+\usepackage{algorithm2e}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage{tocloft}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{url}
+
+\usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
+
+\newcommand{\fix}{\marginpar{FIX}}
+\newcommand{\new}{\marginpar{NEW}}
+\newtheorem{mydef}{Definition}
+\newcommand\todo[1]{\textbf{todo}: \textcolor{red}{#1}}
+\newcommand{\pder}[2][]{\frac{\partial#1}{\partial#2}}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\Rho}{\mathrm{P}}
+\def\subsectionautorefname{Section}
+\def\algorithmautorefname{Algorithm}
+\newcommand{\twopartdef}[4]
+{
+    \left\{
+        \begin{array}{ll}
+            #1 & \mbox{if } #2 \
+            #3 & \mbox{if } #4
+        \end{array}
+    \right.
+}
+\newcommand\blfootnote[1]{%
+  \begingroup
+  \renewcommand\thefootnote{}\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \endgroup
+}
+
+% % Tighten spacing
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\textfraction}{0.1}
+\renewcommand{\floatpagefraction}{0.85}
+
+\cvprfinalcopy % *** Uncomment this line for the final submission
+\def\cvprPaperID{1058} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+
+% Pages are numbered in submission mode, and unnumbered in camera-ready
+\ifcvprfinal\pagestyle{empty}\fi
+\begin{document}
+
+% keywords:
+% computer vision, object recognition,
+
+\title{Anytime Recognition of Objects and Scenes}
+
+\author{
+Sergey Karayev\\
+UC Berkeley
+\and
+Mario Fritz\\
+Max Planck Institute for Informatics
+\and
+Trevor Darrell\\
+UC Berkeley
+}
+
+\maketitle
+\blfootnote{Code, data, and further results are available at\\\url{http://sergeykarayev.com/recognition-on-a-budget/}}
+
+
+% See the textwidth, for plotting purposes.
+% \the\textwidth
+
+\input{../contents}
+
+\end{document}
+

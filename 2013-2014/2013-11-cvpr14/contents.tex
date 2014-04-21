@@ -1,0 +1,19 @@
+% !TEX root = paper/paper.tex
+\vspace{-1em}
+\begin{abstract}
+Humans are capable of perceiving a scene at a glance, and obtain deeper understanding with additional time. Similarly, visual recognition deployments should be robust to varying computational budgets. Such situations require Anytime recognition ability, which is rarely considered in computer vision research. We present a method for learning dynamic policies to optimize Anytime performance in visual architectures. Our model sequentially orders feature computation and performs subsequent classification. Crucially, decisions are made at test time and depend on observed data and intermediate results. We show the applicability of this system to standard problems in scene and object recognition. On suitable datasets, we can incorporate a semantic back-off strategy that gives maximally specific predictions for a desired level of accuracy; this provides a new view on the time course of human visual perception.
+\end{abstract}
+
+\input{../intro}
+\input{../related}
+\input{../method_new}
+\input{../evaluation}
+\input{../conclusion}
+
+{\small
+\section*{Acknowledgements}
+This research was supported by the National Defense Science and Engineering Graduate Fellowship; DARPA Mind's Eye and MSEE programs; NSF awards IIS-0905647, IIS-1134072, and IIS-1212798; by Toyota; and by the Intel Visual Computing Institute.
+
+\bibliographystyle{ieee}
+\bibliography{../../sergeyk_library}
+}

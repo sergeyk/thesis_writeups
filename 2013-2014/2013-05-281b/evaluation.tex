@@ -1,0 +1,143 @@
+% !TEX root = paper/paper.tex
+\section{Evaluation}
+
+Feature selection had four experimental conditions.
+
+\begin{itemize}
+\item
+In \textbf{Random, Independent} selection, each feature was selected independently, and the total number of possible masks for a given budget was not bounded, such that each test instance could have a unique mask (if the number of test instances $N$ was less than the total number of possible feature subsets $2^F$.
+
+\item
+In \textbf{Random, Block-wise} selection, there was no bound on the number of possible masks for a given budget, but features were selected by blocks.
+
+\item
+In \textbf{Clustered, Independent} selection, each feature was selected independently, but there were at most $K$ possible masks for a given budget.
+
+\item
+In \textbf{Clustered, Block-wise} selection, there were at most $K$ possible masks for a budget, and features were selected by blocks.
+\end{itemize}
+
+The MCF method is only evaluated in the \textbf{Random, Independent} policy setting, most advantageous to its assumptions.
+
+All datasets were first standardized by subtracting the row mean and dividing by the row standard deviation.
+
+\subsection{Digits}
+The Digits dataset contains 8x8 grayscale images of hand-written digits 1-10.
+Each of the 10 classes has 200 samples, for a total of 2000 images and 64 features.
+
+The dataset was split 60-40 into training and testing sets.
+The number of clusters for clustered selection was 10.
+For block-wise feature selection, the number of blocks was set to 8.
+
+Figure~\ref{fig:digits} shows the results; here we summarize the conclusions:
+\begin{itemize}
+\item Mean imputation has highest reconstruction and classification error, aside from SVD, which was so bad that its curves were not plotted.
+\item Dot product-based kNN imputation performs worse than Gaussian imputation for both reconstruction and classification, and is slower.
+\item Euclidean distance-based kNN imputation performs best, but is slowest.
+\item Retraining classifier with mean imputation makes a big difference, while retraining classifier with Gaussian imputation does not make a difference at all.
+Presumably, Gaussian imputation maintains the feature statistics of the fully-observed classifier sufficiently well.
+\item Modifying the loss function with MCF results in worse performance than doing mean imputation and retraining (MCF evaluated only on the \textbf{Random, Independent} policy).
+\item Training additional classifiers for clusters of observed susbets does not make a difference to classification performance.
+\item These results hold for all policy experimental conditions.
+\end{itemize}
+
+\begin{figure}[ht!]
+    \centering    
+    \begin{subfigure}[b]{\textwidth}
+        \centering
+        \includegraphics[width=.9\textwidth]{../../../281b/digits/random_-1/subplots.png}
+        \caption{Random, independent feature selection.\vspace{.2cm}}
+    \end{subfigure}
+    \begin{subfigure}[b]{\textwidth}
+        \centering
+        \includegraphics[width=.9\textwidth]{../../../281b/digits/random_8/subplots.png}
+        \caption{Random, block-wise (8 blocks) feature selection.\vspace{.2cm}}
+    \end{subfigure}
+    \begin{subfigure}[b]{\textwidth}
+        \centering
+        \includegraphics[width=1\textwidth]{../../../281b/digits/clustered_-1/subplots.png}
+        \caption{Clustered (10 clusters), independent feature selection.\vspace{.2cm}}
+    \end{subfigure}
+    \begin{subfigure}[b]{\textwidth}
+        \centering
+        \includegraphics[width=1\textwidth]{../../../281b/digits/clustered_8/subplots.png}
+        \caption{Clustered (10 clusters), block-wise (8 blocks) feature selection.\vspace{.2cm}}
+    \end{subfigure}
+
+    \small{
+    \begin{subfigure}[b]{1\textwidth}
+        \centering
+        \input{../../../281b/digits/err_auc_table.tex}
+        \caption{Areas under the Classification Error vs. Budget curves. Lower is better.}
+    \end{subfigure}
+    \begin{subfigure}[b]{1\textwidth}
+        \centering
+        \input{../../../281b/digits/rmse_auc_table.tex}
+        \caption{Areas under the Reconstruction RMSE vs. Budget curves. Lower is better.}
+    \end{subfigure}
+    }
+
+    \caption{All results on the \textbf{Digits} dataset.}
+    \label{fig:digits}
+\end{figure}
+
+
+\subsection{Scenes-15}
+The Scene-15 dataset \cite{Lazebnik-CVPR-2006} contains 4485 images from 15 visual scene classes.
+The task is to identify classify images according to scene.
+
+Following \cite{Xiao-CVPR-2010}, we extracted 14 different visual features (GIST, HOG, TinyImages, LBP, SIFT, Line Histograms, Self-Similarity, Textons, Color Histograms, and variations).
+Separate multi-class linear SVMs were trained on each feature channel, using a random 100 positive example images per class for training.
+We used the liblinear implementation, and cross-validated the penalty parameter $C$.
+
+The trained SVMs were evaluated on the images not used for training, resulting in a dataset of 2238 vectors of 210 confidence values: 15 classes for each of the 14 feature channels.
+This dataset was split 60-40 into training and test sets for our experiments.
+The number of clusters for clustered selection was 10.
+For block-wise feature selection, the number of blocks was set to 5.
+
+Figure~\ref{fig:scenes} shows the results.
+The conclusions are much the same as for the \textbf{Digits} dataset, with the following additional observations:
+\begin{itemize}
+\item Gaussian imputation is more costly than kNN on this data; the feature dimensions is more than twice that of the Digits data.
+\item For block-wise feature selection, mean imputation with retraining is as good as any other approach, and of course by far the fastest.
+\end{itemize}
+
+\begin{figure}[ht!]
+    \centering
+    \begin{subfigure}[b]{\textwidth}
+        \centering
+        \includegraphics[width=.9\textwidth]{../../../281b/scenes/random_-1/subplots.png}
+        \caption{Random, independent feature selection.\vspace{.2cm}}
+    \end{subfigure}
+    \begin{subfigure}[b]{\textwidth}
+        \centering
+        \includegraphics[width=.9\textwidth]{../../../281b/scenes/random_5/subplots.png}
+        \caption{Random, block-wise (8 blocks) feature selection.\vspace{.2cm}}
+    \end{subfigure}
+    \begin{subfigure}[b]{\textwidth}
+        \centering
+        \includegraphics[width=1\textwidth]{../../../281b/scenes/clustered_-1/subplots.png}
+        \caption{Clustered (10 clusters), independent feature selection.\vspace{.2cm}}
+    \end{subfigure}
+    \begin{subfigure}[b]{\textwidth}
+        \centering
+        \includegraphics[width=1\textwidth]{../../../281b/scenes/clustered_5/subplots.png}
+        \caption{Clustered (10 clusters), block-wise (8 blocks) feature selection.\vspace{.2cm}}
+    \end{subfigure}
+
+    \small{
+    \begin{subfigure}[b]{1\textwidth}
+        \centering
+        \input{../../../281b/scenes/err_auc_table.tex}
+        \caption{Areas under the Classification Error vs. Budget curves. Lower is better.}
+    \end{subfigure}
+    \begin{subfigure}[b]{1\textwidth}
+        \centering
+        \input{../../../281b/scenes/rmse_auc_table.tex}
+        \caption{Areas under the Reconstruction RMSE vs. Budget curves. Lower is better.}
+    \end{subfigure}
+    }
+
+    \caption{All results on the \textbf{Scenes-15} dataset.}
+    \label{fig:scenes}
+\end{figure}

@@ -1,0 +1,20 @@
+\section{Appendix}
+
+\begin{table}[h]
+    \label{Summary of notation.}
+    \begin{tabular}{ll}
+    \hline
+    Symbol       & Meaning                                                     \\
+    \hline
+    $h_f$        & Feature function $\mathcal{X} \mapsto \mathbb{R}^{d_f}$ \\
+    $\mathbf{x}$ & Fully observed instance $[h_1(x), \dots, h_F(x)]$ \\
+    $\pi(x)$     & Policy function $\mathcal{X} \mapsto 2^F$ \\
+    $C_{\pi(x)}$ & Cost of the selected subset. \\
+    $\mathbf{x}_\pi$ & Partially observed instance: $\left[ x_i : \left\{ \begin{array}{rl}
+ h_i(x) &\mbox{ if $h_i \in \pi(x)$} \\
+ 0 &\mbox{ otherwise}
+       \end{array} \right. \right]$ \\
+    $g(\mathbf{x})$ & Prediction function $\mathbb{R}^D \mapsto \{1, \dots, K\}$. \\
+    \hline
+    \end{tabular}
+\end{table}

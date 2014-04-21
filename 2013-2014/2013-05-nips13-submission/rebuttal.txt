@@ -1,0 +1,33 @@
+1. Author rebuttal: Please respond to any concerns raised in the reviews. There are no constraints on how you want to argue your case, except for the fact that your text should be limited to a maximum of 6000 characters. Note however that reviewers and area chairs are very busy and may not read long vague rebuttals. It is in your own interest to be concise and to the point.
+
+We first address Reviewer 7's thoughtful review.
+First, we disagree that we miss references on either budgeted feature selection or feature selection with MDPs.
+The author suggests a third-deadline ICML 2013 paper by Xu et al. --- whose line of work we cite twice [20, 21].
+MDP feature selection techniques are cited in [1, 13, 14, 15], which we believe provide the most coverage of the topic.
+
+Out of these references, [15] is the closest, as the reviewer notes, but it considers a different problem and has --- for our ends --- an unworkable model.
+Their problem is defined by an object detection performance metric.
+Accordingly, (1) their 'features' are costly full object detectors, allowing them to use a costly non-linear inference model; (2) they do not combine computed 'features' for classification.
+In contrast, our goal is (1) linear methods for (2) classification.
+
+Regarding tuning parameters vs. constraining the budget, the difference is in training effort.
+If the budget is known, our method allows training a policy that is optimized for it, once; in a method with a tuned parameter, the parameter needs to be cross-validated to optimize for the known budget.
+
+Also, there is indeed a cost feature in the state feature vector, to allay the non-stationarity of the problem: line 241.
+
+We thank Reviewer 8 for suggesting some new related work that we had not come across in our extensive literature review.
+The work focuses on learning cost-sensitive decision trees, which along with [20] is a complement to our linear MDP-based approach.
+We believe that different approaches to the problem of test-time efficiency should be explored, in particular both decision trees and MDPs.
+
+We apologize if the plot figures are difficult to read; this can certainly be remedied.
+
+Reviewer 9 provides very helpful suggestions for further improving clarity of our method.
+In particular, perhaps a misunderstanding is to blame for the question of "what is the improvement over a simple model that selects features following a basic fixed strategy, e.g., from the less expensive to the most expensive (until there is a budget)."
+We evaluate this baseline in our experiments (Static, Greedy) and show that our method performs significantly better than it.
+
+We would like to draw attention to the results on the ImageNet dataset (Section 4.3), which open a promising avenue of algorithmic explanation of cost sensitivity of human vision.
+
+
+2. Review quality feedback (visible to Area Chairs and Program Chairs only). If you have any comments on the quality of the reviews please provide your feedback here. It's most effective if you keep your feedback factual.
+
+

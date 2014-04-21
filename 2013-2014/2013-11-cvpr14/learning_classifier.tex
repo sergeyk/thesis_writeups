@@ -1,0 +1,32 @@
+% !TEX root = paper/paper.tex
+\section{Learning the classifier}
+The feature combination function $\rho$ must combine different subsets of features, since the dynamic policy $\pi$ can select different subsets for different images at test time.
+% We evaluate different choices for learning such a function, with two design decisions: (a) what is the actual feature vector that is input to $\rho$; and (b) what is its classification algorithm?
+
+% \subsection{Features.}
+% We investigate several possibilities for the data that $\rho$ has access to.
+
+% \paragraph{Policy feature vector.}
+% Exactly the same features as defined in \autoref{sec:policy_features}: feature values are $0$ until computed.
+
+% \paragraph{What else?}
+
+\subsection{Learning Method.}
+\paragraph{Boosting.}
+Boosting is a popular method for feature combination.
+In experiments on object recognition datasets, Gehler \& Nowozin show that combining single-kernel SVM classifiers with LPBoost often performs better than actual Multiple Kernel Learning \cite{Gehler2009}.
+
+We use AdaBoost, which fits a sequence of decision stump weak learners by iteratively boosting the weights of misclassified examples \cite{Hastie2009}.
+The final prediction is combined through a weighted vote.
+We use an inherently multi-class variant of AdaBoost with exponential loss: SAMME \cite{Zhu2009}.
+The maximum number of weak learners is set through cross-validation on 3 folds.
+
+\paragraph{Logistic Regression.}
+We train logistic regression with an $L_2$ penalty on the weights, in a one-versus-all scheme.
+The regularization parameter is set through cross-validation.
+\todo{more?}
+
+\paragraph{Gaussian Naive Bayes.}
+\todo{Write this}
+
+% TODO: should also do novel two-stage method.

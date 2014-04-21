@@ -1,0 +1,258 @@
+% !TEX root = paper/paper.tex
+
+\begin{figure}[t]
+\includegraphics[width=1\linewidth]{../../figures/rewards.pdf}
+\caption{
+Definition of the reward function.
+To maximize the total area above the entropy vs. cost curve from $0$ to $\mathcal{B}$, we define the reward of an individual action as the area of the slice of the total area that it contributes.
+From state $s$, action $a = h_f$ leads to state $s'$ with cost $c_f$.
+The information gain is $I_{\mathcal{H}_s}(Y; h_f) = H(Y; \mathcal{H}_s) - H(Y; \mathcal{H}_s \cup {h_f})$.
+\label{fig:rewards}}
+\end{figure}
+
+\section{Anytime Classification by Cost-sensitive\\Dynamic Feature Selection}
+
+\begin{mydef} \label{def:problem}
+\textbf{The test-time efficient multi-class classification problem} consists of
+
+\begin{itemize}
+\addtolength{\itemsep}{-.55\baselineskip}
+\item
+$N$ instances labeled with one of $K$ labels: ${\mathcal{D} = \{x_n \in \mathcal{X}, y_n \in \mathcal{Y} = \{1, \dots, K\}\}_{n=1}^N}$.
+
+\item
+$F$ features $\mathcal{H} = \{h_f : \mathcal{X} \mapsto \mathbb{R}^{d_f} \}_{f=1}^F$, with associated costs $c_f$.
+
+\item Budget-sensitive loss $\mathcal{L}_\mathcal{B}$, composed of cost budget $\mathcal{B}$ and loss function ${\ell(\hat{y}, y) \mapsto \mathbb{R}}$.
+\end{itemize}
+
+The goal is to find a \textbf{feature selection} policy $\pi(x): \mathcal{X} \mapsto 2^\mathcal{H}$ and a \textbf{feature combination} classifier $g(\mathcal{H}_\pi) : 2^\mathcal{H} \mapsto \mathcal{Y}$ such that such that the total budget-sensitive loss $\sum \mathcal{L}_\mathcal{B}(g(\pi(x_n)), y_n)$ is minimized.
+\end{mydef}
+
+%The features $h_f$ can be classifier outputs, possibly multi-class; following convention, we refer to such features as \emph{weak learners}.
+
+The cost of a selected feature subset $\mathcal{H}_{\pi(x)}$ is $C_{\mathcal{H}_\pi(x)}$.
+The budget-sensitive loss $\mathcal{L}_\mathcal{B}$ presents a \textbf{hard budget constraint} by only accepting answers with $C_{\mathcal{H}} \leq \mathcal{B}$.
+Additionally, $\mathcal{L}_\mathcal{B}$ can be \textbf{cost-sensitive}: answers given with less cost are more valuable than costlier answers.
+The motivation for the latter property is \emph{Anytime} performance; we should be able to stop our algorithm's execution at any time and have the best possible answer.
+
+Feature costs $c_f$ can be specified flexibly, with options including theoretical analysis, number of flops, wall clock runtime, total CPU time, or exact power expenditure.
+We believe that a deployment in a modern datacenter is most likely to optimize for power expenditure.
+In the absence of reliable ways to measure power, we use total CPU time to define the cost: if an operation is performed in parallel on multiple cores, its cost is considered to be the total cpu time on all cores.
+
+% For a weak learner $h_f$, the cost $c_f$ is composed of the cost of an underlying feature extraction $\phi_{h_f}(x)$ and the cost of subsequent classification.
+% Once $h_f$ is computed, its underlying feature $\phi$ is considered to be free for all other features $h_f'$ that share it, if any, such that $c_f' < c_f$.
+% Note that in state-of-the-art object recognition systems, complex features and feature encodings are often followed by linear classifiers, and feature extraction cost dominates the total cost.
+
+% \todo{REDO this:}
+% A quick preview of an instance of the defined problem is in order.
+% On the ImageNet dataset, we could define $h_f$ as intersections of feature channels and class subsets:\\
+% {\footnotesize\texttt{
+% GIST.Animal, SIFT-BOW.Animal, LLC-SIFT.Animal,\\
+% GIST.Vehicle, SIFT-BOW.Vehicle, LLC-SIFT.Vehicle.}}\\
+% $\mathcal{G}$ could be defined by a hierarchical loss (accuracy at the leaf nodes counts more than accuracy at inner nodes), and $\mathcal{B}$ could only admit answers that take less than 5 seconds.
+
+At training time, our computation is unbudgeted, and we can compute all features to have \emph{fully-observed} training instances.
+At test time, there is a budget and so the instances we classify will only be \emph{partially-observed}, as determined by the feature selection policy.
+
+We defer discussion of learning the \textbf{feature combination} classifier $g(\mathcal{H}_\pi) : 2^\mathcal{H} \mapsto \mathcal{Y}$ to~\autoref{sec:classifier}.
+For now, we assume that $g$ can combine an arbitrary subset of features and provide a distribution $P(Y = y)$.
+For example, $g$ could be a Naive Bayes (NB) model trained on the fully-observed data.
+
+% \subsection{Static greedy selection.}
+% Our initial goal is select a feature subset $\pi(x)$ such that $C_{\pi(x)} \leq \mathcal{B}$ and $\sum \ell(g(\pi(x_n)), y_n)$ is minimized.
+% We assume that given a feature subset $\pi(x)$, we are able to find a classifier function $g$ such that the loss is minimized.
+
+% If the classifier $g$ can give a full distribution $P(Y = y)$ and not just a prediction $y \in \{1, \dots, K\}$, we can maximize information gain of the selected subset, instead of directly minimizing the loss of $g(\pi(x))$:\[
+% I(Y; \pi(x)) = H(Y) - H(Y | \pi(x)) = \sum_{y \in Y} P(y) \log P(y) -  \sum_{\substack{y \in Y,\\z \in Z}} P(y, z) \log P(y \mid z)
+% \]
+% To the extent that $g$ is unbiased, maximizing information gain corresponds to minimizing loss, and has the benefit of ensuring that we not only make the right classification decision but also become maximally certain.
+
+% Finding the optimal subset is NP-hard.
+% A common heuristic is simple greedy selection, which is known to be near-optimal for optimizing submodular set functions with unit-cost elements \cite{Nemhauser-1978}.
+% In case of non-uniform additive costs, it can be proven that when all features $h$ are independent given $Y$ (as in an NB classifier), building $\pi(x)$ by repeatedly selecting
+% \begin{align*}
+% h* = \argmax_{h \in \mathcal{H} \setminus \pi(x)} \frac{1}{c_f} \left[ H(h \mid \pi(x)) - H(h \mid Y) \right]
+% \end{align*}
+% while $C_{\pi(x)} \leq \mathcal{B}$ gives $I(Y; \pi(x)) \geq \frac{1}{2} (1 - 1/e) I_{\text{OPT}}$ with additional terms if the entropy calculation is not exact \cite{Krause-UAI-2005}\footnote{A tighter (by factor of 2) bound is possible with a $O(F^5)$ instead of this $O(F^2)$ algorithm \cite{Krause-note-2005}.}.
+
+% However, we may find the feature independence assumption too restrictive or may not be able to reliably compute entropy.
+% Additional difficulties come from introducing a setup cost or non-additive costs \todo{although we could resolve them.}
+% When we make the feature selection dynamic---guided by the feature values observed---we will face further challenges if the structure of the problem necessitates a non-myopic solution.
+% \todo{Need stronger explanation for why we are not proceeding with adaptive submodularity---or just not mention submodularity at all?}
+
+\subsection{Dynamic feature selection as a Markov-Decision-Process (MDP).}
+To model the \textbf{feature selection} policy $\pi(x): \mathcal{X} \mapsto 2^\mathcal{H}$, we introduce the Markov Decision Process (MDP), which defines a single \emph{episode} of selecting features for some instance $x$.
+
+\begin{mydef} \label{def:MDP}
+The \textbf{feature selection MDP} consists of the tuple $(\mathcal{S}, \mathcal{A}, T(\cdot), R(\cdot), \gamma)$:
+
+\begin{itemize}\addtolength{\itemsep}{-.55\baselineskip}
+\item \textbf{State} $s \in \mathcal{S}$ stores the selected feature subset $\mathcal{H}_{\pi(x)}$ and their values and total cost $C_{\mathcal{H}_{\pi(x)}}$.
+\item The set of \textbf{actions} $\mathcal{A}$ is exactly the set of features $\mathcal{H}$.
+\item The (stochastic) \textbf{state transition} distribution $T(s' \mid s, a)$ can depend on the instance $x$.
+\item The \textbf{reward} function $R(s, a, s') \mapsto \mathbb{R}$ is manually specified, and depends on the classifier $g$ and the instance $x$.
+\item The discount $\gamma$ determines amount of \textbf{lookahead} in selecting actions: if 0, actions are selected greedily based on their immediate reward; if 1, the reward accrued by subsequent actions is given just as much weight as the reward of the current action.
+\end{itemize}
+\end{mydef}
+
+Running the MDP on a given instance $x$ gives a trajectory $\xi = (s_0, a_0, s_1, r_1, \dots, a_{I-1}, s_I, r_I)$, where $I$ is the total number of actions taken (and therefore features selected), $s_0$ is the initial state, $a_i \sim \pi(a \mid s_i)$ is chosen by the \emph{policy} $\pi(a \mid s)$, and $s_{i+1} \sim T(s \mid s_i, a_i)$, which can depend on $x$.
+The total expected reward (value) of an MDP episode is written as
+\begin{equation} \label{eq:expected_reward}
+V_\pi(s_0) =
+\mathbb{E}_{\xi \sim \left\{ \pi, x \right\}} r(\xi) =
+\mathbb{E}_{\xi \sim \left\{ \pi, x \right\}} \left[ \sum_{i=0}^I \gamma^i \, r_i \right]
+\end{equation}
+Gathering such trajectories forms the basis of our policy learning method.
+
+\subsection{Defining the reward.}
+The budget-sensitive loss $\mathcal{L}_\mathcal{B}$ enforces \emph{Anytime} performance by valuing early gains more than later gains.
+To formalize this, consider \hyperref[fig:rewards]{Figure~\ref*{fig:rewards}}, which shows the entropy and the 0-1 loss of $g$ at every point in a sequential feature selection episode for some instance $x$.
+For the best \emph{Anytime} performance, we want to capture the most area above the loss vs. cost curve, up to max budget $\mathcal{B}$ \cite{Karayev-NIPS-2012}.
+
+Recall from \eqref{eq:expected_reward} that the value of an episode $\xi$ is defined as the sum of obtained rewards.
+If the reward of a single action is defined as the area above the curve that is captured as a direct result, then the value of the whole episode exactly corresponds to $\mathcal{L}_\mathcal{B}$.
+
+However, there is a problem with using loss directly: only the first action to ``tip the scale'' toward the correct prediction gets a direct reward (in the figure, it is the first action).  A smoother reward function is desirable:
+if the classifier $g$ can give a full distribution $P(Y = y \mid \mathcal{H}_{\pi(x)})$ and not just a prediction $\hat{y} \in \mathcal{Y}$, we can maximize the \emph{information gain} of the selected subset instead of directly minimizing the loss of $g(\pi(x))$:
+\begin{eqnarray}
+I(Y; \mathcal{H}_{\pi(x)}) &=& H(Y) - H(Y | \mathcal{H}_{\pi(x)}) = \\ \notag
+&=& \sum_{y \in Y} P(y) \log P(y) -  \\ \notag
+&&\sum_{y, \mathcal{H}_{\pi(x)}} P(y, \mathcal{H}_{\pi(x)}) \log P(y \mid \mathcal{H}_{\pi(x)})
+\end{eqnarray}
+To the extent that $g$ is unbiased, maximizing information gain corresponds to minimizing loss, and ensures that we not only make the right classification decision but also become maximally certain.
+Therefore, as graphically presented in \hyperref[fig:rewards]{Figure~\ref*{fig:rewards}}, we define the reward of selecting feature $h_s$ with cost $c_f$ with the set $\mathcal{H}_s$ computed to be $I_{\mathcal{H}_s}(Y; h_f) (\mathcal{B}_s - \frac{1}{2}c_f)$.
+
+Although we do not evaluate in this regime, note that this definition easily incorporates a \textbf{setup cost} in addition to \textbf{deadline cost} by only computing the area in between setup and deadline costs.
+
+\subsection{Parametrizing and learning the policy.}
+% From the trajectories we can compute the \emph{value function} for any state:
+% \begin{equation} \label{eq:value_function}
+% V_\pi(s) = \sum_{s'} T_\pi(s, s') \left[ R_\pi(s, s') + \gamma V_\pi(s') \right]
+% \end{equation}
+
+Space constraints prohibit a full exposition of reinforcement learning techniques; \cite{Sutton1998} provides a thorough review.
+In brief: we seek $\pi$ that maximizes the expected value of the MDP \eqref{eq:expected_reward}.
+Therefore, actions must be selected according to their expected \emph{value}:
+\begin{align*}
+\argmax_a \pi(a \mid s) = \argmax_a Q^*(s,a)
+\end{align*}
+where $Q^*(s,a)$ is the optimal \emph{action-value function}---the expected value of taking action $a$ in state $s$ and then acting optimally to the end of the episode.
+
+Because the state represents an exponential number of subsets and associated real values, we cannot represent $Q(s,a)$ exactly.
+Instead, we use feature approximation and write $Q(s,a) = \theta^T \phi(s, a)$,  where $\phi: \mathcal{S} \times \mathcal{A} \mapsto \mathbb{R}^{d_s}$ is the state featurization function, $d_s$ is the dimensionality of the state feature vector, and $\theta$ is a vector of weights that defines the policy.
+
+Specifically, the policy is defined as
+\begin{equation}
+\pi(a \mid s) = \frac{1}{Z} \exp\left(\frac{1}{\tau} \theta^T \phi(s, a)\right)
+\end{equation}
+where $Z$ is the appropriate normalization and $\tau$ is a temperature parameter that controls the level of exploration vs. exploitation in the policy.
+As $\tau \rightarrow 0$, ${\pi(a \mid s)}$ becomes highly peaked at $\argmax_a Q(s,a)$; it becomes uniform as $\tau \rightarrow \infty$.
+
+As commonly done, we learn the $\theta$ by \emph{policy iteration}.
+First, we gather $(s, a, r, s')$ samples by running episodes (to completion) with the current policy parameters $\theta_i$.
+From these samples, $\hat{Q}(s, a)$ values are computed, and $\theta_{i+1}$ are given by $L_2$-regularized least squares solution to $\hat{Q}(s, a) = \theta^T \phi(s, a)$, on all states that we have seen in training.
+
+During training, we gather samples starting from either a random feasible state, with probability $\epsilon$, or from the initial empty state otherwise.
+Both $\epsilon$ and $\tau$ parameters decay exponentially with the number of training iterations.
+Training is terminated if $\pi_{\theta_{i+1}}$ returns the exact same sequence of episodes $\xi$ on a validation set as $\pi_{\theta_{i}}$.
+
+\vspace{-1em}
+\paragraph{Static vs. Dynamic state-action feature vector.}\label{sec:policy_features}
+The featurization function $\phi(s)$ extracts the following features from the state:
+\begin{itemize}\addtolength{\itemsep}{-.5\baselineskip}
+\item Bit vector $\textbf{m}$ of length $F$: initially all bits are $1$ and are set to $0$ when the corresponding feature is computed.
+\item For each $h_f$, a vector of size $d_f$ representing the values; $0$ until observed.
+\item Cost feature $c \in [0, 1]$, for fraction of the budget spent.
+\item Bias feature $1$.
+\end{itemize}
+
+\begin{algorithm}[]
+\SetKwFunction{ComputeRewards}{ComputeRewards}
+\SetKwFunction{GatherSamples}{GatherSamples}
+\SetKwFunction{UpdatePolicy}{UpdatePolicy}
+\SetKwFunction{UpdateClassifier}{UpdateClassifier}
+
+\SetAlgoLined
+\KwIn{$\mathcal{D} = \{x_n, y_n\}_{n=1}^N$; $\mathcal{L}_\mathcal{B}$}
+\KwResult{Trained $\pi$, $g$}
+\BlankLine
+$\pi_0 \leftarrow$ random\;
+\For {$i \leftarrow 1$ \KwTo max\_iterations} {
+    States, Actions, Costs, Labels $\leftarrow$ \GatherSamples{$\mathcal{D}$, $\pi_{i-1}$}\;
+    $g_i \leftarrow$ \UpdateClassifier{States, Labels}\;
+    Rewards $\leftarrow$ \ComputeRewards{States, Costs, Labels, $g_i, \mathcal{L}_\mathcal{B}, \gamma$}\;
+    $\pi_i \leftarrow$ \UpdatePolicy{States, Actions, Rewards}\;
+}
+\caption{Because reward computation depends on the classifier, and the distribution of states depends on the policy, $g$ and $\pi$ are trained iteratively.\label{alg:learning}}
+\end{algorithm}
+
+These features define the \textbf{dynamic} state, presenting enough information to have a \emph{closed-loop} (dynamic) policy that may select different features for different test instances.
+The \textbf{static} state has all of the above features except for the observed feature values.
+This enables only an \emph{open-loop} (static) policy, which is exactly the same for all instances.
+Policy learned with the static state is used as a baseline in experiments.
+
+The state-action feature function $\phi(s, a)$ effectively block-codes these features: it is $0$ everywhere except the block corresponding to the action considered.
+In implementation, we train $F$ separate regressions with a tied regularization parameter, which is K-fold cross-validated.
+
+\paragraph{Effect of $\gamma$.}
+Note that solving the MDP with these features and with $\gamma=0$ finds a \textbf{Static, greedy} policy: the value of taking an action in a state is exactly the expected reward to be obtained.
+When $\gamma=1$, the value of taking an action is the entire area above the curve as defined in \autoref{fig:rewards}, and we learn the \textbf{Static, non-myopic} policy---another baseline.
+
+\subsection{Learning the classifier.}\label{sec:classifier}
+
+We have so far assumed that $g$ can combine an arbitrary subset of features and provide a distribution $P(Y = y)$---for example, a Gaussian Naive Bayes (NB) model trained on the fully-observed data.
+% However, a Naive Bayes classifier suffers from its restrictive independence assumptions.
+
+Since discriminative classifiers commonly provide better performance, we use a \textbf{logistic regression} classifier, which presents a new challenge:
+% bu have to account for missing data:
+at test time, some feature values are missing and need to be imputed.
+If the classifier is trained exclusively on fully-observed data, then the feature value statistics at test time will not match, resulting in poor performance.
+Therefore, we need to learn classifier weights on a distribution of data that exhibits the pattern of missing features induces by the policy $\pi$.
+At the same time, learning the policy depends on the classifier $g$, used in the computation of the rewards.
+For this reason, the policy and classifier need to be learned jointly: \autoref{alg:learning} gives the iterative procedure.
+
+\paragraph{Unobserved value imputation.}
+Unlike the Naive Bayes classifier, the logistic regression classifier is not able to use an arbitrary subset of features $\mathcal{H}_\pi$, but instead operates on feature vectors of a fixed size.
+To represent the feature vector of a fully observed instance, we write $\mathbf{x} = [h_1(x), \dots, h_f(x)]$.
+In case that $\mathcal{H}_\pi \subset \mathcal{H}$, we need to fill in unobserved feature values in the vector.
+
+A basic strategy is \textbf{mean imputation}: filling in with the mean value of the feature:
+\begin{align}
+\mathbf{x}_\pi = \left[ h_i(x) : \left\{ \begin{array}{rl}
+ h_i(x) &\mbox{ if $h_i \in \mathcal{H}_{\pi(x)}$} \\
+ \bar{\mathbf{h}}_i &\mbox{ otherwise}
+\end{array} \right. \right]
+\end{align}
+
+If we assume that $\mathbf{x}$ is distributed according to a multivariate Gaussian $\mathbf{x} \sim \mathcal{N}(\mathbf{0}, \Sigma)$, where $\Sigma$ is the sample covariance $X^T X$ and the data is standardized to have zero mean, then it is possible to do \textbf{Gaussian imputation}.
+Given a feature subset $\mathcal{H}_\pi$, we write:
+\begin{equation}
+\mathbf{x}_\pi = \begin{bmatrix} \mathbf{x}^\text{o}\\  \mathbf{x}^\text{u} \end{bmatrix} \sim \mathcal{N} \left( \mathbf{0}, \begin{bmatrix} \mathbf{A} & \mathbf{C}\\ \mathbf{C}^T & \mathbf{B} \end{bmatrix} \right)
+\end{equation}
+where $\mathbf{x}^\text{o}$ and $\mathbf{x}^\text{u}$ represent the respectively observed and unobserved parts of the full feature vector $\mathbf{x}$.
+%, $\mathbf{A}$ is the covariance matrix of $\mathbf{x}^\text{o}$, $\mathbf{B}$ is the covariance matrix of $\mathbf{x}^\text{u}$, and $C$ is the cross-variance matrix that has as many rows as the size of $\mathbf{x}^\text{o}$ and as many columns as the size of $\mathbf{x}^\text{u}$.
+%\cite{Roweis-gaussian-identities}.
+In this case, the distribution over unobserved variables conditioned on the observed variables is given as
+$\mathbf{x}^\text{u} \mid \mathbf{x}^\text{o} \sim \mathcal{N} \left( \mathbf{C}^T \mathbf{A}^{-1} \mathbf{x}^\text{o},\, \mathbf{B} - \mathbf{C}^T \mathbf{A}^{-1} \mathbf{C} \right)$.
+
+\paragraph{Learning more than one classifier.}
+As illustrated in \hyperref[fig:state_space]{Figure~\ref*{fig:state_space}}, the policy $\pi$ selects some feature subsets more frequently than others.
+Instead of learning only one classifier $g$ that must be robust to all observed feature subsets, we can learn several classifiers, one for each of the most frequent subsets.
+This is done by maintaining a distribution over encountered feature subsets during training.
+For each of the $K$ most frequent subsets, a separate classifier is trained, using data that is closest by Hamming distance on the selected-feature bit vector.
+
+Each classifier is trained with the \textsc{Liblinear} implementation of logistic regression, with $L_2$ regularization parameter K-fold cross-validated at each iteration.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=1\linewidth]{../../figures/mdp_masks.pdf}
+\caption{
+The action space $\mathcal{A}$ of the MDP is the the set of features $\mathcal{H}$, represented by the $\phi$ boxes.
+The primary discretization of the state space can be visualized by the possible feature subsets (larger boxes); selected features are colored in the diagram.
+The feature selection policy $\pi$ induces a distribution over feature subsets, for a dataset, which is represented by the shading of the larger boxes.
+Not all states are reachable for a given budget $\mathcal{B}$.
+In the figure, we show three ``budget cuts'' of the state space.
+\label{fig:state_space}
+}
+\end{figure}

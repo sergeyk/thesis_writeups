@@ -1,0 +1,79 @@
+% !TEX root = paper/paper.tex
+\section{Our method}
+Our approach to solving the \hyperref[def:problem]{defined problem} consists of (a) sequential selection of features and (b) combining different subsets of features.
+
+\subsection{Sequential selection of features.}
+Recall that the goal is to learn a classifier $g: \mathcal{X} \mapsto \{1,\dots,K\}$ such that $\mathcal{G}_\mathcal{B}(y, g(x))$ is maximized.
+We formulate the sequential feature selection in $g(x)$ as a Markov Decision Process (MDP).
+
+\begin{mydef} \label{def:MDP}
+The \textbf{feature selection MDP} consists of the tuple $(\mathcal{S}, \mathcal{A}, T(\cdot), R(\cdot), \gamma)$:
+
+\begin{itemize}
+\item State $s \in \mathcal{S}$ stores (a) which features $h \in H$ have been computed; (b) values of features that have been computed; (c) total cost of features computed.
+\item The set of actions $\mathcal{A}$ is exactly the set of features $\mathcal{H}$.
+\item The state transition distribution $T(s' \mid s, a)$ is unknown and depends on the instance $x$.
+\item The reward function $R(s, a, s') \mapsto \mathbb{R}$ is manually specified with knowledge of $\mathcal{G}_\mathcal{B}$.
+\item The discount $\gamma$ determines amount of ``lookahead'' in selecting actions: if 0, actions are selected greedily based on their immediate reward; if 1, the reward accrued by subsequent actions is given just as much weight as for the current action.
+\end{itemize}
+\end{mydef}
+
+Execution of the MDP in a given episode $g(x)$ gives a trajectory $\xi = (s_0, a_0, s_1, r_1, \dots, a_{I-1}, s_I, r_I)$, where $I$ is the total number of actions taken (and therefore features selected), $s_0$ is the initial state, $a_i \sim \pi(a \mid s_i)$ is chosen by the \emph{policy} $\pi(a \mid s)$, and $s_{i+1} \sim T(s \mid s_i, a_i)$, which depends on the instance $x$.
+
+Note that the trajectory is determined by the policy $\pi$ and the transition distribution $T$, which depends on $x$.
+The total expected reward of an MDP episode, also known as its \emph{value}, can therefore be written as
+\begin{equation} \label{eq:expected_reward}
+V_\pi(s_0) = 
+\mathbb{E}_{\xi \sim \left\{ \pi, x \right\}} r(\xi) =
+\mathbb{E}_{\xi \sim \left\{ \pi, x \right\}} \left[ \sum_{i=0}^I \gamma^i \, r_i \right]
+\end{equation}
+
+Our goal is to find a policy $\pi$ to maximize this quantity.
+Since the set of actions is defined as the set of available features, \textbf{$\pi$ is the feature selection function}.
+
+\subsection{Combining an arbitrary subset of features.} 
+The state $s$ stores all computed feature values, which must be combined to give the final answer of $g(x)$.
+We learn a \textbf{feature combination function $\rho$} $: \mathcal{S} \mapsto \{1, \dots, K\}$ to maximize $\mathcal{G}$ (independent of the cost budget $\mathcal{B}$).
+Additionally, we want $\rho$ to be able to give us the multi-class probability distribution $P(y = k \in \{1, \dots, K\} \mid s)$, which we refer to as $\Rho$.
+This is used for reward computation and in some evaluation scenarios.
+
+\subsection{Learning to both select and combine.}
+The feature combination function $\rho$ needs to be robust specifically to the feature subsets that are selected by $\pi$: there is no point in being able to combine subsets of features that never get selected due to the structure of the policy.
+In turn, $\pi$ is dependent on $\rho$: the reward computation depends on its output.
+Therefore, the two functions have to be trained jointly.
+
+Training is done in iterations: starting from random $\pi$ and $\rho$, we gather a batch of trajectories, which are used to update both $\rho$ and $\pi$.
+Then new trajectories are generated with the updated $\pi$, and rewards are computed using the updated $\rho$, and so on, in a variant of generalized policy iteration \cite{Sutton1998}.
+
+The overall training procedure is given in \hyperref[alg:learning]{Algorithm \ref*{alg:learning}}.
+
+\begin{algorithm}[h] \label{alg:learning}
+\SetKwFunction{ComputeRewards}{ComputeRewards}
+\SetKwFunction{Classify}{Classify}
+\SetKwFunction{LearnPolicy}{LearnPolicy}
+\SetKwFunction{LearnClassifier}{LearnClassifier}
+
+\SetAlgoLined
+\KwIn{$\mathcal{D} = \{x_i, y_i\}_{i=1}^N$; $\mathcal{G}_\mathcal{B}$}
+\KwResult{Trained $\pi$, $\rho$}
+\BlankLine
+$\pi_0, \rho_0 \leftarrow$ random\;
+%$\rho_0 \leftarrow$ \LearnClassifier{FullyObservedStates, Labels}\;
+States, Actions, Costs, Rewards, Labels $\leftarrow$ []\;
+\For {$i \leftarrow 1$ \KwTo max\_iterations} {
+    X, y $\leftarrow$ random subset of $\mathcal{D}$\;
+    S, A, C $\leftarrow$ \Classify{X, $\pi_{i-1}$}\;
+    R $\leftarrow$ \ComputeRewards{S, C, $\rho_{i-1}, y, \mathcal{G}_\mathcal{B}, \gamma$}\;
+    add R to Rewards, S to States, A to Actions, C to Costs, y to Labels\;
+    $\pi_i \leftarrow$ \LearnPolicy{States, Actions, Rewards}\;
+    $\rho_i \leftarrow$ \LearnClassifier{States, Labels}\;
+    % \If{$\pi_i$ and $\rho_i$ are not different from $\pi_{i-1}$ and $\rho_{i-1}$}{
+    %     break;
+    % }
+}
+\caption{The iterative learning procedure of $\pi$ and $\rho$.}
+\end{algorithm}
+
+\input{../learning_policy}
+
+\input{../learning_classifier}

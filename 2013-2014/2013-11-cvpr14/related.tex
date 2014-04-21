@@ -1,0 +1,40 @@
+% !TEX root = paper/paper.tex
+\section{Related Work}
+% \paragraph{Feature combination and selection.}
+% \emph{Boosting} is a method for combining weak learners into a more powerful classifier \cite{Hastie2009}.
+% A popular use of boosting is in introducing non-linearities by training depth-limited decision trees as weak learners---the boosting trick.
+% For SVM-based classifiers, \emph{Multiple Kernel Learning} (MKL) provides a way to train classifiers using an automatically weighted combination of kernels \cite{Lanckriet2004}.
+% It has been shown that MKL is outperformed by boosting single-kernel classifiers \cite{Gehler2009}.
+% Of course, if all classifiers are linear, then combining outputs of classifiers trained on different feature channel with another classifier is equivalent to training one classifier on all features at once.
+% \todo{What about learning a \emph{non-linear} second classifier on top of the weak learner scores---any papers?}
+
+% \todo{A couple of sentences on feature selection approaches, particularly using infogain as proxy for classification error.}
+
+\paragraph{Static selection}% test-time efficient feature selection.}
+% The simplest way to limit the number of features used at test time is to $L_1$-regularize.
+% This method does not explicitly consider feature cost, nor is it able to evaluate features one by one, or to give an answer before all features are computed.
+
+A well-known method to evaluate features sequentially is the cascaded boosted classifier of Viola \& Jones \cite{Viola2004} (updated by Bourdev \& Brandt \cite{Bourdev-CVPR-2005} with a soft threshold), which is able to quit evaluating an instance before all features are computed---but feature cost was not considered.
+The cost-sensitive cascade of Chen et al.\ \cite{Chen-AISTATS-2012} optimizes stage order and thresholds to jointly minimize classification error and feature computation cost.
+Xu et al.\ \cite{Xu-ICML-2012} and Grubb \& Bagnell \cite{Grubb-AISTATS-2012} separately develop a variant of gradient boosting for training cost-sensitive classifiers; the latter prove near-optimality of their greedy algorithm with submodularity results.
+Their methods are tightly coupled to the stage-wise regression algorithm.
+
+\vspace{-1em}
+\paragraph{Dynamic selection}% test-time efficient feature selection.}
+The above methods learn an efficient but \emph{fixed} order for evaluating features given a test instance.
+
+Gao \& Koller \cite{Gao-NIPS-2011} propose a method for \emph{active classification}: myopically selecting the next feature based on expected information gain given the values of the already selected features.
+The method is based on locally weighted regression, highly costly at test time.
+Ji \& Carin \cite{Ji-PR-2007} also formulate cost-sensitive feature selection generatively, as an HMM conditioned on actions, but select actions myopically, again at signficant test time cost.
+
+Karayev at al.\ \cite{Karayev-NIPS-2012} propose a reinforcement learning approach for selecting object detectors; they rely on expensive test-time inference in a graphical model to combine observations.
+Dulac-Arnold et al.\ \cite{Dulac-Arnold-ML-2012} present another MDP-based solution to ``datum-wise classification'', with an action space comprised of all features and labels, recently extended to region-based processing \cite{Dulac-Arnold-ICLR-2014}.
+He He et al.\ \cite{HeHe-ICMLW-2012} also formulate an MDP with features and a single classification step as actions, but solve it via imitation learning of a greedy policy.
+Benbouzid et al.\ \cite{Benbouzid-ICML-2012} formulate an MDP that simply extends the traditional sequential boosted classifier with an additional \emph{skip} action, significantly limiting the space of learnable policies (\cite{Trapeznikov} provides another variation on this problem).
+Although \cite{Karayev-NIPS-2012} targets \emph{Anytime} performance, their inference procedure is prohibitively expensive for test-time use in a general classification task.
+In contrast, our fast linear method allows direct specification of the Anytime cost budget.
+
+\emph{Label trees} also guide an instance through a tree of classifiers; their structure is determined by the confusion matrix or learned jointly with weights \cite{Deng-NIPS-2011}.
+Xu et al.\ \cite{Xu-ICML-2013} learn a cost-sensitive binary tree of weak learners using an approach similar to the cyclic optimization of \cite{Chen-AISTATS-2012}.
+Less directly related---but exciting for its novelty---is the work of \cite{weiss2013dynamic}, who apply simple introspection to structured models for a significant speedup of human pose estimation.
+Another exciting direction is theoretical analysis of near-optimal policies with humans in the loop \cite{chen14active}.
