@@ -1,0 +1,45 @@
+\section{Related Work}
+The literature on object detection is vast.
+Here we briefly summarize work relevant to our contribution.
+
+An early success in efficient object detection used simple Haar features to build up a \emph{cascade} of classifiers, which then considered image regions in a sliding window regime~\cite{Viola2001}.
+Plentiful later work improved the behavior of the cascade while maintaining the basic idea~\cite{Bourdev2005}.
+This detection method is fast, but the simple features and classifiers used have not led to the best performing detectors.
+
+The best performance has recently come from detectors that use gradient-based features to represent either local patches or object-sized windows.
+If local patches are used, it appears important to include additional feature channels such as shape and color.
+If object-sized windows are used, finer-scale ``parts'' in object representation boost performance significantly.
+
+The region proposal is usually done exhaustively over the image space, and doing so in an efficient order has not received much attention in the literature.
+Using ``jump windows'' (window hypotheses voted on by local features) as region proposals is one common idea~\cite{Chum2007b,Vijayanarasimhan2011}.
+For local features, a bounded search over the space of all possible windows works well (especially for single-object detection)~\cite{Lampert2008b}.
+The method requires derivation of bounds, which have not yet been developed for the best-performing HOG-based detectors \cite{Dalal2005, Felzenszwalb2010a}, limiting the method's usefulness in state-of-the-art systems.
+%Similar ideas have been formulated in a decision theoretic way~\cite{Sznitman2010}.
+
+One recent idea is to use a class-independent measure of ``objectness'' to reject much of the hypothesis space before running any class-specific detectors~\cite{Alexe2010,Endres2010}.
+However, these approaches have not been shown to be actually faster than exhaustive evaluation, due to an expensive proposal step~\cite{Endres2010}.
+
+Evaluation of regions involves feature computation, which is a time consuming step.
+Efficient feature computation for HOG-based detectors has been explored in~\cite{Dollar2010}.
+Another idea is coarse-to-fine model evaluation.
+A recent work applies coarse-to-fine evaluation and adds a feedback arrow from post-processing to proposals, obtaining an order of magnitude speedup in the deformable part models framework while losing some accuracy~\cite{Pedersoli2011}.
+
+Other systems that add feedback arrows to the conceptual diagram of Proposals -> Classifiers -> Post-processing are often inspired by biological vision and sequential decision process ideas~\cite{Butko2009,Vogel2008,Paletta2005}.
+These works are very close to our motivation.
+Another piece of motivation is Anytime performance, which is a largely unexplored idea for vision systems.
+A pioneering recent paper picks features with maximum value of information in a Hough-voting framework, and explicitly evaluates itself with regard to time \cite{Vijayanarasimhan2010}.
+
+Multi-class detection has its own line of work, focusing largely on detection time sublinear in the number of classes through sharing features~\cite{Torralba2007,Fan2005,Razavi2011}.
+An interesting reinforcement learning approach in a cascade framework is taken in~\cite{Isukapalli2006}.
+
+Context has a long history in vision.
+One source of context is the scene or non-detector cues; for the PASCAL VOC, these are quantitatively considered in~\cite{Divvala2009}.
+Another source is inter-object context, used for detection in a random field setting in~\cite{Torralba2004}.
+
+Attention modeling is a long-standing research problem in psychophysics, resulting in a few key concepts: saliency, bottom-up vs. top-down effects, and using saccades as a proxy~\cite{Itti2001a,Chikkerur2010,Judd2009}.
+The concept of saliency has been used for object classification, and has been explored to no great effect for detection~\cite{Kanan2010}.
+
+The two papers closest to our contribution are principled multi-class structured prediction~\cite{Desai2009} and the detection under bounded resources work~\cite{Vijayanarasimhan2010}.
+We build atop the first work, which assumes that all classes have been evaluated at all regions.
+We share the motivation of Anytime performance with the second work, but in a significantly more powerful detection regime.
+Although we rely on the commonly used deformable parts model detector, our method can use any feature extraction and classification method.

@@ -1,0 +1,11 @@
+\section{Future Work}
+\paragraph{Extra-detection actions}
+In our implementation of the system, we leave open the possibility of extra-detection actions---those actions that may modify the belief state but not generate any detections directly.
+In fact, we implemented one such action: a regression from the GIST \cite{Oliva2001a} feature of the image to object class presence.
+In our experiments, this action was always taken first in every policy evaluation; we did not observe an improvement over not using this special action, but leave the question open for further investigation.
+
+\paragraph{Policy Iteration}
+While our current implementation shows significant gains over baseline, the gap between our policies' performance and the oracle performance shows that there is yet room to improve.
+In particular, we are looking at using the general method of policy iteration to derive approximations of the value function that are able to capture not just greedy but expected rewards to the end of the episode.
+Solving POMDPs, of which our stated problem is an example, has not in general been robustly done for problems of this size \cite{Murphy2000,Ng2000}, but there are promising relaxes approaches \cite{Kwok2004}.
+

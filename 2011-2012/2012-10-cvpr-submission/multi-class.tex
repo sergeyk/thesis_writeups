@@ -1,0 +1,104 @@
+\section{Multi-class detection policy}
+We present a system that deploys multiple detectors to localize all object instances in the image.
+The detectors are considered black boxes to the system, but it can measure the statistics of their performance at training time.
+
+Our evaluation approach is explained in more details in Section \ref{sec:evaluation}; here we briefly summarize:
+\begin{itemize}
+\item The performance of the system is evaluated in the multi-class setting, meaning that detected boxes of a given class are matched to ground truth boxes of all classes, with the corresponding additional capacity for false positives.
+\item The underlying performance metric is Average Precision: the area under the Precision vs. Recall curve.
+\item Running a detector takes time and generates a list of detections, which are added to all current detections and thus generate a new AP point.
+\item The system receives a start time and deadline; we seek to maximize the area under the AP vs. Time curve between these times.
+\end{itemize}
+
+Because the system must deliver results on a time budget, the policy must dynamically decide which detector in its arsenal to deploy next.
+A symbolic explanation of the policy operation is shown in Figure \ref{fig:pomdp}.
+To leverage the signal present in inter-object context, the decision of which detector to run next should be based on the observed results of detector actions that have already been run.
+Of course, the observed results of detector actions do not give full confidence to the presence of a class in the image, necessitating an intermediate step from detection statistics to class presence in our system.
+
+First, we look at how to construct such a system with only one detector per class.
+We explain the general partially-observable decision process that we face and our choices for the different modular components of it.
+We evaluate different ways of obtaining probabilities of object presence, and of estimating the value of running actions.
+Next, we generalize the system to be able to handle multiple detector types per class, and show results on this task.
+
+\section{Policy with a single detector per class}
+The structure of the problem may be further defined as follows.
+There are $|A|$ actions $a_i$.
+Although we relax this later, at first we assume that each action consists in running a detector, and so generates a (possibly empty) list of detections when taken.
+The same action will always generate the same list of detections, so there is no reason to ever take the same action more than once.
+
+\begin{figure}[htb!]
+  \centering
+    \includegraphics[width=0.9\linewidth]{../figures/pomdp.pdf}
+  \caption{Summary of our approach to the problem. Our model consists of two modular parts: predicting the value of taking an action, and updating the latent belief representation having taken an action.}
+  \label{fig:pomdp}
+\end{figure}
+
+Furthermore, for now we assume that $|A|=K$, the number of target classes in the dataset, so that there is exactly one detector that we can run per class.
+The operation of the system, as shown in Figure~\ref{fig:pomdp}, consists in
+\begin{enumerate}
+\item Selecting which action to take, based on the current estimate of the image contents;
+\item Updating the estimate based on the observed detections upon taking the action.
+\end{enumerate}
+
+Additionally, after every detection-generating action, the performance of the system is re-evaluated by computing the multi-class Average Precision of the updated list of detections.
+This result is not observable by the policy.
+
+We first cover the second modular part of the system: updating the latent belief representation, having already taken an action and received a list of detections.
+
+\input{belief_state_update.tex}
+
+\input{value_function.tex}
+
+\section{Evaluation of the System} \label{sec:actual-evaluation}
+Our system treats the detector as a black box that takes an image and class and returns a list of detections for that class.
+In our implementation, we use the Cascaded Deformable Part Model detector, which is among both the fastest and most robust detectors currently available \cite{Felzenszwalb2010a}.
+The detectors take on average around one second to process a standard dataset image.
+
+We evaluate on the standard PASCAL VOC 2007 detection task dataset \cite{pascal-voc-2010}.
+We note that the dataset is not known for having high levels of signal in the inter-object and scene-object context \cite{Divvala2009}, so the parts of our model that seek to exploit inter-object context may be at a disadvantage.
+We follow the approach set forth in Section \ref{sec:evaluation}, but set the start time at $0$ and ignore the feature computation time.
+
+During training time, we learn the behavior of different detectors: the average time taken per image, and the average AP contribution on images that do and do not contain any objects of the desired class.
+For the latter statistic, we collect two variants.
+The ``naive'' AP contribution is the performance of the detector in the multi-class regime if its detections were added to an empty set of detections.
+That is, true detections cannot become false positives due to being overshadows by a more confident but wrong detection of a different class in this evaluation.
+
+The ``actual'' AP contribution is the real performance of the detector in the multi-class regime: its detections are added to an existing set of detections, unless it was the result of the first action to run.
+This case, although more realistic, is subject to signficant noise due to other detectors' performance that may obscure the evaluated detector's characteristics.
+
+In Figure \ref{fig:1det}, the ``Oracle'' curve is obtained by running detectors in the order of greatest ``naive'' AP contributions on each image.
+The performance is formidable, which suggests that the ``naive'' statistics is worth using in our policies.
+
+Due to the large disparity in performance between detectors for different classes, it is not surprising that the curve of the ``Oracle'' policy turns downward: after obtaining the initial true positives, the policy has no choice but start running worse-performing detectors which generate false positives, bringing the overall AP down.
+
+\begin{figure*}[htb]
+  \center{\includegraphics[width=\textwidth]
+      {figures/det1.pdf}}
+  \caption{\label{fig:1det} The random policy shows the typical path of an uninformed multi-class detector through the image, while the oracle policy shows the room to improve. Our policy results in performance between the two, showing clear improvement over the random baseline.}
+\end{figure*}
+
+\section{Policy with multiple detectors per class} \label{sec:multidetector}
+We now expand our model to deal with being able to run multiple detectors per class.
+We simulate a faster but less robust detector, as would be obtained by modifying the stride or classifier strength, by randomly taking half of the detections output by our base detector, described below in Section \ref{sec:actual-evaluation}.
+
+Simply adding such a detector to the existing system as described would lead to pathological performance.
+For example, let's assume that the image contains an object of class 'dog;' we run our most powerful detector for that class and thereafter update our belief state with the strong posterior of this class presence.
+Our value function estimates for running the other 'dog' detectors are now increased from before, despite the fact that actually running them is unlikely to produce any new true positives and will in fact probably hurt performance due to false positives.
+(Remember that in our evaluation, a ground truth object may only be matched to one detection proposal---all other detections matching that ground truth are considered false positives.)
+
+For this reason, we augment the value function with this consideration.
+The only change that needs to be made is to the expected score increase:
+\begin{equation}\label{eq:multiclass}
+\mathbb{E}[\Delta AP^i] = P(C)\Delta AP^i_{avg} - P(C)\sum_{j \neq i} \delta_j \Delta AP^j_{avg}
+\end{equation}
+where $\Delta AP^i$ is the score increase of the detector belonging to the action under consideration, the sum is over all other detector actions of the same class as $i$, and $\delta_j$ is an indicator function for whether action $j$ has been taken.
+
+\begin{figure*}[htb]
+   \center{\includegraphics[width=\linewidth]
+       {figures/det2.pdf}}
+  \caption{\label{fig:2det} When using multiple detectors per class, there is a clear benefit to using a policy that is sensitive to the finite amount of reward that can be obtained from a single class.}
+\end{figure*}
+
+Figure \ref{fig:2det} shows the performance comparison of the usual random, oracle, and the two evaluated policies.
+
+Although we do not evaluate this, our system allows for setting priority weights on different detector classes; this results in different policy behaviors.

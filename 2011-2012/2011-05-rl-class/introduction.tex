@@ -1,0 +1,19 @@
+\section{Introduction} \label{sec:introduction}
+The task of \emph{object detection} as most commonly formulated entails simultaneous recognition and localization of ``things'' in a static image of a natural scene.
+Each object is most commonly assumed to belong to one of a fixed set of classes; its localization is approximated by placing a bounding box around pixels belonging to it.
+Datasets of such annotations by humans are used for evaluation of detection algorithms~\cite{pascal-voc-2010}.
+
+Most object detection systems can be subdivided into three parts: a way to propose regions of the image, a way to evaluate a given region, and a way to post-process the results.
+For example, the deformable parts model of Felzenszwalb \emph{et al.} proposes image regions with an exhaustive sliding window, evaluates them with a window-sized gradient-based feature and a linear SVM (in addition, it fits parts to the model in a Latent-SVM formulation), and uses detection context to prune some detections in post-processing~\cite{Felzenszwalb2010a,Felzenszwalb2010b}.
+Another approach, Multiple Kernels of Vedaldi \emph{et al.}, proposes windows in a cascaded manner and evaluates them with bag-of-words non-linear SVM kernels \cite{Vedaldi2009}.
+Both systems have recently shown state-of-the-art performance on the most commonly used detection challenge dataset~\cite{pascal-voc-2010}, and have pointed the direction for much subsequent research.
+
+These approaches are quite slow.
+In the case of the deformable parts model, detection is on the order of a few seconds; recent work to speed it up with coarse-to-fine search and cascaded parts puts it on the order of a second, at slight hit to the accuracy \cite{Pedersoli2011,Felzenszwalb2010b}.
+Multiple Kernels consider increasingly fewer region proposals with increasingly more powerful SVMs; in the end, more than a minute is spent per image~\cite{Vijayanarasimhan2011}.
+At these rates, real-time detection is problematic.
+
+We argue that the solution to robust but fast object detectors in the notion of attention---meaning a sequential process of looking for something somewhere (as opposed to looking for everything everywhere).
+We suggest that to work on detection approaches scalable to many classes and to sequential frames of videos, the field needs to consider a new evaluation metric that encourages maximization of correct detections as early as possible in the detection process, given either a fixed or stochastic deadline.
+
+This paper reviews past work toward this goal and formulates a novel method for maximizing performance of a detector with regard to the new evaluation.

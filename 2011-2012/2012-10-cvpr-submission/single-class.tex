@@ -1,0 +1,19 @@
+\section{Optimizing the Single-class Detector}
+- generalized detector model: window proposal to classifier to postprocessing
+
+\subsection{Window Proposals}
+- to increase speed, need fewer proposals
+
+- stride, coverage of scales and aspect ratio parameters in a sliding window detector (or jumping window)
+
+- novelty: can sample windows according to data
+
+We experiment with the PASCAL VOC 2007 dataset.
+The training, validation, and testing sets respectively contain 2501, 2510, and 4952 images.
+We do not include objects marked as ``difficult'' in the ground truth annotations.
+
+
+\subsection{Classifier}
+- classifier power: linear vs. rbf
+
+- can do lots of plots: to show that can get same performance given less time than if we weren’t fitting our windows to the data (not sure if this is true)

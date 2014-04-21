@@ -1,0 +1,21 @@
+\section{Results}
+
+We want to show two things: 1) given the same amount of time as our baseline systems, we perform at least as well as them; 2) in the AP vs. time evaluation, we do better than all baselines.
+
+\begin{description}
+  \item[Cascaded DPM Baseline~\cite{Felzenszwalb2010b}] We should do as well as it does in the same time ($\approx$0.5 sec), and better than it for shorter times than that.
+  \item[Coarse-to-fine Baseline~\cite{Pedersoli2011}] Same thing.
+\end{description}
+
+We should think of ways to make the comparison fair.
+
+Should we run the multi-class NMS~\cite{Desai2009} over the detections of the baselines?
+Since our approach relies on it, it seems that we should; on the other hand, it's part of the special sauce of our approach.
+
+To make sliding window detectors run faster, we can modify the stride or scale quantization of their sliding window.
+So, if we want to output detections in 0.1 seconds, we can modify the Cascaded DPM code, for example, to cover the image in that long.
+
+\aside{
+We should also evaluate on some kind of video object detection, to showcase the attentional priors.
+Could be an easy CVPR'12 submission.
+}

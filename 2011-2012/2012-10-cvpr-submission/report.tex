@@ -1,0 +1,76 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% Include other packages here, before hyperref.
+\usepackage{url}
+\usepackage{subfig}
+\usepackage{color}
+
+% If you comment hyperref and then uncomment it, you should delete
+% egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
+% run, let it finish, and you should be clear).
+\usepackage[pagebackref=false,breaklinks=true,colorlinks,bookmarks=false]{hyperref}
+
+% Command definitions
+\def\subsectionautorefname{section}
+\newcommand{\note}[1]{\textcolor{red}{\textbf{#1}}}
+\definecolor{light-gray}{gray}{0.3}
+\newcommand{\aside}[1]{\textcolor{light-gray}{\emph{#1}}}
+\newcommand{\comment}[1]{}
+
+% \cvprfinalcopy % *** Uncomment this line for the final submission
+
+\def\cvprPaperID{2283} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+
+\ifcvprfinal\pagestyle{empty}\fi
+\begin{document}
+
+\title{Timely Object Detection}
+
+\author{First Author\\
+Institution1\\
+Institution1 address\\
+{\tt\small firstauthor@i1.org}
+% For a paper whose authors are all at the same institution,
+% omit the following lines up until the closing ``}''.
+% Additional authors and addresses can be added with ``\and'',
+% just like the second author.
+% To save space, use either the email address or home page, not both
+\and
+Second Author\\
+Institution2\\
+First line of institution2 address\\
+{\small\url{http://www.author.org/~second}}
+}
+
+\maketitle
+% \thispagestyle{empty}
+
+\begin{abstract}
+In a large, multi-class detection system, the problem of timeliness of results is crucial.
+We are motivated by situations where running all detectors would take an unacceptably long time, and the best answer must be given by some deadline.
+Our system for multi-class detection aims to give the best possible results at any single point after a start time; it is terminated at a deadline time.
+Toward this goal, we formulate a dynamic policy to decide which detector to deploy next.
+The policy is guided by an estimate of the contents of the image, and is sensitive to the time deadline and the ``value'' of different classes.
+We evaluate parametrizations of the policy with respect to performance in the novel AP vs. Time evaluation on the PASCAL VOC dataset.
+\end{abstract}
+
+\input{introduction.tex} % includes Evaluation section
+\input{related.tex}
+\input{multi-class.tex} % split into sections
+\input{future_work.tex}
+\input{table.tex}
+
+{\small
+\bibliographystyle{ieee}
+\bibliography{../sergeyk-bibtex}
+}
+
+\end{document}

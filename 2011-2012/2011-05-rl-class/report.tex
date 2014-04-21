@@ -1,0 +1,40 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\pagestyle{headings}
+\usepackage[top=1in, bottom=1in]{geometry}
+\usepackage{amsmath,amsfonts,amsthm,amssymb}
+\usepackage[pdftex]{graphicx}
+\usepackage{url}
+\usepackage{subfig}
+\usepackage{color}
+\usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false,citecolor=red,linkcolor=blue]{hyperref}
+
+%% Command definitions
+\def\subsectionautorefname{section}
+\newcommand{\note}[1]{\textcolor{red}{\textbf{#1}}}
+\definecolor{light-gray}{gray}{0.3}
+\newcommand{\aside}[1]{\textcolor{light-gray}{\emph{#1}}}
+\newcommand{\comment}[1]{}
+
+\title{Attentional Object Detection\\
+Report for CS 294-67 Sequential Decisions}
+\author{Sergey Karayev}
+\date{13 May 2011}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+  Multi-class object detection in cluttered natural scenes is a long-standing open problem in computer vision. Currently best-performing approaches are computationally expensive. We seek to ameliorate this through replacing exhaustive and unprioritized search with a sequential decision process.
+\end{abstract}
+
+\input{introduction.tex}
+\input{related_work.tex}
+\input{evaluation.tex}
+\input{our_approach.tex}
+\input{experiments.tex}
+
+\bibliographystyle{ieeetr}
+\small
+\bibliography{sergeyk-bibtex}
+\end{document}

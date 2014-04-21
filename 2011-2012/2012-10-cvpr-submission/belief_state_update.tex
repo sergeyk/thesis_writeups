@@ -1,0 +1,100 @@
+\subsection{Belief state model}
+In the terminology of partially observable decision processes, we call the part of our system that tracks progress the \emph{belief state}.
+The belief state maintains inferred probabilities of object presence in the image for all classes; record of the actions taken and the composite list of resulting detections; and the current time into the episode.
+
+In order to exploit the signal due to interobject context, we would like the object presence model to be able to model co-occurrences between object classes.
+That is, if through detecting for the class 'person' we become reasonably certain that there indeed is a person in the image, this should boost the expected value of detecting for classes that tend to co-occur with 'person' in the dataset, such as 'motorcycle' or 'horse.'
+
+The co-occurence relations between presences of all the object classes form a highly connected graph of binary random variables $C_i$, $1 \leq i \leq K$.
+$C_i = 1$ if there is at least one object of class $K_i$ in the image; otherwise it is $0$.
+To infer the value of each binary random variable, we use the list of detections output by a given detector.
+In this paper we implement a fast, two-stage approximation to inference in this model.
+
+We use the empirical counts of our training set to formulate initial priors of class presence, such that $P(C_i=1)$, which we write as just $P(C_i)$ for brevity, refers to the number of times class $K_i$ occurs in an image divided by the total number of images in the dataset, and $P(C_i, C_j)$ refers to the similarly normalized number of times classes $K_i$ and $K_j$ occur together in the same image.
+
+Let's say we have inferred values $c_J$ of random variables $C_J$ where $J$ is a set of class indices.
+\[
+%P(C_i|C_J=c_J)=\frac
+%{\sum_{c_K, K \backslash J} P(C_i, C_J=c_J | C_K=c_k)}
+%{\sum_{c_K, K \backslash J} P(C_J=c_J | C_K=c_k)}
+P(C_i|C_J=c_J)=\frac
+{P(C_i, C_J=c_J)}
+{P(C_J=c_J)}
+\]
+
+If during test time we observe a new setting of objects presences, as is likely to happen quite frequently, using empirical counts will report a probability of $0$.
+Accordingly, we need to incorporate some method of smoothing the distribution over all possible assignments.
+
+Our choice is to ``back off'' to a conditional with fewer assignments.
+The complete way to do this would be to incorporate all $2^{K-1}$ conditionals of $C_i$  given any subset of the $K-1$ observed variables.
+A faster approximation of the conditional is to write it out as follows:
+\begin{align*}
+P_{back}(C_1 | C_2\ldots C_k) = \frac{P(C_1 , C_2\ldots C_k) }{P(C_2\ldots C_k)} \\
++ \frac{\lambda_1}{K-1} \left(\sum_{i=2}^K P(C_1|C_i) \right) + \lambda_2 P(C_1)
+\end{align*}
+
+This model has three terms: the first does not assume any independeces, and relies fully on data; the second assumes the naive Bayes independence of $C_1$ and $C_i$ given any $C_j$, $i\neq j$; the third assumes that there are no dependencies between any $C_i$.
+We refer to this model as \textbf{backoff}.
+
+The model \textit{fixed policy} ignores any conditionals and just chooses the next action according to the priors of the single class:
+\begin{equation*}
+P_{fix}(P_1|P_2\ldots P_k) = P(C_1)
+\end{equation*}
+
+Both object class presence probability models are evaluated in Section \ref{sec:actual-evaluation}.
+
+With a set of actions $\mathcal{A}$, progress through the belief states works as follows, starting with belief state $\mathcal{B}_0 = \emptyset$:
+\begin{enumerate}
+ \item Choose an action $\alpha_i \in \mathcal{A}_i$ that maximizes the value function given $\mathcal{B}_0$.
+ \item Execute $\alpha_i$, receiving detections $\beta_i$. 
+ \item Update the current assignments to $C_i$ with the new detections $\beta_i$.
+ Update $\mathcal{B}_{i+1}$ with the new $C_i$ and the time spent on the action;
+ $\mathcal{A}_{i+1} = \mathcal{A}_i\backslash \alpha_i$
+ \item Repeat while $\mathcal{A}_{i+1}\neq \emptyset$ and there is time left.
+\end{enumerate}
+We now provide further explanation of step 3.
+
+\subsection{Inferring $C_i$ from detections}
+After executing an action, we get a set of detections: a list of bounding boxes and associated confidence scores for the given class.
+We want to infer the presence of at least one object of the class in the image.
+Instead of simply tresholding the scores of these detection, we extract a feature vector and classify it with an SVM.
+The feature vector consists of a histogram of the values of scores and the count of detections; the parameters of the histogram are selected through cross-validation.
+The featurization instead of thresholding helps in cases with no overwhelmingly confident detection, but a large number of detections nevertheless.
+
+Table~\ref{tab:scoreClassifier} shows the performance of our classifiers for the classes of the PASCAL VOC 2007 and the two detectors used in our multiple detector system explained in Section \ref{sec:multidetector}.
+We use the metric of accuracy: the number of correct decisions versus the total number of decisions.
+\textit{detector} shows the results of the histogrammed CSC-classifier and \textit{detector-fast} is CSC with parameters settings to speed it up to about half the time.
+
+\begin{table}
+  \begin{center}
+    \begin{tabular}{ c| c c c}
+      Class & Detector & Detector-fast\\
+      \hline
+      aeroplane & 0.7427 & 0.5669\\
+      bicycle &  0.8249 & 0.7342\\
+      bird & 0.5747 & 0.5565\\
+      boat &  0.6935 & 0.6565\\
+      bottle  & 0.7027 & 0.6276\\
+      bus &  0.5 & 0.7533\\
+      car &  0.8565 & 0.7448\\
+      cat & 0.6678 & 0.6213\\
+      chair  & 0.7029 & 0.5\\
+      cow &  0.7160 & 0.6928\\
+      diningtable  & 0.6639 & 0.6393\\
+      dog  & 0.5520 & 0.5281\\
+      horse  & 0.8492 & 0.7077\\
+      motorbike  & 0.7588 & 0.7117\\
+      person &  0.8063 & 0.7263\\
+      %\vdots&\vdots&\vdots&\vdots \\
+      pottedplant  & 0.6213 & 0.6115\\ 
+      sheep &  0.6978 & 0.6336\\ 
+      sofa &  0.6803 & 0.5901\\ 
+      train  &  0.8163 & 0.7149\\ 
+      tvmonitor & 0.7622 & 0.7066
+    \end{tabular}
+    \caption{Per-class accuracies of the object presence classifier. Input is a set of detections on an image, output by either the baseline or the \emph{fast} detector.}
+    \label{tab:scoreClassifier}
+  \end{center}
+\end{table}
+
+

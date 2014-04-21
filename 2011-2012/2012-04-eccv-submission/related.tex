@@ -1,0 +1,26 @@
+\section{Related Work}
+The literature on object detection is vast.
+Here we briefly summarize detection work that sufficiently contextualizes our contribution.
+
+An early success in efficient object detection used simple Haar features to build up a \emph{cascade} of classifiers, which then considered image regions in a sliding window regime~\cite{Viola2001}.
+Although the simple features and classifiers of this method have been surpassed by more complex detectors, the idea of cascading classifier evaluations is still often used.
+
+The best recent performance has come from detectors that use gradient-based features to represent objects as either a collection of local patches or as object-sized windows \cite{Dalal2005,Lowe2004}.
+Usually, SVM classifiers are used to learn separating hyperplanes in such feature spaces between objects of a given class and all other possible contents of an image window.
+
+Window proposal is often done exhaustively over the image space, in a ``sliding window'' fashion.
+Using ``jump windows'' (window hypotheses voted on by local features) as region proposals is another common idea~\cite{Chum2007b,Vedaldi2009,Vijayanarasimhan2011}.
+For local feature-based approaches, a bounded search over the space of all possible windows works reasonably well~\cite{Lampert2008b}---however, the method has not been able to obtain state-of-the-art performance.
+
+Although none of the best-performing systems treat window proposal and evaluation as a closed-loop system, with feedback from evaluation to proposal, some work has been done in the area, mostly inspired by ideas from biological vision and attention research~\cite{Butko2009,Vogel2008,Paletta2005}.
+
+Anytime performance in vision systems is a surprisingly little-explored idea.
+A pioneering recent paper picks features with maximum value of information in a Hough-voting framework, and explicitly evaluates performance vs. time \cite{Vijayanarasimhan2010}.
+
+Inherently multi-class detection has its own line of work, focusing largely on making detection time sublinear in the number of classes through sharing features~\cite{Torralba2007,Fan2005,Razavi2011}.
+A recent post-processing extension to detection systems uses structured prediction to incorporate multi-class context as a principled replacement for the common post-processing step of non-maximum suppression~\cite{Desai2009}.
+
+Context of course has a long history in vision.
+One source of context is the scene or non-detector cues; for the PASCAL VOC, these are quantitatively considered in~\cite{Divvala2009}.
+Another source is inter-object context, used for detection in a random field setting in~\cite{Torralba2004}.
+A critical summary of the main approaches to using context for object detection is given in \cite{Galleguillos2010}.

@@ -1,0 +1,20 @@
+\subsection{Fast multi-class approximation of the right class} \label{sec:multiclass_approx}
+If we consider a window and have $N$ detectors, how can we efficiently figure out which of the $N$ detectors have the greatest likelihood of giving a high score to this window?
+
+One idea is to use classifier dimensionality reduction.
+Let's assume we are using SVM classifiers and classifying vectors of the same dimension.
+Do we really need to run all of them in their full dimensions, to have a good guess as to which are going to score high?
+Could we not use dimensionality reduction on all the learned classifiers to come up with a very low-dimensional evaluation that would approximate the full-dimensional score?
+Then we could only run those classifiers that are past threshold on this low-dimensional approximation.
+
+Another idea is to forget about the specific classifier we are using and just try to partition the feature space into class clusters, roughly.
+We can use K-means, for example.
+The cluster(s) that a specific window then falls into determine the more complex classifiers that we will evaluate.
+
+\aside{
+A similar idea is explored in the paper \cite{Isukapalli2006}.
+They use boosting to train a cascade of classifiers to classify all object classes.
+Then they learn a policy to partition the output of the detectors into class-specific clusters.
+The policy is a decision tree.
+The leafs of the decision trees specify the expected class of that window, and they use that to run a class-specific classifier cascade.
+}

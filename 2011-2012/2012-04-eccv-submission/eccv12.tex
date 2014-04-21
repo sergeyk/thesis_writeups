@@ -1,0 +1,54 @@
+\documentclass[runningheads]{llncs}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb} % define this before the line numbering.
+\usepackage{ruler}
+\usepackage{color}
+\usepackage{subfig}
+\usepackage[width=122mm,left=12mm,paperwidth=146mm,height=193mm,top=12mm,paperheight=217mm]{geometry}
+\usepackage[pagebackref=true,breaklinks=true,colorlinks,bookmarks=false]{hyperref}
+\begin{document}
+% \renewcommand\thelinenumber{\color[rgb]{0.2,0.5,0.8}\normalfont\sffamily\scriptsize\arabic{linenumber}\color[rgb]{0,0,0}}
+% \renewcommand\makeLineNumber {\hss\thelinenumber\ \hspace{6mm} \rlap{\hskip\textwidth\ \hspace{6.5mm}\thelinenumber}}
+% \linenumbers
+\pagestyle{headings}
+
+% Definitions
+\newcommand{\argmax}{\operatornamewithlimits{argmax}}
+\def\subsectionautorefname{section}
+\definecolor{light-gray}{gray}{0.5}
+\newcommand{\aside}[1]{\textcolor{light-gray}{\emph{#1}}}
+\newcommand{\todo}[1]{\textcolor{red}{\emph{#1}}}
+\newcommand{\cut}[1]{\textcolor{light-gray}{#1}}
+\newcommand{\comment}[1]{}
+
+\mainmatter
+\def\ECCV12SubNumber{1617}  % Insert your submission number here
+
+\title{Timely Object Recognition}
+
+\titlerunning{ECCV-12 submission ID \ECCV12SubNumber}
+
+\authorrunning{ECCV-12 submission ID \ECCV12SubNumber}
+
+\author{Anonymous ECCV submission}
+\institute{Paper ID \ECCV12SubNumber}
+
+\maketitle
+
+\begin{abstract}
+In a large visual multi-class detection system, the problem of timeliness of results is crucial.
+We are motivated by situations where running all detectors would take an unacceptably long time, and that the best answer must be given by some deadline.
+Our system for multi-class detection aims to give the best possible results at any single point after a start time; it is terminated at a deadline time.
+Toward this goal, we formulate a dynamic policy, guided by inference of the contents of the image, to decide which detector to deploy next.
+We evaluate parametrizations of the policy with respect to performance in the novel AP vs. Time evaluation on the PASCAL VOC dataset.
+\end{abstract}
+
+\input{introduction.tex} % includes Evaluation section
+\input{technical.tex}
+\input{evaluation.tex}
+\input{related.tex}
+
+\bibliographystyle{splncs}
+\bibliography{sergeyk-bibtex,misc}
+
+\end{document}

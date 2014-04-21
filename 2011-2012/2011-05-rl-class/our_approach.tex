@@ -1,0 +1,21 @@
+\section{Problem Formulation}
+Our goal is to output the best detections at some deadline $F$, and to continue having the best detections at every time step after that.
+Specifically, we seek to maximize the average multi-class AP of a detector for all classes in all images of a test dataset.
+
+Given enough time, our program will look everywhere for everything, but given a short deadline, it should first look in the most promising places for the most likely objects.
+To take advantage of semantic and spatial context, where the program looks at time $t$ should depend on the results gathered by $t-1$.
+
+In each of the $I$ images we consider, we look for $K$ classes of objects, and have detectors $c_k$.
+
+We represent an image as a collection of overlapping windows at different scales: a multi-scale pyramid of $N$ locations $\l_i = (x,y,s)$.
+We assume that each location $\ell$ can be the center of at most one bounding box, containing an object belonging to one of $K$ classes.
+
+We can consider three variants of object detection as a sequential decision problem:
+\begin{enumerate}
+  \item Looking for everything at a location: Selecting a location $i$, and running a black box program $P$ there that evaluates all detectors as it sees fit.
+  \item Looking for something at a location: Selecting a location $i$ and a detector $c_k$. Picking the sequence of partial classifiers for $d$ is then a black box subproblem.
+\item Looking for partial evidence of something at a location: Selecting a location $i$ and a partial classifier $c_{kp}$.
+\end{enumerate}
+We will be working at the level of the second problem---we assume that we have $K$ powerful classifiers, and want to pick the shortest path through (location, class) pairs to all correct detections.
+
+\input{pomdp_approach.tex}

@@ -1,0 +1,46 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\pagestyle{headings}
+\usepackage[top=1in, bottom=1in]{geometry}
+\usepackage{amsmath,amsfonts,amsthm,amssymb}
+\usepackage[pdftex]{graphicx}
+\usepackage{url}
+\usepackage{subfig}
+\usepackage{color}
+\usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false,citecolor=red,linkcolor=blue]{hyperref}
+
+%% Command definitions
+\def\subsectionautorefname{section}
+\newcommand{\note}[1]{\textcolor{red}{\textbf{#1}}}
+\definecolor{light-gray}{gray}{0.3}
+\newcommand{\aside}[1]{\textcolor{light-gray}{\emph{#1}}}
+\newcommand{\comment}[1]{}
+
+\title{Attentional Object Detection: A Proposal}
+\author{Sergey Karayev}
+\date{updated: 22 April 2011}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This document tracks the development of ideas for efficient object detection using the idea of attention: a sequential process of looking for something somewhere.
+We follow the Deformable Part Model approach to object detection and extend it in several ways, mostly focusing on the role of context, toward the goal of Anytime detection performance.
+I expect a submission to NIPS'11 to be whittled down from the text and results here.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\input{introduction.tex}
+\input{related_work.tex}
+\input{evaluation.tex}
+\input{our_approach.tex}
+\input{discretization_and_featurization.tex}
+\input{ideas.tex}
+\input{results.tex}
+
+\bibliographystyle{ieeetr}
+\small
+\bibliography{sergeyk-bibtex}
+\end{document}

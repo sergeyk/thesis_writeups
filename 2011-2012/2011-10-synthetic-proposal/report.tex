@@ -1,0 +1,36 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\pagestyle{headings}
+\usepackage[top=1in, bottom=1in]{geometry}
+\usepackage{amsmath,amsfonts,amsthm,amssymb}
+\usepackage[pdftex]{graphicx}
+\usepackage{url}
+\usepackage{subfig}
+\usepackage{color}
+\usepackage{tabularx}
+\usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false,citecolor=red,linkcolor=blue]{hyperref}
+
+%% Command definitions
+\def\subsectionautorefname{section}
+\newcommand{\note}[1]{\textcolor{red}{\textbf{#1}}}
+\definecolor{light-gray}{gray}{0.3}
+\newcommand{\aside}[1]{\textcolor{light-gray}{\emph{#1}}}
+\newcommand{\comment}[1]{}
+
+\title{Object Detection on a Budget}
+\author{Sergey Karayev}
+\date{19 October 2011}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Notes on the POMDP-like approach to multi-class object detection that I am currently coding up.
+\end{abstract}
+
+\input{our_approach.tex}
+
+\bibliographystyle{ieeetr}
+\small
+\bibliography{sergeyk-bibtex}
+\end{document}

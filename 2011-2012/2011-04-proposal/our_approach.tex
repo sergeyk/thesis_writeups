@@ -1,0 +1,35 @@
+\section{Problem Formulation}
+Our goal is to output the best detections at some deadline $F$, and to continue having the best detections at every time step after that.
+Specifically, we seek to maximize the AP of a detector for all classes in all images of a test dataset.
+\note{but see todo note in~\autoref{sec:evaluation}.}
+
+In the limit of infinite time, our program will look everywhere for everything, but given a short deadline, it should first look in the most promising places for the most likely objects.
+To take advantage of semantic and spatial context, where it looks at time $t$ should depend on the results gathered by $t-1$.
+
+In each of the $I$ images we consider, we look for $K$ classes of objects, and have detectors $d_k$, with each one having some number $P_k$ of part fittings, cascade stages, or other partial classifiers $c_{kp}$.
+
+We represent an image as a collection of overlapping windows at different scales: a multi-scale pyramid of $N$ locations $\l_i = (x,y,s)$ (the discretization and feautirzation of the image pyramid is discussed in~\autoref{sec:discretization_and_featurization}).
+We assume that each location $\ell$ can be the center of at most one bounding box, containing an object belonging to one of $K$ classes.
+While this assumption may not hold in cases of occlusion, it does hold for the data we consider and at the levels of discretization we use. \note{is this true?}
+
+\aside{
+There are two ways we could think about our task.
+The first can be called ``assigning content to locations.''
+It fits the sliding-window paradigm.
+The second can be called ``assigning locations to content.''
+It is inspired by particle filtering and the like~\cite{Gualdi2010}.
+We'll mostly talk in the paradigm of the former, but these are two sides of the same coin.
+}
+
+We first describe a partially observable Markov decision process representing our problem.
+Although we do not commit to using the methodology of solving POMDPs, this section is important, as it describes the specific models we assume, which even a hard-coded solution will use.
+
+We can consider three variants of object detection as a sequential decision problem:
+\begin{enumerate}
+  \item Looking for everything at a location: Selecting a location $i$, and running a black box program $P$ there that evaluates all detectors as it sees fit.
+  \item Looking for something at a location: Selecting a location $i$ and a detector $d_k$. Picking the sequence of partial classifiers for $d$ is then a black box subproblem.
+\item Looking for partial evidence of something at a location: Selecting a location $i$ and a partial classifier $c_{kp}$.
+\end{enumerate}
+We will be working mostly at the level of the third problem in the following sections, although our initial implementations may start out at lower levels.
+
+\input{pomdp_approach.tex}

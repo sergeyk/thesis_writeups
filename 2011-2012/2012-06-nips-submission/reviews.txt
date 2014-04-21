@@ -1,0 +1,107 @@
+Reviewer 5
+---
+
+This paper considers a scenario where an object detection system needs to provide the best output it can within a given time budget. The paper uses a reinforcement learning formulation. 
+
+Positive: 
++ The paper considers a practical and refreshingly new view of object detection systems, also leading to a novel evaluation metric 
++ The paper opens up several interesting potential research questions 
++ Experimental results are convincing 
+
+Negative: 
+- The paper can have larger impact if the reinforcement learning formalism is made even more accessible for the vision community. 
+
+Quality: High 
+Clarity: Very good in general, can be improved for specific aspects 
+Originality: Seems to be very novel 
+Significance: Potentially high 
+
+Comments: 
+Authors talk about "values of the classes" on line 107. What do these correspond to in a real system? 
+
+On page 3, it is not clear yet why works using context are relevant to this paper. Perhaps a summary of the proposed approach, or examples of actions the systems can take would be useful. Even till the latter part of page 3, it is not clear what exactly is the desired output of the system (detections or classifications), what are example actions the system can take, etc. 
+
+Is ap^j missing from equation (2)? 
+
+Line 216-217 could use more explanation. 
+
+The use of an MRF to estimate the probabilities seems neat. 
+
+It would have been really interesting to see results of the proposed system on the SUN dataset. It has many more classes (107) making the proposed approach very relevant, and it doesn't suffer from the biases of the PASCAL dataset (which is predominantly people). 
+
+How long does it take to train the proposed system? 
+
+It is nice how a gist classifier can be incorporated in the proposed formulation seamlessly. Any form of context, or any classifiers conducting relevant tasks can be incorporated in the system. This is a significant strength. 
+
+It would be nice if the authors made it clear early on what an incomplete response consists of. Does it mean an approximate set of detection scores on the entire image? Or does it mean a subset of detector results? On reading the paper it is clear that it is the latter, but in the abstract, intro, etc. it is not clear along which dimension the output of the system is incomplete if stopped at any point in time. On the same note, can other forms of "incompleteness" be incorporated in this framework? 
+
+The following paper is related at a high-level. It also has the philosophy of "say what you can", but from the perspective of trying to be correct more often, even if the system can be less specific. 
+
+Hedging Your Bets: Optimizing Accuracy-Specificity Trade-offs in Large Scale Visual Recognition 
+Jia Deng, Jonathan Krause, Alex Berg, Li Fei-Fei 
+IEEE Conference on Computer Vision and Pattern Recognition(CVPR), 2012.
+
+Summary
+===
+The paper considers the task of multi-class detection in a time-constrained scenario. Authors propose a reinforcement learning formulation to train the system to provide the best results it can at any given time. This leads to a novel evaluation metric as well. The paper addresses a novel and practical view of the detection problem, and opens up several interesting future research questions. The formulation makes sense, and experimental results are convincing.
+
+Reviewer 6
+---
+
+Paper 413 considers the problem of timely multi-class object detection: 
+given an image, the goal is to provide the best possible detection performance at any point after a start time. 
+A new timeliness measure is introduced which is the area under the Average Precision vs Time curve. 
+To optimize this measure, a method based on reinforcement learning is proposed which 
+learns a dynamic policy to select the optimal sequence of actions (where an action can be a detector or a scene classifer). 
+On the positive side: 
++ The problem which is tackled in this paper -- timely object detection -- is original. 
++ Improvements are reported on a standard benchmark. 
+
+My main doubt about this paper concerns the definition of the reward in equation (2). 
+If we refer to Figure 3b, then the reward is the trapezoid which is *on the right* of the yellow line up to time Td. 
+This definition of the reward depends on Td while the goal is to have the best possible result at any point in time (independently of Td). 
+Also, this definition implicitly assumes that the AP vs Time curve is non-decreasing. Is this guaranteed? 
+I do not undertand why the authors did not rather consider the trapezoid which is *below* the yellow line down to AP=0. 
+This choice would circumvent the two problems mentioned above. 
+
+Additional comments: 
+- It is proposed to include in the feature phi(s,a) the 'entropies of all classes' (line 252). 
+I understand what would be the entropy of a set of classes: if we denote p_k = p(C_k|o) then this would be - \sum_k p_k log(p_k). 
+However, I do not understand how you compute *one entropy per class*. 
+Do you mean that for each class you compute -p_k log(p_k) - (1-p_k) log(1-p_k) ? 
+This should be clarified. 
+
+- It is stated line 292 that the action value function can 'learn correlations between presence if different classes'. 
+However, a linear function is learned (line 193.5) which only enables to learn a very weak correlation between the classes. 
+Given the small number of classes considered, have the authors considered products of class posteriors in their feature phi(s,a) 
+to learn stronger correlation relationships? 
+- It is stated that the GIST classification action 'brings another boost in performance' (line 370). 
+I find the term 'boost' grossly overstated given the very modest improvement it brings: +0.04 for (0.20), +0.01 for (0.10) and +0.02 for (5,15). 
+- I am very surprised to read that the GIST action takes as much as 0.3s per image. 
+Indeed, the GIST is a very simple feature which is (i) very cheap to compute and (ii) very cheap to classifiy given its low dimensionality. 
+Would the authors please elaborate on this aspect? What kind of implementation of the GIST did they use? 
+- Could the authors also provide more details about the cost of the part-model detector of [27], 
+especially with respect to the GIST classification action? 
+
+Typo: line 173.5 $a_i \in O$ -> $o_i \in O$. 
+
+Summary
+===
+Paper 413 tackles an original problem in the computer vision community: timely object detection. 
+However, I have some doubts about the technical correctness which I would like the authors to address in their rebuttal. 
+
+Reviewer 8
+---
+This paper deals with an interesting problem: how to get the best object detection results given a fixed amount of time. The paper proposes to use reinforcement learning to learn an action policy. At each step, the policy will decide which action (e.g. object detector) to apply. 
+
+The application of reinforcement learning in computer vision is definitely new, but the proposed technique is not very convincing. The paper only compared with some extremely simple baselines. The closed work to this paper is [18], at the very least, you should have compared with [18]. 
+
+The comparison in Table 1 is not fair to the baselines. For RL with MRF, you need to do a loopy belief propagation, but the baselines do not. So the time bounds for different methods in Table 1 are tricky. It is not entirely clear whether they are comparable. 
+
+The paper also shows some graphs in Fig 1 and Fig 2. But I could not see what information they provide. What exactly am I supposed to be looking at in the figures? 
+
+In summary, the paper attempts to address an interesting problem. But the proposed method and experimental results are not mature enough for a NIPS publication. 
+
+Summary
+===
+This paper deals with an interesting problem. But the proposed technique is not very sensible to me, and the experimental results are not convincing.

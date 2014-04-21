@@ -1,0 +1,35 @@
+All reviewers noted the significance of our "refreshingly new" view on performing and evaluating object detection, and recognized that we open interesting research avenues with convincing results.
+As Reviewer 6 writes, we introduce a new "timeliness" AP vs. Time measure of detection performance, and use a reinforcement learning approach to optimize it.
+
+The reviewer's main uncertainties about our method concern the reward function:
+1) that it assumes that the measure is non-decreasing;
+2) that it depends on a deadline time.
+
+The first concern is not valid, as the definition of the reward can absolutely handle decreasing AP vs. Time: it simply produces negative rewards, which pose no problem to our learning approach.
+
+Regarding the second concern, we note in the abstract that our goal is Anytime performance **between a start time and a deadline**.
+Figure 3b illustrates a situation in which the deadline plays an important role: the very last possible action is illustrated as a choice between a solid green line and a dashed red line.
+The green line is for an action that obtains a lower AP but finishes prior to deadline; the red line is for an action that obtains a higher AP but finishes after deadline.
+The system should be able to learn to take the "green" action; this is why our reward function depends on a deadline time.
+
+We do appreciate the reviewer's valuable and valid suggestion for a modification to the reward function, and we agree that it would be helpful to provide more exposition.
+
+Regarding the reviewer's additional comments:
+- Entropy: that is correct;
+- Class correlations: that is correct, which is why we use an MRF model for inference: it is able to learn additional correlations;
+- Actions: as we write, we report runtimes for a specific combination of software implementation and hardware; the details are not as important as the general approach used, as our learning is agnostic to the performances of the system components
+We use the original MATLAB implementation of GIST by Torralba, which takes about a quarter of the time of the cascaded DPM implementation by Felzenswalb.
+
+Reviewer 8 considers our approach to be interesting and new, but believes that the work of [18] is a close analog.
+We disagree; while [18] uses a similar evaluation, they formulate a very specific system for object classification using local features.
+In contrast, we develop a general framework for optimizing object detection, using different detectors and classifiers.
+The closest work to ours is [19], but it deals with classification and not detection, and does not learn non-greedy policies.
+
+In fact, the reviewer's questions regarding Figures 1 and 2 raise concerns about their fundamental understanding of our approach.
+Figure 1 shows the execution of our system over time, as different actions (classification and detection) are performed in sequence, results are obtained, and inference is performed in the MRF.
+Figure 2 shows the weights learned by greedy learning and reinforcement learning on the features that represent the state of the system; the differences are illustrative of the desired properties of the reinforecement learning approach.
+Regarding fairness, we note that we report multiple time bounds exactly for that reason.
+
+Reviewer 5 provides helpful suggestions that we appreciate and would love to further discuss in another venue due to space constraints of this rebuttal.
+A quick apology regarding ap^j: it is not in the equation, and so should be removed from the following definition of terms.
+We sincerely appreciate all the reviewers' effort in providing very helpful comments on our paper!

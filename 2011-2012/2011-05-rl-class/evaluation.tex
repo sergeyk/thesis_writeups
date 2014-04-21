@@ -1,0 +1,14 @@
+\section{Time-sensitive evaluation} \label{sec:evaluation}
+Average Precision (AP) has become a standard evaluation for detector performance on challenging datasets.
+AP is the area under the Precision vs. Recall curve, which is obtained by varying the threshold on the confidence of the detector.
+
+Just as we care about the performance of our system at different thresholds of detection, we should also care about performance as the system is given different amount of time to output detections.
+Accordingly, we plot the P-R \emph{surface} instead of the P-R curve, with time as one of the axes.
+The surface can be integrated along the Recall dimension to yield an AP vs. time curve.
+
+The goal of our scheme is to schedule computation optimally, so that the largest part of the detection performance is recovered early on.
+In the limit of infinite time, we still want optimal performance---the performance of our system should not degrade as it is given more time.
+Accordingly, our goal is \emph{Anytime} performance starting at some fixed deadline.
+
+As our task is fundamentally in \emph{multi-class} object detection, we rely on a slightly different evaluation than is commonly used: instead of pooling detections across images in the dataset but not classes, we pool detections across classes, but evaluate per-image (and report the average).
+This has been done before~\cite{Desai2009}.

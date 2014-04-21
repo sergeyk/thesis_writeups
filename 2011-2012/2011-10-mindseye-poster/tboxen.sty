@@ -1,0 +1,111 @@
+% T-Boxen Style
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{tboxen}
+          [2005/11/04 v0.1.0  Posterboxen with TikZ.]
+\typeout{|-->tboxen<--| Posterboxen with tikz.}
+
+% Add in required packages
+\RequirePackage{tikz}
+\RequirePackage{pgflibraryshapes}
+\RequirePackage{calc}
+\RequirePackage{graphics}
+\RequirePackage{palatino}
+
+% Define some colors
+\definecolor{PBmainbgcol}{rgb}{1,1,1} % Main box background color
+\definecolor{PBmainlinecol}{rgb}{0,0,0} % Main box outline color
+\definecolor{PBtitlebgcol}{rgb}{0.15,0.30,0.60} % Title box background color
+\definecolor{PBtitletextcol}{rgb}{1,1,1} % Title box text color
+\definecolor{PBtitlelinecol}{rgb}{0,0,0} % Title box outline color
+
+% set up the fonts
+\renewcommand{\tiny}{\fontsize{12}{14}\selectfont}
+\renewcommand{\scriptsize}{\fontsize{14.4}{18}\selectfont}
+\renewcommand{\footnotesize}{\fontsize{17.28}{22}\selectfont}
+\renewcommand{\small}{\fontsize{20.74}{25}\selectfont}
+\renewcommand{\normalsize}{\fontsize{24.88}{30}\selectfont}
+\renewcommand{\large}{\fontsize{29.86}{37}\selectfont}
+\renewcommand{\Large}{\fontsize{35.83}{45}\selectfont}
+\renewcommand{\LARGE}{\fontsize{43}{54}\selectfont}
+\renewcommand{\huge}{\fontsize{51.6}{64}\selectfont}
+\renewcommand{\Huge}{\fontsize{61.92}{77}\selectfont}
+\newcommand{\veryHuge}{\fontsize{74.3}{93}\selectfont}
+\newcommand{\VeryHuge}{\fontsize{89.16}{112}\selectfont}
+\newcommand{\VERYHuge}{\fontsize{107}{134}\selectfont}
+
+% No page numbering
+\pagestyle{empty}
+
+% user accesible lengths
+\newlength{\PBboxmargin}
+\newlength{\PBtitlemargin}
+\newlength{\PBtitleoffset}
+\newlength{\PBmainboxlinewidth}
+\newlength{\PBtitleboxlinewidth}
+\newlength{\PBtitlewidth}
+
+% set default values
+\setlength{\PBboxmargin}{1cm}  % margin of between box and internal minipage
+\setlength{\PBtitlemargin}{.5cm} % extra margin at top of main box if there's a title
+\setlength{\PBtitleoffset}{2cm} % offset from left of title text
+\setlength{\PBmainboxlinewidth}{4pt} % line width of mainbox box
+\setlength{\PBtitleboxlinewidth}{2pt} % line width of titlebox box
+
+% style for a main box
+\tikzstyle{tbox}=[
+  anchor=north west,
+  outer sep=0pt,
+  draw=PBmainlinecol,
+  fill=PBmainbgcol,
+  rounded corners=1cm,
+  line width=\PBmainboxlinewidth,
+  text justified,
+  outer sep=0cm,
+  inner sep=\PBboxmargin
+]
+
+% style for a title box
+\tikzstyle{tboxtitle}=[
+  anchor=south west,
+  draw=PBtitlelinecol,
+  fill=PBtitlebgcol,
+  inner xsep=.4cm,
+  inner ysep=.1cm,
+  outer sep=0cm,
+  rounded corners=.5cm,
+  line width=\PBtitleboxlinewidth
+]
+
+% get max title text height
+\newlength{\pb@titletextheight}
+\newlength{\pb@titletextwidth}
+\newlength{\pb@titletextdepth}
+\newcommand{\pb@sampletitletext}{\textit{\textsf{\Large TMgy}}}
+\settoheight{\pb@titletextheight}{\pb@sampletitletext}%
+\settodepth{\pb@titletextdepth}{\pb@sampletitletext}%
+%\settowidth{\pb@titletextwidth}{\pb@sampletitletext}
+  
+\newcommand{\pb@titletext}{}
+\newcommand{\addtitle}[2]{%
+  % set the title text
+  \renewcommand{\pb@titletext}{\textit{\textsf{\Large \color{PBtitletextcol} #2}}}
+  % Set the path and place the title
+  \path (#1.north west) ++(\PBtitleoffset,-.5cm) node [style=tboxtitle] {%
+    \rule[-\pb@titletextdepth-3pt]{0pt}{\pb@titletextheight+\pb@titletextdepth+8pt}%   
+    \pb@titletext %
+    \hspace*{8pt}%
+  };
+}
+\newcommand{\addcenteredtitle}[2]{%
+  % set the title text
+  \renewcommand{\pb@titletext}{\textit{\textsf{\Large \color{PBtitletextcol} #2}}}
+  % Set the path and place the title
+  \path (#1.north) ++(0cm,-.5cm) node [style=tboxtitle,anchor=south] {%
+    \rule[-\pb@titletextdepth-3pt]{0pt}{\pb@titletextheight+\pb@titletextdepth+8pt}%
+    \hspace*{8pt}%
+    \pb@titletext %
+    \hspace*{8pt}%
+  };
+}
+
