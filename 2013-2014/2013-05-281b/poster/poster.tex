@@ -62,29 +62,29 @@
 % These usually stay the same for tboxen
 \setlength{\headheight}{0 cm}
 \setlength{\headsep}{0 cm}
-\setlength{\topmargin}{-2 cm} 
+\setlength{\topmargin}{-2 cm}
 \setlength{\oddsidemargin}{-1in}
 
 % From tboxen:
 % this is often necessary for pdf and dvips to work
-\ifx\pdfoutput\undefined 
+\ifx\pdfoutput\undefined
 % for dvi
 \special{papersize=\arabic{width}cm,\arabic{height}cm}
-\else 
+\else
 % for pdf
-\pdfpagewidth=\paperwidth 
-\pdfpageheight=\paperheight 
-\fi 
+\pdfpagewidth=\paperwidth
+\pdfpageheight=\paperheight
+\fi
 
 % ==============================================================================
 % POSTER STARTS HERE
 \begin{document}
 \begin{center}
-  
+
   % ==============================================================================
   % Main body
   \begin{tikzpicture}
-    
+
     % This defines your background box - entries are pretty self explanatory.
     % The colors ``topcolor'' and ``bottomcolor'' are defined above.
     \shade[top color = topcolor,
@@ -92,7 +92,7 @@
       rounded corners = 1cm, % The larger this is, the rounder your corners
       line width = 2mm, % The width of your border lines
       draw]
-    (0,0) rectangle +(\textwidth-2cm,\textheight-1cm); 
+    (0,0) rectangle +(\textwidth-2cm,\textheight-1cm);
     % This last line above just sets up the bounding box for the whole poster.  You don't want to change it.
 
     % ==============================================================================
@@ -141,7 +141,7 @@
 
       \end{center}
     };
-    
+
 %%% FIRST COLUMN
 
     %%% ABSTRACT
@@ -156,7 +156,7 @@
     \vspace{.5cm}
     \textbf{\textsc{Approach}}
     \begin{itemize}
-    \item 
+    \item
     We compare several ways of completing missing variables:
       \begin{itemize}
       \item \textbf{mean} imputation; \textbf{SVD} imputation; conditioning a \textbf{joint Gaussian}; and averaging \textbf{k-Nearest Neighbors}.
@@ -177,7 +177,7 @@
     \item \textbf{Scenes}: features are SVM outputs from different kernels.
     \end{itemize}
     }; \addcenteredtitle{abstract}{Abstract}
-    
+
 
     %%% PROBLEM FORMULATION
     \path (abstract.south west) ++(0cm,-2cm) node(formulation) [style=tbox,text width=30cm] {
@@ -270,7 +270,7 @@ In case of partially observed features, we can write
 where $C$ is the cross-variance matrix that has as many rows as the size of $\mathbf{x}^\text{o}$ and as many columns as the size of $\mathbf{x}^\text{u}$.
 
 \vspace{.5cm}
-The distribution over unobserved variables conditioned on the observed variables is simply 
+The distribution over unobserved variables conditioned on the observed variables is simply
 \begin{equation}
 \mathbf{x}^\text{u} \mid \mathbf{x}^\text{o} \sim \mathcal{N} \left( \mathbf{C}^T \mathbf{A}^{-1} \mathbf{x}^\text{o},\, \mathbf{B} - \mathbf{C}^T \mathbf{A}^{-1} \mathbf{C} \right)
 \end{equation}
@@ -314,7 +314,7 @@ For example, for blankout noise and logistic loss, we can derive the surrogate l
 \end{equation}
 
     }; \addcenteredtitle{classifier}{Classifier}
-    
+
     %% RESULTS
     \path (classifier.south west) ++(0cm,-2cm) node(results1) [style=tbox,text width=30cm] {
 
@@ -329,12 +329,12 @@ For example, for blankout noise and logistic loss, we can derive the surrogate l
 \end{center}
 
 \begin{itemize}
-\item The MCF loss classifier is outperformed by all approaches, including simple mean imputation with retraining. 
+\item The MCF loss classifier is outperformed by all approaches, including simple mean imputation with retraining.
 \item Retraining the classifier with synthetically imputed data improves performance, but much more dramatically for simple approaches than for already well-performing imputations.
 \item The most expensive method---$k$-NN---performs the best.
 \end{itemize}
     }; \addcenteredtitle{results1}{Evaluation}
-    
+
 \end{tikzpicture}
 \end{center}
 \end{document}
