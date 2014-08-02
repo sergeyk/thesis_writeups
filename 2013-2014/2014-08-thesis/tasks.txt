@@ -2,5 +2,6 @@ Draft
 -----
 (in order)
 x get in all content from cvpr14 paper into a chapter, make sure everything compiles
-- get in all content from nips12 paper into a chapter, make sure everything compiles
+x get in all content from nips12 paper into a chapter, make sure everything compiles
+- get in all content from 281b report into own chapter, make sure everything compiles
 - merge nips12 and cvpr14 intros and related works into own chapter
