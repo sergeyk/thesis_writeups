@@ -1,10 +1,8 @@
 \documentclass[landscape]{article}
-
 \usepackage{tboxen}
 \usepackage{url}
 \usepackage{amsmath}
 \usepackage{amssymb}
-\usepackage{epsfig}
 \usepackage[tight]{subfigure}
 \usepackage{color}
 \usepackage{type1cm}
@@ -126,7 +124,7 @@
         % Three parboxes allow for images on both sides of the title
         % box with the title text in the middle.
         \parbox{10cm} {
-          \includegraphics[height=6cm]{../../figures/berkeley_seal.pdf}
+          \includegraphics[height=6cm]{../../figures/logos/berkeley_seal.pdf}
         }
         \parbox{\arabic{title-box-width}cm} {
           \centering
@@ -136,7 +134,7 @@
         }
         \parbox{10cm} {
           \hfill
-          \includegraphics[height=6cm]{../../figures/ICSI_bw.pdf}
+          \includegraphics[height=6cm]{../../figures/logos/ICSI_bw.pdf}
         }
 
       \end{center}
@@ -319,12 +317,12 @@ For example, for blankout noise and logistic loss, we can derive the surrogate l
     \path (classifier.south west) ++(0cm,-2cm) node(results1) [style=tbox,text width=30cm] {
 
 \begin{center}
-  \includegraphics[width=1\textwidth]{../digits_subplots.png}
+  \includegraphics[width=1\textwidth]{../../figures/281b/digits_subplots.png}
   Random policy on the \textbf{Digits} dataset: $10$ classes with $200$ samples per class, feature dimension $64$ (pixels).
 \end{center}
 
 \begin{center}
-  \includegraphics[width=1\textwidth]{../scenes_subplots.png}
+  \includegraphics[width=1\textwidth]{../../figures/281b/scenes_subplots.png}
   Random policy on the \textbf{Scenes-15} dataset: $15$ classes, feature dimension is $165$ (SVM outputs of $11$ different feature kernels).
 \end{center}
 
