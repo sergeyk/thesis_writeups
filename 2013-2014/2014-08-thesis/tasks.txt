@@ -5,3 +5,4 @@ x get in all content from cvpr14 paper into a chapter, make sure everything comp
 x get in all content from nips12 paper into a chapter, make sure everything compiles
 - get in all content from 281b report into own chapter, make sure everything compiles
 - merge nips12 and cvpr14 intros and related works into own chapter
+- for cvpr14, see what's missing in method_new (vs method) and adjust accordingly
