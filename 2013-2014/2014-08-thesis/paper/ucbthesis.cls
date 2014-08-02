@@ -1,5 +1,5 @@
-%% ucbthesis.cls
-%% Copyright (C) 1988-2004 Daniel Gildea, BBF, Ethan Munson.
+%% ucbthesis.cls 2014-04-11
+%% Copyright (C) 1988-2014 Daniel Gildea, BBF, Ethan Munson, Paul Vojta.
 %
 % This work may be distributed and/or modified under the
 % conditions of the LaTeX Project Public License, either version 1.3
@@ -13,13 +13,15 @@
 %
 % The Current Maintainer of this work is Paul Vojta.
 %
-% This work consists of the files ucbthesis.cls, ucbtest.bib, and ucbtest.tex.
+% This work consists of the files ucbthesis.cls, README, ucbthesis.pdf,
+% ucbthesis.tex, thesis.tex, abstract.tex, chap1.tex, chap2.tex, and
+% references.bib.
 
 %%% ====================================================================
 %%%  @LaTeX-class-file{
 %%%     filename        = "ucbthesis.cls",
-%%%     version         = "3.391",
-%%%     date            = "6 August 2012",
+%%%     version         = "3.4",
+%%%     date            = "11 April 2014",
 %%%     license         = "LPPL",
 %%%     codetable       = "ISO/ASCII",
 %%%     keywords        = "LaTeX, ucbthesis",
@@ -48,7 +50,7 @@
 %%%
 %%%			   Version 2.x fixes a bug in the previous
 %%%			   version of 20 Jun 1988.  The bug was that
-%%%			   "draft" optional mode didn't work because of
+%%%			   ``draft'' optional mode didn't work because of
 %%%			   problems in handling optional arguments.
 %%%                        This file does not seem to work with earlier
 %%%                        versions of LaTeX (pre-Jan 1992).
@@ -102,16 +104,11 @@
 %%%			   been used previously).  It also switches Master's
 %%%			   theses to single-spacing (and adds an ``oldmasters''
 %%%			   option for theses submitted in 2011 and earlier).
+%%%			   In addition, it added support for co-chairs on the
+%%%			   dissertation/thesis committee, joint degrees, and
+%%%			   degrees with a Designated Emphasis.
 %%%
-%%%			   Some users have had problems with the
-%%%			   margins ending up too small on one side.
-%%%			   This appears to be a DVI-to-PostScript
-%%%			   driver or printer-adjustment problem.
-%%%			   If you have such trouble, make small adjustments
-%%%			   to the \textwidth and \oddsidemargin
-%%%			   settings in your document preamble.
-%%%
-%%%			   Another problem some people have had is
+%%%			   A problem that some people have had is
 %%%			   that you can't use \pagestyle{headings}
 %%%			   and \markboth if you use \part.  The solution
 %%%			   is to get the headerfooter style, which is
@@ -120,7 +117,7 @@
 %%% ====================================================================
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{ucbthesis}[2012/08/06 v3.391 University of California, Berkeley Thesis Class]
+\ProvidesClass{ucbthesis}[2014/04/11 v3.4 University of California, Berkeley Thesis Class]
 
 %    ****************************************
 %    *               OPTIONS                *
@@ -328,7 +325,11 @@
 % The full (unabbreviated) name of the degree
 \def\degree#1{\gdef\@degree{#1}}
 
+% The Joint Institution of your degree (optional, and rare)
+\def\jointinstitution#1{\gdef\@jointinst{#1}}
+
 % All previous degrees: one per line in chronological order
+% This is no longer used, but is provided for backwards compatibility.
 \def\prevdegrees#1{\gdef\@prevdegrees{#1}}
 
 % The name of your committee's chair
@@ -350,10 +351,10 @@
 % The name of your degree's field (e.g. Psychology, Computer Science)
 \def\field#1{\gdef\@field{#1}}
 
-% You have to define the campus name twice because I can't figure out
-% how to get the TeX \uppercase macro to work for me (EVM, 9/21/94)
+% The name of your degree's designated emphasis (optional, and rare)
+\def\emphasis#1{\gdef\@emphasis{#1}}
 
-% The name of your UC Campus CAPITALIZED (e.g. Berkeley, Los Angeles)
+% The name of your UC Campus (e.g. Berkeley, Los Angeles)
 \def\@campus{Berkeley}	% default value is Berkeley
 \def\campus#1{\gdef\@campus{#1}}
 
@@ -373,57 +374,65 @@
 
 \def\maketitle{
 {\ssp
+  \makeatletter
+    \setlength{\@tempdima}{28pt}\advance\@tempdima-\baselineskip
+    \parskip=\@tempdima minus 4pt
+  \makeatother
 \begin{alwayssingle}
-    \let\footnotesize\small
-    \let\footnoterule\relax
-    \thispagestyle{empty}
-    \setcounter{page}{1}
+  \hrule height 0pt
+  % Fix things so that they're vertically centered
+  % \@tempdima = 2 * ((\stockheight-\textheight) / 2 - \uppermargin) - \topskip
+    \@tempdima=\stockheight
+    \advance\@tempdima-\textheight
+    \advance\@tempdima-2\uppermargin
+    \advance\@tempdima-\topskip
+    \vspace{\@tempdima}
+  \vfill
+  \let\footnotesize\small
+  \let\footnoterule\relax
+  \thispagestyle{empty}
+  \setcounter{page}{1}
 
-    \null\vfil
   \begin{center}
     \fmfont
     \textbf{\@title}\par
-    \bigskip \medskip
+    \vspace{14pt minus 4pt}
     by \par
-    \bigskip \medskip
-    {\@author} \par
-\vspace{6ex}
-    % {\@prevdegrees} \par
-% \vspace{6ex}
+    {\@author}\par
+    \vspace{28pt minus 8pt}
     A \@dissertation submitted in partial satisfaction of the \par
-\smallskip
     requirements for the degree of \par
-\smallskip
-    {\@degree} \par
-    \bigskip \medskip
+    \ifdefined\@jointinst
+      Joint {\@degree}\\with {\@jointinst}\par
+    \else
+      {\@degree}\par
+    \fi
     in \par
-    \bigskip \medskip
     {\@field}\par
-    \bigskip \medskip
+    \ifdefined\@emphasis
+      and the Designated Emphasis\par
+      in\par
+      {\@emphasis}\par
+    \fi
     in the \par
-    \bigskip \medskip
     Graduate Division \par
-    \bigskip
     of the \par
-    \bigskip
-    University of California, {\expandafter{\@campus}}
+    University of California, {\expandafter{\@campus}}\par
+    \vspace{34pt minus 8pt}
+    {
+      \fmsmallfont
+      Committee in charge: \par
+      {\@chair}, \@chairtitle \\
+      \ifdefined\@cochair
+        {\@cochair}, Co-chair \\
+      \fi
+      {\@othermembers}\par
+      \vspace{14pt minus 4pt}
+      \@degreesemester \ \@degreeyear\par
+    }
   \end{center}
-{
-\vspace{6ex}
-\begin{center}
-\fmsmallfont
-  Committee in charge: \\
-\vspace{3ex}
-{\@chair}, \@chairtitle \\
-\ifdefined\@cochair
-  {\@cochair}, Co-chair \\
-\fi
-{\@othermembers} \\
-\vspace{4ex}
-  {\@degreesemester \ \@degreeyear}
-\end{center}
-}
-    \vfil\null
+  \vfill
+  \hrule height 0pt
 \end{alwayssingle}
 
 \setcounter{footnote}{0}
@@ -501,13 +510,13 @@ by\par
 \end{center}
 \end{alwayssingle}}
 
+
 % ABSTRACT
 %
 % The ABSTRACT environment allows for multi-page abstracts which,
 % in accordance with UC rules, is numbered separately from the rest
 % of the rest of the dissertation in Arabic.  It requires definition
 % of the \title, \author, \degree, \field, \campus, and \chair macros.
-
 
 \def\abstract{
 \begin{alwayssingle}
