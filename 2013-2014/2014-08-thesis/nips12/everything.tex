@@ -1,58 +1,7 @@
 %!TEX root=../paper/thesis.tex
 \chapter{Reinforcement Learning for Anytime Detection}
 
-\todo{This section starts with the NIPS 2012 paper verbatim.}
-
-\section{Abstract}
-
-In a large visual multi-class detection framework, the timeliness of results can be crucial.
-Our method for \emph{timely} multi-class detection aims to give the best possible performance at any single point after a start time; it is terminated at a deadline time.
-Toward this goal, we formulate a dynamic, closed-loop policy that infers the contents of the image in order to decide which detector to deploy next.
-In contrast to previous work, our method significantly diverges from the predominant greedy strategies, and is able to learn to take actions with deferred values.
-We evaluate our method with a novel \emph{timeliness} measure, computed as the area under an Average Precision vs. Time curve.
-Experiments are conducted on the PASCAL VOC object detection dataset.
-If execution is stopped when only half the detectors have been run, our method obtains $66\%$ better AP than a random ordering, and $14\%$ better performance than an intelligent baseline.
-On the timeliness measure, our method obtains at least $11\%$ better performance.
-Our method is easily extensible, as it treats detectors and classifiers as black boxes and learns from execution traces using reinforcement learning.
-
-\section{Introduction} \label{sec:introduction}
-
-In real-world applications of visual object recognition, performance is time-sensitive.
-In robotics, a small finite amount of processing power per unit time is all that is available for robust object detection, if the robot is to usefully interact with humans.
-In large-scale detection systems, such as image search, results need to be obtained quickly per image as the number of items to process is constantly growing.
-In such cases, an acceptable answer at a reasonable time may be more valuable than the best answer given too late.
-
-\begin{figure}[ht!]
-\center{\includegraphics[width=0.86\linewidth]
-    {../../../2011-2012/figures/figure1.pdf}}
-  \caption{
-A sample trace of our method.
-At each time step beginning at $t=0$, potential actions are considered according to their predicted \emph{value}, and the maximizing action is picked.
-The selected action is performed and returns \emph{observations}.
-Different actions return different observations: a detector returns a list of detections, while a scene context action simply returns its computed feature.
-The \emph{belief model} of our system is updated with the observations, which influences the selection of the next action.
-The final evaluation of a detection episode is the area of the \emph{AP vs. Time} curve between given start and end times.
-The value of an action is the expected result of final evaluation if the action is taken and the policy continues to be followed, which allows actions without an immediate benefit to be scheduled.
-}
-  \label{fig:figure1}
-\end{figure}
-
-A hypothetical system for vision-based advertising presents a case study: companies pay money to have their products detected in images on the internet.
-The system has different values (in terms of cost per click) and accuracies for different classes of objects, and the queue of unprocessed images varies in size.
-The detection strategy to maximize profit in such an environment has to exploit every inter-object context signal available to it, because there is not enough time to run detection for all classes.
-
-What matters in the real world is timeliness, and either not all images can be processed or not all classes can be evaluated in a detection task.
-Yet the conventional approach to evaluating visual recognition does not consider efficiency, and evaluates performance independently across classes.
-We argue that the key to tackling problems of dynamic recognition resource allocation is to start asking a new question:
-\emph{What is the best performance we can get on a budget?}
-
-Taking the task of object detection, we propose a new \emph{timeliness} measure of performance vs. time (shown in Figure~\ref{fig:figure1}).
-We present a method that treats different detectors and classifiers as black boxes, and uses reinforcement learning to learn a dynamic policy for selecting actions to achieve the highest performance under this evaluation.
-
-Specifically, we run scene context and object class detectors over the whole image sequentially, using the results of detection obtained so far to select the next actions.
-Evaluating on the PASCAL VOC dataset and evaluation regime, we are able to obtain better performance than all baselines when there is less time available than is needed to exhaustively run all detectors.
-
-\section{Recognition Problems and Related Work}
+\section{Setup}
 
 Formally, we deal with a dataset of images $\mathcal{D}$, where each image $\mathcal{I}$ contains zero or more objects.
 Each object is labeled with exactly one category label $k \in \{1, \dots, K\}$.
@@ -71,49 +20,6 @@ To highlight the hierarchical structure of these problems, we note that the conf
 
 Multi-class performance is evaluated by averaging the individual per-class AP values.
 In a specialized system such as the advertising case study from~\autoref{sec:introduction}, the metric generalizes to a weighted average, with the weights set by the \emph{values} of the classes.
-
-\subsection{Related Work}
-
-\paragraph{Object detection}
-The best recent performance has come from detectors that use gradient-based features to represent objects as either a collection of local patches or as object-sized windows \cite{Dalal2005,Lowe2004}.
-Classifiers are then used to distinguish between featurizations of a given class and all other possible contents of an image window.
-Window proposal is most often done exhaustively over the image space, as a ``sliding window''.
-
-For state-of-the-art performance, the object-sized window models are augmented with parts \cite{Felzenszwalb2010a}, and the bag-of-visual-words models employ non-linear classifiers \cite{Vedaldi2009}.
-We employ the widely used Deformable Part Model detector \cite{Felzenszwalb2010a} in our evaluation.
-Some approaches use ``jump windows'' (hypotheses voted on by local features) \cite{Vedaldi2009,Vijayanarasimhan2011}, or a bounded search over the space of all possible windows \cite{Lampert2008a}.
-
-None of the best-performing systems treat window proposal and evaluation as a closed-loop system, with feedback from evaluation to proposal.
-Some work has been done on this topic, mostly inspired by ideas from biological vision and attention research~\cite{Butko2009,Vogel2008}.
-
-Most detection methods train individual models for each class.
-Work on inherently multi-class detection focuses largely on making detection time sublinear in the number of classes through sharing features \cite{Torralba2007,Fan2005}.
-
-A post-processing extension to detection systems uses structured prediction to incorporate multi-class context as a principled replacement for non-maximum suppression \cite{Desai2009}.
-
-\paragraph{Using context}
-The most common source of context for detection is the \emph{scene} or other non-detector cues; the most common scene-level feature is the GIST \cite{Oliva-IJCV-2001} of the image.
-We use this source of scene context in our evaluation.
-
-Inter-object context has also been shown to improve detection \cite{Torralba2004}.
-In a standard evaluation setup, inter-object context plays a role only in post-filtering, once all detectors have been run.
-In contrast, our work leverages inter-object context in the action-planning loop.
-
-A critical summary of the main approaches to using context for object and scene recognition is given in \cite{Galleguillos2010}.
-For the commonly used PASCAL VOC dataset \cite{pascal-voc-2010}, GIST and other sources of context are quantitatively explored in~\cite{Divvala2009}.
-
-\paragraph{Efficiency through cascades}
-An early success in efficient object detection of a single class uses simple, fast features to build up a \emph{cascade} of classifiers, which then considers image regions in a sliding window regime \cite{Viola2004}.
-Most recently, cyclic optimization has been applied to optimize cascades with respect to feature computation cost as well as classifier performance \cite{Chen-AISTATS-2012}.
-
-Cascades are not dynamic policies: they cannot change the order of execution based on observations obtained during execution, which is our goal.
-
-\paragraph{Anytime and active classification}
-This surprisingly little-explored line of work in vision is closest to our approach.
-A recent application to the problem of visual detection picks features with maximum value of information in a Hough-voting framework \cite{Vijayanarasimhan2010}.
-There has also been work on active classification \cite{Gao-NIPS-2011} and active sensing \cite{Yu2009}, in which intermediate results are considered in order to decide on the next classification step.
-Most commonly, the scheduling in these approaches is greedy with respect to some manual quantity such as expected information gain.
-In contrast, we learn policies that take actions without any immediate reward.
 
 \section{Multi-class Recognition Policy} \label{sec:tech}
 
@@ -208,7 +114,7 @@ Our policy is at its base determined by a linear function of the features of the
 \pi(s) = \argmax_{a_i \in \mathcal{A} \setminus \mathcal{O}} \theta_\pi^\top \phi(s,a_i).
 \end{align}
 
-%Since we want to be able to learn a dynamic policy, the observations $\mathbf{o}$ that are part of the state $s$ should play a role in determining the value of a potential action.
+Since we want to be able to learn a dynamic policy, the observations $\mathbf{o}$ that are part of the state $s$ should play a role in determining the value of a potential action.
 
 We include the following quantities as features $\phi(s,a)$:
 
