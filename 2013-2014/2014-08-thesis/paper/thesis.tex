@@ -1,0 +1,66 @@
+%% thesis.tex 2014/04/11
+\documentclass{ucbthesis}
+\usepackage[backend=bibtex,citestyle=authoryear-icomp,bibstyle=authoryear]{biblatex}
+\addbibresource{../mendeley_bibtex.bib}
+\addbibresource{../manual_additions.bib}
+\usepackage{indentfirst}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage[pdftex]{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{algorithm2e}
+\usepackage{booktabs}
+\usepackage{url}
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage{enumitem}
+\usepackage{multirow}
+\usepackage[colorlinks]{hyperref}
+
+%% Math commands
+\newtheorem{theorem}{Theorem}
+\newtheorem{mydef}{Definition}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+%% Misc commands
+\newcommand\gray[1]{\textcolor{Gray}{#1}}
+\newcommand\todo[1]{\textcolor{BrickRed}{todo: #1}}
+\def\algorithmautorefname{Algorithm}
+\def\subsectionautorefname{Section}
+
+\begin{document}
+\title{Anytime Recognition of Objects and Scenes}
+\author{Sergey Karayev}
+\degreesemester{Fall}
+\degreeyear{2014}
+\degree{Doctor of Philosophy}
+\chair{Professor Trevor Darrell}
+\othermembers{Professor Pieter Abbeel \\Professor Ken Goldberg}
+\numberofmembers{3}
+\field{Computer Science}
+
+% \maketitle
+% Comment out for final.
+% \approvalpage
+% \copyrightpage
+% \input{../abstract}
+\begin{frontmatter}
+    \tableofcontents
+    % \listoffigures
+    % \listoftables
+    % \input{../acknowledgements}
+\end{frontmatter}
+
+\pagestyle{headings}
+% \input{../introduction}
+\input{../cvpr14/everything}
+% \input{../cascaded_cnn_recognition}
+% \input{../conclusion}
+
+% \appendix
+% \chapter{../definitions}
+
+\printbibliography
+\end{document}
