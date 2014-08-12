@@ -1,4 +1,22 @@
 %!TEX root=paper/thesis.tex
 \chapter{Conclusion}
 
-\gray{Lorem ipsum Cupidatat in veniam occaecat qui reprehenderit Ut dolore qui Excepteur amet veniam magna eu sint et et adipisicing elit cupidatat exercitation nostrud elit adipisicing sint labore pariatur eiusmod officia est veniam cupidatat nisi consectetur pariatur exercitation ut nisi voluptate laboris ullamco adipisicing dolore consectetur magna Excepteur anim commodo occaecat in aliquip voluptate sit sint Excepteur velit ad aliquip nulla sunt in reprehenderit in non ut consequat irure ea et sit ullamco do voluptate quis mollit cillum Ut Excepteur magna Excepteur cupidatat dolore fugiat in in magna cillum commodo aliquip sed amet sunt adipisicing pariatur aliquip fugiat Excepteur veniam nulla nisi ea laborum reprehenderit sed culpa nisi laborum dolor laborum sunt culpa fugiat veniam eiusmod mollit esse non occaecat voluptate eu anim adipisicing nulla eiusmod et laboris elit veniam minim tempor sit esse reprehenderit voluptate reprehenderit velit deserunt sed do aute laborum nulla deserunt in officia culpa dolore pariatur sit commodo ea dolor laboris anim sunt quis.}
+\section{NIPS12 Conclusion}
+We presented a method for learning ``closed-loop'' policies for multi-class object recognition, given existing object detectors and classifiers and a metric to optimize.
+The method learns the optimal policy using reinforcement learning, by observing execution traces in training.
+If detection on an image is cut off after only half the detectors have been run, our method does $66\%$ better than a random ordering, and $14\%$ better than an intelligent baseline.
+In particular, our method learns to take action with no intermediate reward in order to improve the overall performance of the system.
+
+As always with reinforcement learning problems, defining the reward function requires some manual work.
+Here, we derive it for the novel detection AP vs. Time evaluation that we suggest is useful for evaluating efficiency in recognition.
+Although computation devoted to scheduling actions is less significant than the computation due to running the actions, the next research direction is to explicitly consider this decision-making cost; the same goes for feature computation costs.
+Additionally, it is interesting to consider actions defined not just by object category but also by spatial region.
+The code for our method is available\footnote{\url{http://sergeykarayev.com/work/timely/}}.
+
+\section{CVPR14 Conclusion}
+We have shown how to optimize feature selection and classification strategies under an Anytime objective by modeling the associated process as a Markov Decision Process.
+Throughout the experiments we show how strategies that adapt the course of computation at test time lead to gains in performance and efficiency.
+Beyond the aspects of practical deployment of vision systems that our work is motivated by, we are curious to further investigate our model as a tool to study human cognition and the time course of visual perception.
+
+Lastly, the recent successes of convolutional neural nets for visual recognition open an exciting new avenue for exploring cost-sensitivity.
+Layers of a deep network can be seen as features in our system, through which a properly learned policy can optimally direct computation.

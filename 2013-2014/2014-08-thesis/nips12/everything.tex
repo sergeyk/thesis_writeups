@@ -1,6 +1,8 @@
 %!TEX root=../paper/thesis.tex
 \chapter{Reinforcement Learning for Anytime Detection}
 
+\input{../nips12/figure1}
+
 \section{Setup}
 
 Formally, we deal with a dataset of images $\mathcal{D}$, where each image $\mathcal{I}$ contains zero or more objects.
@@ -260,15 +262,3 @@ Bounds & Random & Fixed Order & RL        & RL w/ GIST         & Oracle \\ \hlin
 \end{tabular}
 \end{center}
 \end{table}
-
-\section{Conclusion}
-We presented a method for learning ``closed-loop'' policies for multi-class object recognition, given existing object detectors and classifiers and a metric to optimize.
-The method learns the optimal policy using reinforcement learning, by observing execution traces in training.
-If detection on an image is cut off after only half the detectors have been run, our method does $66\%$ better than a random ordering, and $14\%$ better than an intelligent baseline.
-In particular, our method learns to take action with no intermediate reward in order to improve the overall performance of the system.
-
-As always with reinforcement learning problems, defining the reward function requires some manual work.
-Here, we derive it for the novel detection AP vs. Time evaluation that we suggest is useful for evaluating efficiency in recognition.
-Although computation devoted to scheduling actions is less significant than the computation due to running the actions, the next research direction is to explicitly consider this decision-making cost; the same goes for feature computation costs.
-Additionally, it is interesting to consider actions defined not just by object category but also by spatial region.
-The code for our method is available\footnote{\url{http://sergeykarayev.com/work/timely/}}.
