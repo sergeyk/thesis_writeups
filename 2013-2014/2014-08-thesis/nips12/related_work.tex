@@ -1,0 +1,42 @@
+\section{NIPS12 Related Work}
+
+\paragraph{Object detection}
+The best recent performance has come from detectors that use gradient-based features to represent objects as either a collection of local patches or as object-sized windows \cite{Dalal2005,Lowe2004}.
+Classifiers are then used to distinguish between featurizations of a given class and all other possible contents of an image window.
+Window proposal is most often done exhaustively over the image space, as a ``sliding window''.
+
+For state-of-the-art performance, the object-sized window models are augmented with parts \cite{Felzenszwalb2010a}, and the bag-of-visual-words models employ non-linear classifiers \cite{Vedaldi2009}.
+We employ the widely used Deformable Part Model detector \cite{Felzenszwalb2010a} in our evaluation.
+Some approaches use ``jump windows'' (hypotheses voted on by local features) \cite{Vedaldi2009,Vijayanarasimhan2011}, or a bounded search over the space of all possible windows \cite{Lampert2008a}.
+
+None of the best-performing systems treat window proposal and evaluation as a closed-loop system, with feedback from evaluation to proposal.
+Some work has been done on this topic, mostly inspired by ideas from biological vision and attention research~\cite{Butko2009,Vogel2008}.
+
+Most detection methods train individual models for each class.
+Work on inherently multi-class detection focuses largely on making detection time sublinear in the number of classes through sharing features \cite{Torralba2007,Fan2005}.
+
+A post-processing extension to detection systems uses structured prediction to incorporate multi-class context as a principled replacement for non-maximum suppression \cite{Desai2009}.
+
+\paragraph{Using context}
+The most common source of context for detection is the \emph{scene} or other non-detector cues; the most common scene-level feature is the GIST \cite{Oliva-IJCV-2001} of the image.
+We use this source of scene context in our evaluation.
+
+Inter-object context has also been shown to improve detection \cite{Torralba2004}.
+In a standard evaluation setup, inter-object context plays a role only in post-filtering, once all detectors have been run.
+In contrast, our work leverages inter-object context in the action-planning loop.
+
+A critical summary of the main approaches to using context for object and scene recognition is given in \cite{Galleguillos2010}.
+For the commonly used PASCAL VOC dataset \cite{pascal-voc-2010}, GIST and other sources of context are quantitatively explored in~\cite{Divvala2009}.
+
+\paragraph{Efficiency through cascades}
+An early success in efficient object detection of a single class uses simple, fast features to build up a \emph{cascade} of classifiers, which then considers image regions in a sliding window regime \cite{Viola2004}.
+Most recently, cyclic optimization has been applied to optimize cascades with respect to feature computation cost as well as classifier performance \cite{Chen-AISTATS-2012}.
+
+Cascades are not dynamic policies: they cannot change the order of execution based on observations obtained during execution, which is our goal.
+
+\paragraph{Anytime and active classification}
+This surprisingly little-explored line of work in vision is closest to our approach.
+A recent application to the problem of visual detection picks features with maximum value of information in a Hough-voting framework \cite{Vijayanarasimhan2010}.
+There has also been work on active classification \cite{Gao-NIPS-2011} and active sensing \cite{Yu2009}, in which intermediate results are considered in order to decide on the next classification step.
+Most commonly, the scheduling in these approaches is greedy with respect to some manual quantity such as expected information gain.
+In contrast, we learn policies that take actions without any immediate reward.
