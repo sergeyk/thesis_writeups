@@ -2,14 +2,19 @@ Maybe
 -----
 - add figure of the fei-fei progressive scene recognition from oral.key
 
+Definitely
+----------
+- add R-CNN stuff to detection section
+- add statespace exploration approaches figure to related work for classification
+
 Draft
 -----
 (in order)
 x get in all content from cvpr14 paper into a chapter, make sure everything compiles
 x get in all content from nips12 paper into a chapter, make sure everything compiles
 x get in all content from 281b report into own chapter, make sure everything compiles
-- merge nips12 and cvpr14 intros into own section
-- merge nips12 and cvpr14 related works into own section
+x merge nips12 and cvpr14 intros into own section
+xs merge nips12 and cvpr14 related works into own section
 - for cvpr14, see what's missing in method_new (vs method) and adjust accordingly
 - add 281b report as section to cvpr14 chapter
 - merge nips12 and cvpr14 conclusions

@@ -1,6 +1,70 @@
 %!TEX root=paper/thesis.tex
+\section{Related Work}\label{sec:related_work}
 
-\section{Related Work}
+\subsection{Detection}
 
-\input{../nips12/related_work}
-\input{../cvpr14/related_work}
+\PM{Basics}
+The best recent performance has come from detectors that use gradient-based features to represent objects as either a collection of local patches or as object-sized windows \cite{Dalal2005,Lowe2004}.
+Classifiers are then used to distinguish between featurizations of a given class and all other possible contents of an image window.
+Window proposal is most often done exhaustively over the image space, as a ``sliding window''.
+
+\PM{State of the art}
+For state-of-the-art performance, the object-sized window models are augmented with parts \cite{Felzenszwalb2010a}, and the bag-of-visual-words models employ non-linear classifiers \cite{Vedaldi2009}.
+We employ the widely used Deformable Part Model detector \cite{Felzenszwalb2010a} in our evaluation.
+Some approaches use ``jump windows'' (hypotheses voted on by local features) \cite{Vedaldi2009,Vijayanarasimhan2011}, or a bounded search over the space of all possible windows \cite{Lampert2008a}.
+
+\PM{Using feedback}
+None of the best-performing systems treat window proposal and evaluation as a closed-loop system, with feedback from evaluation to proposal.
+Some work has been done on this topic, mostly inspired by ideas from biological vision and attention research~\cite{Butko2009,Vogel2008}.
+A recent application to the problem of visual detection picks features with maximum value of information in a Hough-voting framework \cite{Vijayanarasimhan2010}.
+
+\PM{Multi-class context}
+Most detection methods train individual models for each class.
+Work on inherently multi-class detection focuses largely on making detection time sublinear in the number of classes through sharing features \cite{Torralba2007,Fan2005}.
+Inter-object context has also been shown to improve detection \cite{Torralba2004}.
+A post-processing extension to detection systems uses structured prediction to incorporate multi-class context as a principled replacement for non-maximum suppression \cite{Desai2009}.
+In a standard evaluation setup, inter-object context plays a role only in post-filtering, once all detectors have been run.
+In contrast, our work leverages inter-object context in the action-planning loop.
+
+\PM{Scene context}
+The most common source of context for detection is the \emph{scene} or other non-detector cues; the most common scene-level feature is the GIST \cite{Oliva-IJCV-2001} of the image.
+We use this source of scene context in our evaluation.
+A critical summary of the main approaches to using context for object and scene recognition is given in \cite{Galleguillos2010}.
+For the commonly used PASCAL VOC dataset \cite{pascal-voc-2010}, GIST and other sources of context are quantitatively explored in~\cite{Divvala2009}.
+
+
+\subsection{Classification}
+
+\PM{Combining many features.}
+\emph{Boosting} is a method for combining weak learners into a more powerful classifier \parencite{Hastie2009}.
+A popular use of boosting is in introducing non-linearities by training depth-limited decision trees as weak learners---the boosting trick.
+For SVM-based classifiers, \emph{Multiple Kernel Learning} (MKL) provides a way to train classifiers using an automatically weighted combination of kernels \parencite{Lanckriet2004}.
+It has been shown that MKL is outperformed by boosting single-kernel classifiers \parencite{Gehler2009}.
+Of course, if all classifiers are linear, then combining outputs of classifiers trained on different feature channel with another classifier is equivalent to training one classifier on all features at once.
+
+\PM{Feature selection.}
+The simplest way to limit the number of features used at test time is to $L_1$-regularize.
+This method does not explicitly consider feature cost, nor is it able to evaluate features one by one, or to give an answer before all features are computed.
+
+\PM{Cascades.}
+A well-known method to evaluate features sequentially is the cascaded boosted classifier of Viola \& Jones \parencite{Viola2004} (updated by Bourdev \& Brandt \parencite{Bourdev-CVPR-2005} with a soft threshold), which is able to quit evaluating an instance before all features are computed---but feature cost was not considered.
+The cost-sensitive cascade of Chen et al.\ \parencite{Chen-AISTATS-2012} optimizes stage order and thresholds to jointly minimize classification error and feature computation cost.
+Xu et al.\ \parencite{Xu-ICML-2012} and Grubb \& Bagnell \parencite{Grubb-AISTATS-2012} separately develop a variant of gradient boosting for training cost-sensitive classifiers; the latter prove near-optimality of their greedy algorithm with submodularity results.
+Their methods are tightly coupled to the stage-wise regression algorithm.
+Cascades are not dynamic policies: they cannot change the order of execution based on observations obtained during execution, which is our goal.
+
+\PM{Dynamic feature selection.}
+In contrast, \emph{Label trees} guide an instance through a tree of classifiers; their structure is determined by the confusion matrix or learned jointly with weights \parencite{Deng-NIPS-2011}.
+Xu et al.\ \parencite{Xu-ICML-2013} learn a cost-sensitive binary tree of weak learners using an approach similar to the cyclic optimization of \parencite{Chen-AISTATS-2012}.
+Gao \& Koller \parencite{Gao-NIPS-2011} propose a method for \emph{active classification}: myopically selecting the next feature based on expected information gain given the values of the already selected features.
+The method is based on locally weighted regression, highly costly at test time.
+Ji \& Carin \parencite{Ji-PR-2007} also formulate cost-sensitive feature selection generatively, as an HMM conditioned on actions, but select actions myopically, again at signficant test time cost.
+
+\PM{Reinforcement Learning}
+Dulac-Arnold et al.\ \parencite{DulacArnold-ML-2012} present an MDP-based solution to ``datum-wise classification'', with an action space comprised of all features and labels, recently extended to region-based processing \parencite{DulacArnold-ICLR-2014}.
+He He et al.\ \parencite{HeHe-ICMLW-2012} also formulate an MDP with features and a single classification step as actions, but solve it via imitation learning of a greedy policy.
+Benbouzid et al.\ \parencite{Benbouzid-ICML-2012} formulate an MDP that simply extends the traditional sequential boosted classifier with an additional \emph{skip} action, significantly limiting the space of learnable policies (\parencite{Trapeznikov-ML-2012} provides another variation on this problem).
+
+\PM{Misc}
+Less directly related---but exciting for its novelty---is the work of \parencite{Weiss-ICCV-2013}, who apply simple introspection to structured models for a significant speedup of human pose estimation.
+Another exciting direction is theoretical analysis of near-optimal policies with humans in the loop \parencite{Chen-2014-ICML}.
