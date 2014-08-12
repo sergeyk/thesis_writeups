@@ -1,0 +1,40 @@
+Introduction Outline
+--------------------
+
+Biological vision systems have Anytime and progressively enahnced performance.
+
+Real-world applications also need time-sensitive performance, at different time budgets.
+    For example, advertising.
+
+Computer vision deals with lots of classes, data sources, locations for detection.
+
+We formulate method for deploying existing vision methods for Anytime performance.
+
+Method is based on reinforcement learning.
+
+For detection, use heavyweight inference: actions are slow; want class and scene context.
+
+For classification, need to be linear: actions are fast.
+
+Related Work Outline
+--------------------
+
+Detection
+    How state of the art works
+
+    Closed loop systems
+
+    Multi-class context
+
+    Scene context
+
+Classification
+    Feature selection
+
+    Cascades, including cost-optimized
+
+    Dynamic selection: trees, including label trees
+
+    Dynamic selection: non tree
+
+    Other

@@ -1,0 +1,37 @@
+%Author: alain.lehmann @ gmail.com
+%Date:   18/02/2013
+%Version: 1.0
+\RequirePackage{tikz}
+
+\newcommand{\PMlabelDelta}{1em}
+\newcommand{\PMevenlabel}{1in+\hoffset+\evensidemargin-\PMlabelDelta}
+\newcommand{\PModdlabel}{1in+\hoffset+\oddsidemargin+\textwidth+\PMlabelDelta}
+\newcommand{\PMlabelUp}{2ex}
+\newcommand{\PMlabelDown}{\PMlabelUp-\baselineskip}
+\newcommand{\PMformat}[1]{\sffamily\itshape\vphantom{Cg}\underline{#1}}
+
+\tikzstyle{PMnodeformat}=[fill=white,text=black,rounded corners]
+
+% indented paragraphs on even-numbered pages
+\newcommand{\PMeven}[1]{%
+\tikz[remember picture,overlay]{
+\path (0,0-|current page.south west) -- +(\PMevenlabel,\PMlabelDown)
+node[left,rotate=+90,PMnodeformat]{\PMformat{#1}};
+}\relax\ignorespaces}
+
+% non-indented paragraphs on even-numbered pages
+% could we determine this out automatically?
+\newcommand{\PMevenNoIndent}[1]{%
+\tikz[remember picture,overlay]{
+\path (0,0-|current page.south west) -- +(\PMevenlabel,\PMlabelUp)
+node[left,rotate=+90,PMnodeformat]{\PMformat{#1}};
+}\relax\ignorespaces}
+
+% paragraphs on odd-numbered pages (indentation does not matter)
+\newcommand{\PModd}[1]{%
+\tikz[remember picture,overlay]{
+\path (0,0-|current page.south west) -- +(\PModdlabel,\PMlabelUp)
+node[right,rotate=-90,PMnodeformat]{\PMformat{#1}};
+}\relax\ignorespaces}
+
+\newcommand{\PM}[1]{\checkoddpage\ifoddpage \PModd{#1} \else \PMeven{#1}\fi}

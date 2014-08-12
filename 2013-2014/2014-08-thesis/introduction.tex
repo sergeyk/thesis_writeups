@@ -1,5 +1,58 @@
 %!TEX root=paper/thesis.tex
 \chapter{Introduction}\label{sec:introduction}
 
-\input{../nips12/introduction}
-\input{../cvpr14/introduction}
+\PM{Perception is Anytime}
+It is a well-known fact that human perception is both anytime, meaning that a scene can be described after even a short presentation, and progressive, meaning that the quality of description increases with more time.
+Studies have produced evidence for coarse-to-fine processing of visual input as more time becomes available \parencite{Vanrullen-1996,Fei-Fei-Vision-2007}.
+There is also evidence that the progressive enhancement of description occurs in an ontologically meaningful way, as for example, when we recognize something as an animal before recognizing it as a dog \parencite{Mace-PloS-2009}.
+The underlying mechanisms are unknown, with only a few attempts to explain the temporal dynamics (e.g. via sequential decision processes in \textcite{Hegde-Neuro-2008}).
+
+\PM{Applications}
+While visual recognition has achieved levels of performance that allow useful real-world implementation, state-of-the-art methods tend to be computationally expensive and insensitive to Anytime demands.
+As these methods are applied at scale, managing their resource consumption (power or cpu-time) cost becomes increasingly important.
+For tasks such as personal robotics, the ability to deploy varying levels of processing to different stimuli, depending on computational demands on the robot, also seems crucial.
+In such cases, an acceptable answer at a reasonable time may be more valuable than the best answer given too late.
+
+\PM{Example}
+A hypothetical system for vision-based advertising presents a case study: companies pay money to have their products detected in images on the internet.
+The system has different values (in terms of cost per click) and accuracies for different classes of objects, and the queue of unprocessed images varies in size.
+The recognition strategy to maximize profit in such an environment has to exploit every signal available to it, because there is not enough time to run detection for all classes.
+Furthermore, the behavior of the system should be Anytime, as it depends on the length of the queue.
+
+\PM{Features}
+For most state-of-the-art classification methods, different features are extracted from an image instance at different costs, and contribute differently to decreasing classification error.
+Although ``the more features, the better'', high accuracy can be achieved with only a small subset of features for some instances---and different instances benefit from different subsets of features.
+For example, simple binary features are sufficient to quickly detect faces \parencite{Viola2004} but not more varied visual objects, while the features most useful for separating landscapes from indoor scenes \parencite{Xiao-CVPR-2010} are different from those most useful for recognizing fine distinctions between bird species \parencite{Farrell-ICCV-2011}.
+
+\PM{Regions}
+For detection, state-of-the-art detectors are slow, and need to process many regions of each image \cite{Felzenszwalb2010a,Girshick-CVPR-2014}.
+However, class and scene contextual cues can be exploited to process regions in an intelligent order, such that most objects are found early.
+
+\PM{Timeliness}
+Computing all features or processing all regions for all images is infeasible in a deployment sensitive to Anytime needs, as each feature brings a significant computational burden.
+Yet the conventional approach to evaluating visual recognition does not consider efficiency, and evaluates performance independently across classes.
+We address the problem of selecting and combining a subset of features under an \emph{Anytime} cost budget, specified in terms of wall time or total power expended or another metric, and propose a new \emph{timeliness} measure of performance vs. time.
+
+\PM{Our Approach}
+To exploit the fact that different instances benefit from different subsets of features, our approach to feature selection is a sequential policy.
+To learn the policy parameters, we formulate the problem as a Markov Decision Process (MDP) and use reinforcement learning methods.
+The method does not make many assumptions about the underlying actions, which can be existing object detectors and feature-specific classifiers.
+With different settings of parameters, we can learn policies ranging from \textbf{Static, Myopic}---greedy selection not relying on any observed feature values, to \textbf{Dynamic, Non-myopic}---relying on observed values and considering future actions.
+
+\PM{Detection}
+For detection, the actions are time-consuming detectors applied to the whole image, as well as a quick scene classifier.
+We run scene context and object class detectors over the whole image sequentially, using the results of detection obtained so far to select the next actions.
+Since the actions are time-consuming, we use a powerful inference mechanism to select the best next action.
+
+\PM{Classification}
+Classification actions are much faster than detectors, and the action-selection method accordingly needs to be fast.
+For this reason, our models are based on linear evaluations, not nearest-neighbor or graphical model methods.
+Because different features can be selected for different instances, and because our system may be called upon to give an answer at any point during its execution, the feature combination method needs to be robust to a large number of different observed-feature subsets.
+To this end, we present a novel method for learning several classifiers for different clusters of observed-feature subsets.
+
+\PM{Evaluation}
+For the detection task, we evaluate on the PASCAL VOC dataset and obtain better performance than all baselines when there is less time available than is needed to exhaustively run all detectors.
+For the classification task, we evaluate our method on several multi-class datasets.
+We first demonstrate on synthetic data that our algorithm learns to pick features most useful for the specific test instance.
+We demonstrate the advantage of non-myopic over greedy, and of dynamic over static on this and the Scene-15 visual classification dataset.
+Then we show results on a subset of the hierarchical ImageNet dataset, where we additionally learn to provide the most specific answers for any desired cost budget and accuracy level.
