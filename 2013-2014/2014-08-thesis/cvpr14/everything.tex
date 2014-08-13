@@ -139,6 +139,7 @@ Therefore, actions must be selected according to their expected \emph{value}:
 \argmax_a \pi(a \mid s) = \argmax_a Q^*(s,a)
 \end{align*}
 where $Q^*(s,a)$ is the optimal \emph{action-value function}---the expected value of taking action $a$ in state $s$ and then acting optimally to the end of the episode.
+This function is defined analogously to the value function \eqref{eq:expected_reward}.
 
 Because the state represents an exponential number of subsets and associated real values, we cannot represent $Q(s,a)$ exactly.
 Instead, we use feature approximation and write $Q(s,a) = \theta^T \phi(s, a)$,  where $\phi: \mathcal{S} \times \mathcal{A} \mapsto \mathbb{R}^{d_s}$ is the state featurization function, $d_s$ is the dimensionality of the state feature vector, and $\theta$ is a vector of weights that defines the policy.
@@ -153,6 +154,11 @@ As $\tau \rightarrow 0$, ${\pi(a \mid s)}$ becomes highly peaked at $\argmax_a Q
 As commonly done, we learn the $\theta$ by \emph{policy iteration}.
 First, we gather $(s, a, r, s')$ samples by running episodes (to completion) with the current policy parameters $\theta_i$.
 From these samples, $\hat{Q}(s, a)$ values are computed, and $\theta_{i+1}$ are given by $L_2$-regularized least squares solution to $\hat{Q}(s, a) = \theta^T \phi(s, a)$, on all states that we have seen in training.
+
+\todo{can expand on the learning method}
+
+A detail: instead of block-coding $\phi(s,a)$, we learn $F$ separate $\theta_f$'s for the features $\phi(s)$: one for each action $a$.
+The weight $\alpha$ of the regularization term is tied across the $F$ separate regressions and is tuned by cross-validation on 3 folds.
 
 During training, we gather samples starting from either a random feasible state, with probability $\epsilon$, or from the initial empty state otherwise.
 Both $\epsilon$ and $\tau$ parameters decay exponentially with the number of training iterations.
@@ -195,22 +201,29 @@ Policy learned with the static state is used as a baseline in experiments.
 The state-action feature function $\phi(s, a)$ effectively block-codes these features: it is $0$ everywhere except the block corresponding to the action considered.
 In implementation, we train $F$ separate regressions with a tied regularization parameter, which is K-fold cross-validated.
 
-\paragraph{Effect of $\gamma$.}
-Note that solving the MDP with these features and with $\gamma=0$ finds a \textbf{Static, greedy} policy: the value of taking an action in a state is exactly the expected reward to be obtained.
-When $\gamma=1$, the value of taking an action is the entire area above the curve as defined in \autoref{fig:rewards}, and we learn the \textbf{Static, non-myopic} policy---another baseline.
+\paragraph{Greedy vs non-myopic policy.}
+The $\gamma$ parameter of the MDP controls the level of \emph{discounting} of rewards of future action in computing the value \eqref{eq:expected_reward}.
+In the baseline \textbf{greedy} setting, with $\gamma=0$, rewards gained by future actions are not counted at all in determining the value of the current action.
+In the \textbf{non-myopic} setting, with $\gamma=1$, rewards gained by future actions are valued exactly as much as reward gained by the current action in determining its value.
+In other words, the value of taking an action is the entire area above the curve as defined in \autoref{fig:rewards}.
+The former setting is used as baseline.
 
 \subsection{Learning the classifier.}\label{sec:classifier}
 
 We have so far assumed that $g$ can combine an arbitrary subset of features and provide a distribution $P(Y = y)$---for example, a Gaussian Naive Bayes (NB) model trained on the fully-observed data.
-% However, a Naive Bayes classifier suffers from its restrictive independence assumptions.
+However, a Naive Bayes classifier suffers from its restrictive independence assumptions.
 
-Since discriminative classifiers commonly provide better performance, we use a \textbf{logistic regression} classifier, which presents a new challenge:
-% bu have to account for missing data:
-at test time, some feature values are missing and need to be imputed.
+Since discriminative classifiers commonly provide better performance, we use a \textbf{logistic regression} classifier, which presents a new challenge: at test time, some feature values are missing and need to be imputed.
+
 If the classifier is trained exclusively on fully-observed data, then the feature value statistics at test time will not match, resulting in poor performance.
 Therefore, we need to learn classifier weights on a distribution of data that exhibits the pattern of missing features induces by the policy $\pi$.
 At the same time, learning the policy depends on the classifier $g$, used in the computation of the rewards.
+
 For this reason, the policy and classifier need to be learned jointly: \autoref{alg:learning} gives the iterative procedure.
+In summary, we start from random $\pi$ and $g$, gather a batch of trajectories.
+The batch is used to update both $g$ and $\pi$.
+Then new trajectories are generated with the updated $\pi$, rewards are computed using the updated $g$, and the process is repeated.
+This is a variant of generalized policy iteration \cite{Sutton1998}.
 
 \paragraph{Unobserved value imputation.}
 Unlike the Naive Bayes classifier, the logistic regression classifier is not able to use an arbitrary subset of features $\mathcal{H}_\pi$, but instead operates on feature vectors of a fixed size.

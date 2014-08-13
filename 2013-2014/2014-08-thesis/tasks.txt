@@ -14,7 +14,9 @@ x get in all content from cvpr14 paper into a chapter, make sure everything comp
 x get in all content from nips12 paper into a chapter, make sure everything compiles
 x get in all content from 281b report into own chapter, make sure everything compiles
 x merge nips12 and cvpr14 intros into own section
-xs merge nips12 and cvpr14 related works into own section
-- for cvpr14, see what's missing in method_new (vs method) and adjust accordingly
+x merge nips12 and cvpr14 related works into own section
+x for cvpr14, see what's missing in method_new (vs method) and adjust accordingly
+- move evaluations to own sections
+- move all MDP method setup to detection chapter, and make sure terminology is consistent
 - add 281b report as section to cvpr14 chapter
 - merge nips12 and cvpr14 conclusions
