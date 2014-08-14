@@ -1,0 +1,19 @@
+\begin{algorithm}[]
+\SetKwFunction{ComputeRewards}{ComputeRewards}
+\SetKwFunction{GatherSamples}{GatherSamples}
+\SetKwFunction{UpdatePolicy}{UpdatePolicy}
+\SetKwFunction{UpdateClassifier}{UpdateClassifier}
+
+\SetAlgoLined
+\KwIn{$\mathcal{D} = \{x_n, y_n\}_{n=1}^N$; $\mathcal{L}_\mathcal{B}$}
+\KwResult{Trained $\pi$, $g$}
+\BlankLine
+$\pi_0 \leftarrow$ random\;
+\For {$i \leftarrow 1$ \KwTo max\_iterations} {
+    States, Actions, Costs, Labels $\leftarrow$ \GatherSamples{$\mathcal{D}$, $\pi_{i-1}$}\;
+    $g_i \leftarrow$ \UpdateClassifier{States, Labels}\;
+    Rewards $\leftarrow$ \ComputeRewards{States, Costs, Labels, $g_i, \mathcal{L}_\mathcal{B}, \gamma$}\;
+    $\pi_i \leftarrow$ \UpdatePolicy{States, Actions, Rewards}\;
+}
+\caption{Because reward computation depends on the classifier, and the distribution of states depends on the policy, $g$ and $\pi$ are trained iteratively.\label{alg:learning}}
+\end{algorithm}

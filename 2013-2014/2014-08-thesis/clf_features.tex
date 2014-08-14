@@ -1,0 +1,18 @@
+%!TEX root=paper/thesis.tex
+\subsection{Static vs. Dynamic state-action feature vector.}\label{sec:policy_features}
+
+The featurization function $\phi(s)$ extracts the following features from the state:
+\begin{itemize}\addtolength{\itemsep}{-.5\baselineskip}
+\item Bit vector $\textbf{m}$ of length $F$: initially all bits are $1$ and are set to $0$ when the corresponding feature is computed.
+\item For each $h_f$, a vector of size $d_f$ representing the values; $0$ until observed.
+\item Cost feature $c \in [0, 1]$, for fraction of the budget spent.
+\item Bias feature $1$.
+\end{itemize}
+
+These features define the \textbf{dynamic} state, presenting enough information to have a \emph{closed-loop} (dynamic) policy that may select different features for different test instances.
+The \textbf{static} state has all of the above features except for the observed feature values.
+This enables only an \emph{open-loop} (static) policy, which is exactly the same for all instances.
+Policy learned with the static state is used as a baseline in experiments.
+
+The state-action feature function $\phi(s, a)$ effectively block-codes these features: it is $0$ everywhere except the block corresponding to the action considered.
+In implementation, we train $F$ separate regressions with a tied regularization parameter, which is K-fold cross-validated.

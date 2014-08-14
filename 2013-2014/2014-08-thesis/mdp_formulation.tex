@@ -1,0 +1,95 @@
+%!TEX root=paper/thesis.tex
+\subsection{MDP Formulation}\label{sec:mdp_formulation}
+
+To model the \textbf{feature selection} policy $\pi(x): \mathcal{X} \mapsto 2^\mathcal{A}$, we introduce the Markov Decision Process (MDP), which defines a single \emph{episode} of selecting features for some instance $x$.
+
+\begin{mydef} \label{def:MDP}
+The \textbf{feature selection MDP} consists of the tuple $(\mathcal{S}, \mathcal{A}, T(\cdot), R(\cdot), \gamma)$:
+\begin{itemize}\addtolength{\itemsep}{-.55\baselineskip}
+\item \textbf{State} $s \in \mathcal{S}$ stores the selected feature subset $\mathcal{H}_{\pi(x)}$ and their values and total cost $C_{\mathcal{H}_{\pi(x)}}$.
+\item The set of \textbf{actions} $\mathcal{A}$.
+\item The (stochastic) \textbf{state transition} distribution $T(s' \mid s, a)$ can depend on the instance $x$.
+\item The \textbf{reward} function $R(s, a, s') \mapsto \mathbb{R}$ is manually specified, and depends on the classifier $g$ and the instance $x$.
+\item The discount $\gamma$ determines amount of \textbf{lookahead} in selecting actions: if 0, actions are selected greedily based on their immediate reward; if 1, the reward accrued by subsequent actions is given just as much weight as the reward of the current action.
+\end{itemize}
+\end{mydef}
+
+\PM{Trajectories and reward}
+A recognition \emph{episode} takes an image $\mathcal{I}$ and proceeds from the initial state $s^0$ and action $a^0$ to the next pair $(s^1,a^1)$, and so on until $(s^J,a^J)$, where $J$ is the last step of the process with $t \le T_d$.
+At that point, the policy is terminated, and a new episode can begin on a new image.
+
+\PM{Total reward}
+We call this a \emph{trajectory} $\xi = (s_0, a_0, s_1, r_1, \dots, a_{I-1}, s_I, r_I)$, where $I$ is the total number of actions taken (and therefore features selected), $s_0$ is the initial state, $a_i \sim \pi(a \mid s_i)$ is chosen by the \emph{policy} $\pi(a \mid s)$, and $s_{i+1} \sim T(s \mid s_i, a_i)$, which can depend on $x$.
+The total expected reward (value) of an MDP episode is written as
+\begin{equation} \label{eq:expected_reward}
+V_\pi(s_0) =
+\mathbb{E}_{\xi \sim \left\{ \pi, x \right\}} r(\xi) =
+\mathbb{E}_{\xi \sim \left\{ \pi, x \right\}} \left[ \sum_{i=0}^I \gamma^i \, r_i \right]
+\end{equation}
+Gathering such trajectories forms the basis of our policy learning method.
+
+\PM{Q-Value function}
+We seek $\pi$ that maximizes the expected value of the MDP \eqref{eq:expected_reward}.
+Therefore, actions must be selected according to their expected \emph{value}, which we can specify with a function $Q(s,a): S \times \mathcal{A} \mapsto \mathbb{R}$, where $S$ is the space of all possible states, to assign a value to a potential action $a \in \mathcal{A}$ given the current state $s$ of the decision process.
+We can then define the policy $\pi$ as simply taking the action with the maximum value:
+\begin{align}
+\pi(s) = \argmax_{a_i \in \mathcal{A} \setminus \mathcal{O}} Q(s,a_i)
+\end{align}
+$Q^*(s,a)$ is the optimal \emph{action-value function}---the expected value of taking action $a$ in state $s$ and then acting optimally to the end of the episode.
+This function is defined analogously to the value function \eqref{eq:expected_reward}.
+
+\subsection{Learning the policy}
+\PM{Function approximation}
+Although the action space $\mathcal{A}$ is manageable, the space of possible states $S$ is intractable, and we must use function approximation to represent $Q(s,a)$: a common technique in reinforcement learning \cite{Sutton1998}.
+We featurize the state-action pair and assume linear structure:
+\begin{align}
+Q^\pi(s,a) = \theta_\pi^\top \phi(s,a)
+\end{align}
+where $\phi: \mathcal{S} \times \mathcal{A} \mapsto \mathbb{R}^{d_s}$ is the state featurization function, $d_s$ is the dimensionality of the state feature vector, and $\theta^\pi$ is a vector of weights that defines the policy $\pi$.
+
+\PM{Policy function}
+Specifically, the policy is defined as
+\begin{equation}
+\pi(a \mid s) = \frac{1}{Z} \exp\left(\frac{1}{\tau} \theta^T \phi(s, a)\right)
+\end{equation}
+where $Z$ is the appropriate normalization and $\tau$ is a temperature parameter that controls the level of exploration vs. exploitation in the policy.
+As $\tau \rightarrow 0$, ${\pi(a \mid s)}$ becomes highly peaked at $\argmax_a Q(s,a)$; it becomes uniform as $\tau \rightarrow \infty$.
+
+\PM{Sampling Q-function}
+While we can't directly compute the expectation in \eqref{eq:recursive_value}, we can sample it by running actual episodes to gather $<s,a,r,s'>$ samples, where $r$ is the reward obtained by taking action $a$ in state $s$, and $s'$ is the following state.
+We then learn the optimal policy by repeatedly gathering samples with the current policy, minimizing the error between the discounted reward to the end of the episode as predicted by our current $Q(s^j,a)$ and the actual values gathered, and updating the policy with the resulting weights.
+This method is akin to fitted Q-iteration, a variant of generalized policy iteration \cite{Ernst2005,Sutton1998}.
+
+\PM{Gathering trajectories}
+During training, we gather samples starting from either a random feasible state, with probability $\epsilon$, or from the initial empty state otherwise.
+Both $\epsilon$ and $\tau$ parameters decay exponentially with the number of training iterations.
+Training is terminated if $\pi_{\theta_{i+1}}$ returns the exact same sequence of episodes $\xi$ on a validation set as $\pi_{\theta_{i}}$.
+During test time, $\epsilon$ is set to $0.05$.
+
+\PM{Block-coding}
+To formulate learning the policy as a single regression problem, we represent the features in block form, where $\phi(s,a)$ is a vector of size $F|\mathcal{A}|$, with all values set to $0$ except for the $F$-sized block corresponding to $a$.
+An implementation detail: instead of block-coding $\phi(s,a)$, we learn $F$ separate $\theta_f$'s for the features $\phi(s)$: one for each action $a$
+The weight $\alpha$ of the regularization term is tied across the $F$ separate regressions and is tuned by cross-validation on 3 folds.
+
+\PM{Details}
+To prevent overfitting to the training data, we use $L_2$-regularized regression.
+We run $15$ iterations of accumulating samples by running $350$ episodes, starting with a baseline policy which will be described in \autoref{sec:evaluation}, and cross-validating the regularization parameter at each iteration.
+Samples are not thrown away between iterations.
+
+\subsubsection{Greedy vs non-myopic policy.}
+The $\gamma$ parameter of the MDP controls the level of \emph{discounting} of rewards of future action in computing the value \eqref{eq:expected_reward}.
+Note that the expected value of the final evaluation can be written recursively in terms of the value function:
+\begin{align} \label{eq:recursive_value}
+Q^\pi(s^j,a) = \mathbb{E}_{s^{j+1}} [R(s^j,a) + \gamma Q^\pi(s^{j+1},\pi(s^{j+1}))]
+\end{align}
+where $\gamma \in [0,1]$ is the \emph{discount} value.
+This setting is used as baseline.
+
+\PM{Greedy}
+In the baseline \textbf{greedy} setting, with $\gamma=0$, rewards gained by future actions are not counted at all in determining the value of the current action.
+The value function is determined entirely by the immediate reward, and so only completely greedy policies can be learned in this case.
+
+\PM{Non-myopic}
+In the \textbf{non-myopic} setting, with $\gamma=1$, rewards gained by future actions are valued exactly as much as reward gained by the current action in determining its value.
+However, a slightly lower value of $\gamma$ mitigates the effects of increasing uncertainty regarding the state transitions over long episodes.
+We set this meta-parameter of our approach through cross-validation, and find that a mid-level value ($0.4$) works best.
