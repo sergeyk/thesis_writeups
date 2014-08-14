@@ -16,7 +16,8 @@ x merge nips12 and cvpr14 related works into own section
 x for cvpr14, see what's missing in method_new (vs method) and adjust accordingly
 x move evaluations to own sections
 x move all MDP method setup to detection chapter: have to rewrite a little bit
-- add 281b report as section to cvpr14 chapter
+x add 281b report as section to cvpr14 chapter
+- go over classifier training and eval sections, ensure flow and remove all mentions of MCF (fine to leave in figures for now)
 - merge nips12 and cvpr14 abstracts and conclusions
 - take holistic pass over paper
 - go through slides and insert good figures into thesis

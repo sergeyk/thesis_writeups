@@ -12,6 +12,7 @@
 \usepackage{algorithm2e}
 \usepackage{booktabs}
 \usepackage{url}
+\usepackage{titlesec}
 \usepackage{float}
 \usepackage{subcaption}
 \usepackage{enumitem}
@@ -22,6 +23,14 @@
   citecolor=Cerulean,
   urlcolor=Cerulean
 }
+
+% Format paragraphs as sections
+\setcounter{tocdepth}{4}
+\setcounter{secnumdepth}{4}
+\titleformat{\paragraph}
+{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
 
 %% Math commands
 \newtheorem{theorem}{Theorem}

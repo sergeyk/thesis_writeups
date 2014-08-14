@@ -35,25 +35,18 @@ For the commonly used PASCAL VOC dataset \cite{pascal-voc-2010}, GIST and other 
 
 \subsection{Classification}
 
-\PM{Combining many features.}
-\emph{Boosting} is a method for combining weak learners into a more powerful classifier \parencite{Hastie2009}.
-A popular use of boosting is in introducing non-linearities by training depth-limited decision trees as weak learners---the boosting trick.
-For SVM-based classifiers, \emph{Multiple Kernel Learning} (MKL) provides a way to train classifiers using an automatically weighted combination of kernels \parencite{Lanckriet2004}.
-It has been shown that MKL is outperformed by boosting single-kernel classifiers \parencite{Gehler2009}.
-Of course, if all classifiers are linear, then combining outputs of classifiers trained on different feature channel with another classifier is equivalent to training one classifier on all features at once.
-
-\PM{Feature selection.}
+\PM{Feature selection}
 The simplest way to limit the number of features used at test time is to $L_1$-regularize.
 This method does not explicitly consider feature cost, nor is it able to evaluate features one by one, or to give an answer before all features are computed.
 
-\PM{Cascades.}
+\PM{Cascades}
 A well-known method to evaluate features sequentially is the cascaded boosted classifier of Viola \& Jones \parencite{Viola2004} (updated by Bourdev \& Brandt \parencite{Bourdev-CVPR-2005} with a soft threshold), which is able to quit evaluating an instance before all features are computed---but feature cost was not considered.
 The cost-sensitive cascade of Chen et al.\ \parencite{Chen-AISTATS-2012} optimizes stage order and thresholds to jointly minimize classification error and feature computation cost.
 Xu et al.\ \parencite{Xu-ICML-2012} and Grubb \& Bagnell \parencite{Grubb-AISTATS-2012} separately develop a variant of gradient boosting for training cost-sensitive classifiers; the latter prove near-optimality of their greedy algorithm with submodularity results.
 Their methods are tightly coupled to the stage-wise regression algorithm.
 Cascades are not dynamic policies: they cannot change the order of execution based on observations obtained during execution, which is our goal.
 
-\PM{Dynamic feature selection.}
+\PM{Dynamic feature selection}
 In contrast, \emph{Label trees} guide an instance through a tree of classifiers; their structure is determined by the confusion matrix or learned jointly with weights \parencite{Deng-NIPS-2011}.
 Xu et al.\ \parencite{Xu-ICML-2013} learn a cost-sensitive binary tree of weak learners using an approach similar to the cyclic optimization of \parencite{Chen-AISTATS-2012}.
 Gao \& Koller \parencite{Gao-NIPS-2011} propose a method for \emph{active classification}: myopically selecting the next feature based on expected information gain given the values of the already selected features.
@@ -68,3 +61,30 @@ Benbouzid et al.\ \parencite{Benbouzid-ICML-2012} formulate an MDP that simply e
 \PM{Misc}
 Less directly related---but exciting for its novelty---is the work of \parencite{Weiss-ICCV-2013}, who apply simple introspection to structured models for a significant speedup of human pose estimation.
 Another exciting direction is theoretical analysis of near-optimal policies with humans in the loop \parencite{Chen-2014-ICML}.
+
+\subsubsection{Feature Combination}
+
+\PM{Boosting and MKL}
+\emph{Boosting} is a method for combining weak learners into a more powerful classifier \parencite{Hastie2009}.
+A popular use of boosting is in introducing non-linearities by training depth-limited decision trees as weak learners---the boosting trick.
+For SVM-based classifiers, \emph{Multiple Kernel Learning} (MKL) provides a way to train classifiers using an automatically weighted combination of kernels \parencite{Lanckriet2004}.
+It has been shown that MKL is outperformed by boosting single-kernel classifiers \parencite{Gehler2009}.
+Of course, if all classifiers are linear, then combining outputs of classifiers trained on different feature channel with another classifier is equivalent to training one classifier on all features at once.
+
+\PM{Imputing missing values}
+The imputation problem is faced in the \emph{collaborative filtering} literature, working on problems such as the Netflix Prize \cite{Koren-2009}.
+Matrix factorization methods, commonly based on the Singular Value Decomposition (SVD), are often employed.
+Our SVD imputation method is inspired by this literature.
+However, the training data is also missing values in this problem, and the end goal is not classification with imputed features, which makes it different from ours.
+Imputation approaches have also been explored in genomics work, where the real-world data is often missing a large portion of the observations \cite{Hastie-1999}.
+
+\PM{Expensive methods}
+Our main motivating case is the problem of test-time dynamic feature selection.
+Locally-weighted regression, corresponding to a mixture of Gaussians model, was used for the classification task in \cite{Gao-NIPS-2011}.
+If the number of possible observed subsets is bounded, then a separate classifier can be learned for each subset---this is done in the tree-structured dynamic policy of \cite{Xu-ICML-2013}.
+We do not want to be limited to a tree structure, and so would like a more general method.
+
+\PM{Modifying loss}
+An interesting related problem is explored in work on feature corruption, for example the ``Nightmare at test time'' scenario of \cite{Globerson-ICML-2006}, and the Marginalized Corrupted Features of \cite{Maaten-ICML-2013}.
+These approaches modify the loss function of a linear classifier with, respectively, the worst-case or the expected-case of feature corruption.
+Because they provide additional regularization of the classifier weights, such approaches may increase performance even if there is no test-time corruption.
