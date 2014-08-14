@@ -4,12 +4,10 @@ Maybe
 
 Definitely
 ----------
-- add R-CNN stuff to detection section
 - add statespace exploration approaches figure to related work for classification
 
 Draft
 -----
-(in order)
 x get in all content from cvpr14 paper into a chapter, make sure everything compiles
 x get in all content from nips12 paper into a chapter, make sure everything compiles
 x get in all content from 281b report into own chapter, make sure everything compiles
@@ -20,3 +18,9 @@ x move evaluations to own sections
 - move all MDP method setup to detection chapter: have to rewrite a little bit
 - add 281b report as section to cvpr14 chapter
 - merge nips12 and cvpr14 conclusions
+- take holistic pass over paper
+
+If adding C-CNN
+---------------
+- add R-CNN stuff to detection section
+- add C-CNN paper as chapter

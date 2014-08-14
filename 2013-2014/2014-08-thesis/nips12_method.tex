@@ -20,17 +20,17 @@ A common measure of a correct detection is the PASCAL overlap: two bounding boxe
 Multi-class performance is evaluated by averaging the individual per-class AP values.
 In a specialized system such as the advertising case study from~\autoref{sec:introduction}, the metric generalizes to a weighted average, with the weights set by the \emph{values} of the classes.
 
-\section{Multi-class Recognition Policy} \label{sec:tech}
-
+\PM{Policy}
 Our goal is a multi-class recognition policy $\pi$ that takes an image $\mathcal{I}$ and outputs a list of multi-class detection results by running detector and global scene \emph{actions} sequentially.
-
 The policy repeatedly selects an action $a_i \in \mathcal{A}$, executes it, receiving observations $o_i$, and then selects the next action.
 The set of actions $\mathcal{A}$ can include both classifiers and detectors: anything that would be useful for inferring the contents of the image.
 
+\PM{Actions}
 Each action $a_i$ has an expected cost $c(a_i)$ of execution.
 Depending on the setting, the cost can be defined in terms of algorithmic runtime analysis, an idealized property such as number of \emph{flops}, or simply the empirical runtime on specific hardware.
 We take the empirical approach: every executed action advances $t$, the \emph{time into episode}, by its runtime.
 
+\PM{Anytime metric}
 As shown in Figure~\ref{fig:nips12_figure1}, the system is given two times: the setup time $T_s$ and deadline $T_d$.
 We want to obtain the best possible answer if stopped at any given time between the setup time and the deadline.
 A single-number metric that corresponds to this objective is the area captured under the curve between the start and deadline bounds, normalized by the total area.
@@ -55,6 +55,7 @@ The specific actions we consider in the following exposition are detector action
 Although we avoid this in the exposition, note that our system easily handles multiple detector actions per class.
 
 \subsection{Selecting actions} \label{sec:value}
+
 As our goal is to pick actions dynamically, we want a function $Q(s,a): S \times \mathcal{A} \mapsto \mathbb{R}$, where $S$ is the space of all possible states, to assign a value to a potential action $a \in \mathcal{A}$ given the current state $s$ of the decision process.
 We can then define the policy $\pi$ as simply taking the action with the maximum value:
 \begin{align}
@@ -72,18 +73,12 @@ Recall that detector actions returns lists of detection hypotheses.
 Therefore, the final AP vs. Time evaluation of an episode is a function $eval(h,T_s,T_d)$ of the history of execution $h=s^0,s^1,\dots,s^J$.
 It is precisely the normalized area under the AP vs. Time curve between $T_s$ and $T_d$, as determined by the detections in $\mathbf{o}^j$ for all steps $j$ in the episode.
 
-\begin{figure}[h!]
-\centering
-\includegraphics[width=\linewidth]{../../../2011-2012/figures/apvst_expl.pdf}
-\caption{
-Graphically representing our reward function.
-}\label{fig:rewards}
-\end{figure}
+\input{../det_rewards_fig}
 
-Note from Figure~\ref{fig:rewards} that this evaluation function is additive per action, as each action $a$ generates observations that may raise or lower the mean AP of the results so far ($\Delta ap$) and takes a certain time ($\Delta t$).
+Note from Figure~\ref{fig:det_rewards} that this evaluation function is additive per action, as each action $a$ generates observations that may raise or lower the mean AP of the results so far ($\Delta ap$) and takes a certain time ($\Delta t$).
 We can accordingly represent the final evaluation $eval(h,T_s,T_d)$ in terms of individual action rewards: $\sum_{j=0}^J R(s^j,a^j)$.
 
-Specifically, as shown in Figure~\ref{fig:rewards}, we define the \emph{reward} of an action $a$ as
+Specifically, as shown in Figure~\ref{fig:det_rewards}, we define the \emph{reward} of an action $a$ as
 \begin{align}\label{eq:advanced}
 R(s^j,a) = \Delta \text{ap} (t_T^j-\frac{1}{2}\Delta t)
 \end{align}

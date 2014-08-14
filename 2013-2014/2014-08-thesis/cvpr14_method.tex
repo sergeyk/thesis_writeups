@@ -1,17 +1,7 @@
-%!TEX root=../paper/thesis.tex
+%!TEX root=paper/thesis.tex
 \chapter{Reinforcement Learning for Anytime Classification}
 
-\section{Anytime Classification by Cost-sensitive Dynamic Feature Selection}
-
-\begin{figure}[ht]
-\includegraphics[width=1\linewidth]{../../figures/rewards.pdf}
-\caption{
-Definition of the reward function.
-To maximize the total area above the entropy vs. cost curve from $0$ to $\mathcal{B}$, we define the reward of an individual action as the area of the slice of the total area that it contributes.
-From state $s$, action $a = h_f$ leads to state $s'$ with cost $c_f$.
-The information gain is $I_{\mathcal{H}_s}(Y; h_f) = H(Y; \mathcal{H}_s) - H(Y; \mathcal{H}_s \cup {h_f})$.
-\label{fig:rewards}}
-\end{figure}
+\section{Problem Definition}
 
 \begin{mydef} \label{def:problem}
 \textbf{The test-time efficient multi-class classification problem} consists of
@@ -47,33 +37,12 @@ Note that in state-of-the-art object recognition systems, complex features and f
 At training time, our computation is unbudgeted, and we can compute all features to have \emph{fully-observed} training instances.
 At test time, there is a budget and so the instances we classify will only be \emph{partially-observed}, as determined by the feature selection policy.
 
+\subsection{Dynamic feature selection as a Markov-Decision-Process (MDP).}
+
 We defer discussion of learning the \textbf{feature combination} classifier $g(\mathcal{H}_\pi) : 2^\mathcal{H} \mapsto \mathcal{Y}$ to~\autoref{sec:classifier}.
 For now, we assume that $g$ can combine an arbitrary subset of features and provide a distribution $P(Y = y)$.
 For example, $g$ could be a Naive Bayes (NB) model trained on the fully-observed data.
 
-% \subsection{Static greedy selection.}
-% Our initial goal is select a feature subset $\pi(x)$ such that $C_{\pi(x)} \leq \mathcal{B}$ and $\sum \ell(g(\pi(x_n)), y_n)$ is minimized.
-% We assume that given a feature subset $\pi(x)$, we are able to find a classifier function $g$ such that the loss is minimized.
-
-% If the classifier $g$ can give a full distribution $P(Y = y)$ and not just a prediction $y \in \{1, \dots, K\}$, we can maximize information gain of the selected subset, instead of directly minimizing the loss of $g(\pi(x))$:\[
-% I(Y; \pi(x)) = H(Y) - H(Y | \pi(x)) = \sum_{y \in Y} P(y) \log P(y) -  \sum_{\substack{y \in Y,\\z \in Z}} P(y, z) \log P(y \mid z)
-% \]
-% To the extent that $g$ is unbiased, maximizing information gain corresponds to minimizing loss, and has the benefit of ensuring that we not only make the right classification decision but also become maximally certain.
-
-% Finding the optimal subset is NP-hard.
-% A common heuristic is simple greedy selection, which is known to be near-optimal for optimizing submodular set functions with unit-cost elements \parencite{Nemhauser-1978}.
-% In case of non-uniform additive costs, it can be proven that when all features $h$ are independent given $Y$ (as in an NB classifier), building $\pi(x)$ by repeatedly selecting
-% \begin{align*}
-% h* = \argmax_{h \in \mathcal{H} \setminus \pi(x)} \frac{1}{c_f} \left[ H(h \mid \pi(x)) - H(h \mid Y) \right]
-% \end{align*}
-% while $C_{\pi(x)} \leq \mathcal{B}$ gives $I(Y; \pi(x)) \geq \frac{1}{2} (1 - 1/e) I_{\text{OPT}}$ with additional terms if the entropy calculation is not exact \parencite{Krause-UAI-2005}\footnote{A tighter (by factor of 2) bound is possible with a $O(F^5)$ instead of this $O(F^2)$ algorithm \parencite{Krause-note-2005}.}.
-
-% However, we may find the feature independence assumption too restrictive or may not be able to reliably compute entropy.
-% Additional difficulties come from introducing a setup cost or non-additive costs \todo{although we could resolve them.}
-% When we make the feature selection dynamic---guided by the feature values observed---we will face further challenges if the structure of the problem necessitates a non-myopic solution.
-% \todo{Need stronger explanation for why we are not proceeding with adaptive submodularity---or just not mention submodularity at all?}
-
-\subsection{Dynamic feature selection as a Markov-Decision-Process (MDP).}
 To model the \textbf{feature selection} policy $\pi(x): \mathcal{X} \mapsto 2^\mathcal{H}$, we introduce the Markov Decision Process (MDP), which defines a single \emph{episode} of selecting features for some instance $x$.
 
 \begin{mydef} \label{def:MDP}
@@ -98,8 +67,11 @@ V_\pi(s_0) =
 Gathering such trajectories forms the basis of our policy learning method.
 
 \subsection{Defining the reward.}
+
+\input{../clf_rewards_fig}
+
 The budget-sensitive loss $\mathcal{L}_\mathcal{B}$ enforces \emph{Anytime} performance by valuing early gains more than later gains.
-To formalize this, consider \hyperref[fig:rewards]{Figure~\ref*{fig:rewards}}, which shows the entropy and the 0-1 loss of $g$ at every point in a sequential feature selection episode for some instance $x$.
+To formalize this, consider \hyperref[fig:clf_rewards]{Figure~\ref*{fig:clf_rewards}}, which shows the entropy and the 0-1 loss of $g$ at every point in a sequential feature selection episode for some instance $x$.
 For the best \emph{Anytime} performance, we want to capture the most area above the loss vs. cost curve, up to max budget $\mathcal{B}$ \parencite{Karayev-NIPS-2012}.
 
 Recall from \eqref{eq:expected_reward} that the value of an episode $\xi$ is defined as the sum of obtained rewards.
@@ -113,7 +85,7 @@ I(Y; \mathcal{H}_{\pi(x)}) &=& H(Y) - H(Y | \mathcal{H}_{\pi(x)}) = \\ \notag
 &&\sum_{y, \mathcal{H}_{\pi(x)}} P(y, \mathcal{H}_{\pi(x)}) \log P(y \mid \mathcal{H}_{\pi(x)})
 \end{eqnarray}
 To the extent that $g$ is unbiased, maximizing information gain corresponds to minimizing loss, and ensures that we not only make the right classification decision but also become maximally certain.
-Therefore, as graphically presented in \hyperref[fig:rewards]{Figure~\ref*{fig:rewards}}, we define the reward of selecting feature $h_s$ with cost $c_f$ with the set $\mathcal{H}_s$ computed to be $I_{\mathcal{H}_s}(Y; h_f) (\mathcal{B}_s - \frac{1}{2}c_f)$.
+Therefore, as graphically presented in \hyperref[fig:clf_rewards]{Figure~\ref*{fig:clf_rewards}}, we define the reward of selecting feature $h_s$ with cost $c_f$ with the set $\mathcal{H}_s$ computed to be $I_{\mathcal{H}_s}(Y; h_f) (\mathcal{B}_s - \frac{1}{2}c_f)$.
 
 Although we do not evaluate in this regime, note that this definition easily incorporates a \textbf{setup cost} in addition to \textbf{deadline cost} by only computing the area in between setup and deadline costs.
 
@@ -145,7 +117,6 @@ As $\tau \rightarrow 0$, ${\pi(a \mid s)}$ becomes highly peaked at $\argmax_a Q
 As commonly done, we learn the $\theta$ by \emph{policy iteration}.
 First, we gather $(s, a, r, s')$ samples by running episodes (to completion) with the current policy parameters $\theta_i$.
 From these samples, $\hat{Q}(s, a)$ values are computed, and $\theta_{i+1}$ are given by $L_2$-regularized least squares solution to $\hat{Q}(s, a) = \theta^T \phi(s, a)$, on all states that we have seen in training.
-
 \todo{can expand on the learning method}
 
 A detail: instead of block-coding $\phi(s,a)$, we learn $F$ separate $\theta_f$'s for the features $\phi(s)$: one for each action $a$.
@@ -196,7 +167,7 @@ In implementation, we train $F$ separate regressions with a tied regularization 
 The $\gamma$ parameter of the MDP controls the level of \emph{discounting} of rewards of future action in computing the value \eqref{eq:expected_reward}.
 In the baseline \textbf{greedy} setting, with $\gamma=0$, rewards gained by future actions are not counted at all in determining the value of the current action.
 In the \textbf{non-myopic} setting, with $\gamma=1$, rewards gained by future actions are valued exactly as much as reward gained by the current action in determining its value.
-In other words, the value of taking an action is the entire area above the curve as defined in \autoref{fig:rewards}.
+In other words, the value of taking an action is the entire area above the curve as defined in \autoref{fig:clf_rewards}.
 The former setting is used as baseline.
 
 \subsection{Learning the classifier.}\label{sec:classifier}
