@@ -9,7 +9,9 @@ x for cvpr14, see what's missing in method_new (vs method) and adjust accordingl
 x move evaluations to own sections
 x move all MDP method setup to detection chapter: have to rewrite a little bit
 x add 281b report as section to cvpr14 chapter
-- go over classifier training and eval sections, ensure flow and remove all mentions of MCF (fine to leave in figures for now)
+x go over classifier training and eval sections, ensure flow and remove all mentions of MCF (fine to leave in figures for now)
+    x move imputation evaluation to appendix1
+    x remove all mention of retraining and remove tables
 - merge nips12 and cvpr14 abstracts and conclusions
 - take holistic pass over paper, ensuring notation consistency and marginal labels
 - go through slides and insert good figures into thesis
@@ -26,3 +28,4 @@ Little things
 Maybe
 -----
 - add figure of the fei-fei progressive scene recognition from oral.key
+- re-plot 281b results

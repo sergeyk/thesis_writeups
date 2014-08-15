@@ -1,5 +1,6 @@
 \section{Evaluation}\label{sec:clf_evaluation}
 
+\PM{Settings}
 We evaluate the following sequential selection baselines:
 
 \begin{itemize}
@@ -10,17 +11,23 @@ We evaluate the following sequential selection baselines:
 
 Our method is the \textbf{Dynamic, non-myopic} policy: observed feature values, and full lookahead.
 
-We evaluate two forms of test-time efficient performance measure: the area under the curve and the performance at max budget, although note that all methods are trained only for the former measure.
+\PM{Metrics}
+We evaluate two forms of test-time efficient performance measure: the area under the curve and the performance at max budget.
+(Note that all methods are trained only for the former measure.)
 
+\PM{Classifier}
 In preliminary experiments, Logistic Regression always performed better than the Gaussian Naive Bayes classifier, and so only the former is used in the experiments below.
+As described, we evaluated classification with \textbf{Gaussian} vs. \textbf{Mean} imputation, and with different number of classifiers (1, 3, and 6) clustered by feature subsets.
+We found that Gaussian imputation performed better than mean imputation, but
+
+Although increased number of classifiers sometimes increased performance, it also made our method prone to overfitting.
+In the final accounting, $K=1$ classifiers worked best on all tasks.
+Results of detailed experiments on imputation and clustering are given in \autoref{sec:imputation_evaluation}.
+For policy experiments, we report only the best achieved imputation method.
+
+\PM{Implementation}
+For details on the reinforcement learning implementation, see \autoref{sec:mdp_formulation} and \autoref{sec:det_evaluation}.
 We largely rely on classifier implementations in the \texttt{scikit-learn} package \parencite{Pedregosa2011}.
-
-As described above, we evaluated classification with \textbf{Gaussian} vs. \textbf{Mean} imputation, and with different number of classifiers (1, 3, and 6) clustered by feature subsets.
-We found that mean imputation performed better than Gaussian imputation, and although increased number of classifiers sometimes increased performance, it also made our method more prone to overfitting; $K=1$ classifiers worked best on all tasks.
-In the following section, we provide detailed results of preliminary evaluation of the imputation method.
-After that, we report only the best achieved imputation method.
-
-\input{../imputation_evaluation}
 
 \subsection{Experiment: Synthetic}
 

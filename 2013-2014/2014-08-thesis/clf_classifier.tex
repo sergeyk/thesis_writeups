@@ -1,10 +1,12 @@
 %!TEX root=paper/thesis.tex
-\subsection{Learning the classifier}\label{sec:classifier}
+\subsection{Learning the classifier}\label{sec:clf_classifier}
 
-\PM{Logistic regression}
+\PM{Logistic regression and NN}
 We have so far assumed that $g$ can combine an arbitrary subset of features and provide a distribution $P(Y = y)$---for example, a Gaussian Naive Bayes (NB) model trained on the fully-observed data.
 However, a Naive Bayes classifier suffers from its restrictive independence assumptions.
-Since discriminative classifiers commonly provide better performance, we use a \textbf{logistic regression} classifier.
+Since discriminative classifiers commonly provide better performance, we'd like to use a \textbf{logistic regression} classifier.
+Nearest Neighbor methods also provide a robust classifier for partially observed data, but are slow for large datasets.
+We consider them in this exposition, but do not use them in final policy learning experiments due to this problem.
 
 \PM{Missing features}
 This presents a new challenge: at test time, some feature values are missing.
@@ -35,6 +37,7 @@ $X^c$ denotes the fully observed $N \times F$ training set.
 We assume that we have only sequential access to the missing-feature test instances $\mathbf{x}^m$.
 
 \paragraph{Mean imputation}
+
 A basic strategy is \textbf{mean imputation}: filling in with the mean value of the feature.
 We simply replace the missing value in $X^m$ with their row mean in $X^c$.
 Because our data is always zero-mean, this amounts to simply replacing the value with $0$.
@@ -44,52 +47,6 @@ Because our data is always zero-mean, this amounts to simply replacing the value
  \bar{\mathbf{h}}_i &\mbox{ otherwise}
 \end{array} \right. \right]
 \end{align}
-
-\paragraph{SVD Imputation}
-The basic idea is to learn a set of basis function using the Singular Value Decomposition (SVD) of the matrix $X^c$, and impute missing values in $X^m$ by regressing to the basis functions using the observed values, and using the regression coefficients to predict the missing values.
-
-The rank-$R$ truncated SVD of $N \times F$ matrix $X^c$ can be written as
-\begin{equation}
-\hat{X}^c = U_R D_R V_R^T
-\end{equation}
-where $U$ is an $N \times R$ matrix of left singular vectors, $V$ is an $F \times R$ matrix of right singular vectors, and $D$ is a diagonal matrix of the top $R$ singular values of $X^c$.
-
-It can be proven \cite{Hopcroft-book-2013} that $U$ and $V$ are orthogonal, and that the truncated SVD is the best rank-$R$ approximation to $X^c$:
-\begin{equation}
-\min_{M\,\text{of rank}\,J} || X^c - M ||_F
-\end{equation}
-
-To set up the imputation, let's view this result from the angle of least-squares regression of a row $x$ of $X^c$ onto the right singular vectors:
-\begin{equation} \label{eq:svd_regression}
-\min_\theta \sum_{f=1}^F (x_f - \sum_{r=1}^R v_{fr} \theta_r )^2 = \min_\theta \left\| x - V_R \theta \right\|
-\end{equation}
-
-The solution is given in closed form by $\left( V_R^T V_R \right)^{-1} V_R^T x$, and as $V_R$ is orthogonal, we obtain $\theta = V_R^T x$.
-A row is predicted as $\hat{x} = V_R \theta$, and the whole matrix as $\hat{X^c} = \Theta V_R^T$.
-$\Theta = X^c V_R = U_R D_R$ gives regression coefficients for all rows, and so $\hat{X}^c = U_R D_R V_R^T$.
-
-We see that the SVD performs regression of $X^c$ onto $V_R$.
-Now consider the missing-value matrix $X^m$.
-The same regression can be performed, using only observed values:
-\begin{equation}
-\min_\theta \sum_{f \text{obs}} (x_f - \sum_{r=1}^R v_{fr} \theta_r )^2 = \min_\theta \left\| x - V_R^\text{o} \theta \right\|
-\end{equation}
-where $V_R^o$ is a version of $V_R$ composed only of rows corresponding to observed features in $x$.
-
-The solution is now given by $\theta = \left( V_R^{\text{o}T} V_R^o \right)^{-1} V_R^{\text{o}T} x$ ($V^\text{o}$ is not necessarily orthogonal), and the predictions for the missing elements of $x$ are $V_R^\text{u} \theta$, where $V_R^\text{u}$ is the complement to $V_R^\text{o}$, composed only of rows corresponding to unobserved features in $x$.
-
-Note that we do not need an intercept term for these regressions, as each column of $X$ is zero-mean.
-
-\PM{Parameters}
-$R$ is a parameter of this approach.
-As $N > F$ in all of our evaluation, the largest value that $R$ can take on is $F$.
-Using a smaller value may in fact be beneficial as it may rid the data of noise, but there is no theory to guide us.
-We set $R$ via 3-fold cross-validation on the training set.
-
-\PM{Computational Complexity}
-There are numerous algorithms for computing the SVD, but the runtime is usually dominated by a $O(N^3)$ operation, which scales poorly with the size of the dataset.
-Computing the full SVD is also very memory-intensive---prohibitively so for even medium-sized datasets (on the order of 1000x1000).
-Computing the truncated SVD, which is all we need, can be done with constant memory, but remains slow in all implementations considered.
 
 \paragraph{Joint Gaussian model}
 
@@ -117,17 +74,13 @@ In this case, the distribution over unobserved variables conditioned on the obse
 \mathbf{x}^\text{u} \mid \mathbf{x}^\text{o} \sim \mathcal{N} \left( \mathbf{C}^T \mathbf{A}^{-1} \mathbf{x}^\text{o},\, \mathbf{B} - \mathbf{C}^T \mathbf{A}^{-1} \mathbf{C} \right)
 \end{equation}
 
-\PM{Parameters}
-In this approach, we can choose to either always set the imputed values to the mean of the conditional Gaussian, or to impute with noise specified by the covariance matrix.
-In preliminary experiments, using the mean only provided far better performance, so only that setting is included in the evaluation.
-
 \PM{Computational Complexity}
 After computing the complete covariance matrix $\Sigma$, which takes $O(N^3)$ time, we need to make $N'$ test-time predictions.
 In the course of the predictions, we may need to compute at most $\min(N', 2^F)$ unique matrix inversions (again in $O(N^3)$).
 The size of the matrices being inverted is proportional to the budget $b$, making this method slower for larger budgets.
 
 \paragraph{k-NN Imputation and Prediction}
-In the SVD and Gaussian methods, we want to use some knowledge of the feature covariance to fill in the missing values.
+In the Gaussian method, we want to use some knowledge of the feature covariance to fill in the missing values.
 Instead of learning anything, we could go directly to the source of the covariances---the actual feature values for all points in the training set.
 The family of Nearest Neighbor methods takes this approach.
 The algorithm for imputation is simple: find the nearest neighbors in the observed dimensions, and use their averaged values to fill in the unobserved dimensions.
@@ -135,25 +88,16 @@ The algorithm for imputation is simple: find the nearest neighbors in the observ
 For $\mathbf{X}^m$, we find the $k$ nearest neighbors with the highest dot product similarity $\mathbf{x}^{cT} \mathbf{x^m}$ or lowest Euclidean distance $\| \mathbf{x}^{c} - \mathbf{x}^{m} \|$, using only the features that are observed in $\mathbf{x}^{m}$.
 For \textbf{imputation}, the unobserved values are set to the average across these nearest neighbors for that dimension.
 Similarly, we do \textbf{classification} by returning the mode label of the nearest neighbors.
-The obvious parameter of $k$-NN is $k$, which we set by 3-fold cross-validation on the training set (up to $20$).
 
 \PM{Computational Complexity}
 Finding the nearest neighbors by dot product similarity is $O(NF'^2)$, and Euclidean distance is the same with an additional constant term.
 $F'S$ is the number of observed dimensions, which grows proportionally with budget $b$, making this method more expensive with increased budget.
 
-\subsubsection{Learning classifier}
-
-\todo{In the evaluation, we make a distinction between retraining and using original classifier. In CVPR14, we don't make such a distinction. Need to fix.}
-
-In addition to the $k$-NN classifier described above, we consider three linear classifiers, obtained by minimizing:
-\begin{enumerate}
-  \item Logistic loss on fully observed data: simply using $X^c$.
-  \item Logistic loss on synthetically re-imputed version of the data: we obtain $X^m$ through applying $o(x, b)$ on each $x^c$, and then imputing the missing values with the methods described.
-\end{enumerate}
-
 \subsubsection{Learning more than one classifier}
 
-As illustrated in \hyperref[fig:state_space]{Figure~\ref*{fig:state_space}}, the policy $\pi$ selects some feature subsets more frequently than others.
+\input{../mdp_masks_fig}
+
+As illustrated in \hyperref[fig:mdp_masks]{Figure~\ref*{fig:mdp_masks}}, the policy $\pi$ selects some feature subsets more frequently than others.
 Instead of learning only one classifier $g$ that must be robust to all observed feature subsets, we can learn several classifiers, one for each of the most frequent subsets.
 This is done by maintaining a distribution over encountered feature subsets during training.
 
@@ -161,16 +105,3 @@ We use hierarchical agglomerative clustering, growing clusters bottom-up from th
 In the case of training $K$ classifiers, we need to find $K$ clusters such that the masks are distributed as evenly as possible into the clusters.
 The distance measure for the binary masks is the Hamming distance; standard K-Means clustering technique is not applicable to this distance measure.
 Each one of $K$ classifiers is trained with the \textsc{Liblinear} implementation of logistic regression, with $L_2$ regularization parameter K-fold cross-validated at each iteration.
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width=1\linewidth]{../../figures/mdp_masks.pdf}
-\caption{
-The action space $\mathcal{A}$ of the MDP is the the set of features $\mathcal{H}$, represented by the $\phi$ boxes.
-The primary discretization of the state space can be visualized by the possible feature subsets (larger boxes); selected features are colored in the diagram.
-The feature selection policy $\pi$ induces a distribution over feature subsets, for a dataset, which is represented by the shading of the larger boxes.
-Not all states are reachable for a given budget $\mathcal{B}$.
-In the figure, we show three ``budget cuts'' of the state space.
-\label{fig:state_space}
-}
-\end{figure}

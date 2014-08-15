@@ -1,4 +1,5 @@
-\subsection{Missing value imputation}\label{sec:clf_eval_imputation}
+%!TEX root=paper/thesis.tex
+\chapter{Missing value imputation}\label{sec:imputation_evaluation}
 
 We evaluate reconstruction and classification error on two datasets: Digits and Scenes-15.
 Two feature selection policies are considered: Random and Clustered.
@@ -7,26 +8,15 @@ For each policy, we consider Independent and Block-wise selection patterns.
 We find that mean imputation with classifier retraining is a reasonably well-performing approach.
 Nearest Neighbor methods perform best but are the most expensive.
 Gaussian imputation method performs very well, but is also expensive.
-
-Training classifiers with a loss function modified to expect a certain level of feature corruption did not improve performance.
 Training additional classifiers for clusters of observed feature subsets did not improve performance.
 
 Feature selection had four experimental conditions.
 \begin{itemize}
-\item
-In \textbf{Random, Independent} selection, each feature was selected independently, and the total number of possible masks for a given budget was not bounded, such that each test instance could have a unique mask (if the number of test instances $N$ was less than the total number of possible feature subsets $2^F$.
-
-\item
-In \textbf{Random, Block-wise} selection, there was no bound on the number of possible masks for a given budget, but features were selected by blocks.
-
-\item
-In \textbf{Clustered, Independent} selection, each feature was selected independently, but there were at most $K$ possible masks for a given budget.
-
-\item
-In \textbf{Clustered, Block-wise} selection, there were at most $K$ possible masks for a budget, and features were selected by blocks.
+\item In \textbf{Random, Independent} selection, each feature was selected independently, and the total number of possible masks for a given budget was not bounded, such that each test instance could have a unique mask (if the number of test instances $N$ was less than the total number of possible feature subsets $2^F$.
+\item In \textbf{Random, Block-wise} selection, there was no bound on the number of possible masks for a given budget, but features were selected by blocks.
+\item In \textbf{Clustered, Independent} selection, each feature was selected independently, but there were at most $K$ possible masks for a given budget.
+\item In \textbf{Clustered, Block-wise} selection, there were at most $K$ possible masks for a budget, and features were selected by blocks.
 \end{itemize}
-
-The MCF method is only evaluated in the \textbf{Random, Independent} policy setting, most advantageous to its assumptions.
 
 All datasets were first standardized by subtracting the row mean and dividing by the row standard deviation.
 
@@ -39,14 +29,12 @@ The number of clusters for clustered selection was 10.
 For block-wise feature selection, the number of blocks was set to 8.
 
 Figure~\ref{fig:digits} shows the results; here we summarize the conclusions:
+
 \begin{itemize}
-\item Mean imputation has highest reconstruction and classification error, aside from SVD, which was so bad that its curves were not plotted.
+\item Mean imputation has highest reconstruction and classification error.
 \item Dot product-based kNN imputation performs worse than Gaussian imputation for both reconstruction and classification, and is slower.
 \item Euclidean distance-based kNN imputation performs best, but is slowest.
-\item Retraining classifier with mean imputation makes a big difference, while retraining classifier with Gaussian imputation does not make a difference at all.
-Presumably, Gaussian imputation maintains the feature statistics of the fully-observed classifier sufficiently well.
-\item Modifying the loss function with MCF results in worse performance than doing mean imputation and retraining (MCF evaluated only on the \textbf{Random, Independent} policy).
-\item Training additional classifiers for clusters of observed susbets does not make a difference to classification performance.
+\item Training additional classifiers for clusters of observed subsets slightly decreased classification error, but only if the number of clusters was high.
 \item These results hold for all policy experimental conditions.
 \end{itemize}
 
@@ -54,35 +42,34 @@ Presumably, Gaussian imputation maintains the feature statistics of the fully-ob
     \centering
     \begin{subfigure}[b]{.9\textwidth}
         \centering
-        \includegraphics[width=\linewidth]{../../figures/281b/digits/random_-1/subplots.png}
+        \includegraphics[width=\linewidth]{../../figures/281b_for_thesis/digits/random_-1/subplots.png}
         \caption{Random, independent feature selection.\vspace{.2cm}}
     \end{subfigure}
     \begin{subfigure}[b]{.9\textwidth}
         \centering
-        \includegraphics[width=\linewidth]{../../figures/281b/digits/random_8/subplots.png}
+        \includegraphics[width=\linewidth]{../../figures/281b_for_thesis/digits/random_8/subplots.png}
         \caption{Random, block-wise (8 blocks) feature selection.\vspace{.2cm}}
     \end{subfigure}
     \begin{subfigure}[b]{\textwidth}
         \centering
-        \includegraphics[width=\linewidth]{../../figures/281b/digits/clustered_-1/subplots.png}
+        \includegraphics[width=\linewidth]{../../figures/281b_for_thesis/digits/clustered_-1/subplots.png}
         \caption{Clustered (10 clusters), independent feature selection.\vspace{.2cm}}
     \end{subfigure}
     \begin{subfigure}[b]{\textwidth}
         \centering
-        \includegraphics[width=\linewidth]{../../figures/281b/digits/clustered_8/subplots.png}
+        \includegraphics[width=\linewidth]{../../figures/281b_for_thesis/digits/clustered_8/subplots.png}
         \caption{Clustered (10 clusters), block-wise (8 blocks) feature selection.\vspace{.2cm}}
     \end{subfigure}
-
-    \begin{subfigure}[t]{.48\textwidth}
-        \centering
-        \tiny{\input{../../figures/281b/digits/err_auc_table.tex}}
-        \caption{Areas under the Classification Error vs. Budget curves. Lower is better.}
-    \end{subfigure}\hfill%
-    \begin{subfigure}[t]{.48\textwidth}
-        \centering
-        \tiny{\input{../../figures/281b/digits/rmse_auc_table.tex}}
-        \caption{Areas under the Reconstruction RMSE vs. Budget curves. Lower is better.}
-    \end{subfigure}
+    % \begin{subfigure}[t]{.48\textwidth}
+    %     \centering
+    %     \tiny{\input{../../figures/281b_for_thesis/digits/err_auc_table.tex}}
+    %     \caption{Areas under the Classification Error vs. Budget curves. Lower is better.}
+    % \end{subfigure}\hfill%
+    % \begin{subfigure}[t]{.48\textwidth}
+    %     \centering
+    %     \tiny{\input{../../figures/281b_for_thesis/digits/rmse_auc_table.tex}}
+    %     \caption{Areas under the Reconstruction RMSE vs. Budget curves. Lower is better.}
+    % \end{subfigure}
     \caption{All results on the \textbf{Digits} dataset.}
     \label{fig:digits}
 \end{figure}
@@ -111,35 +98,34 @@ The conclusions are much the same as for the \textbf{Digits} dataset, with the f
     \centering
     \begin{subfigure}[b]{.8\textwidth}
         \centering
-        \includegraphics[width=\linewidth]{../../figures/281b/scenes/random_-1/subplots.png}
+        \includegraphics[width=\linewidth]{../../figures/281b_for_thesis/scenes/random_-1/subplots.png}
         \caption{Random, independent feature selection.\vspace{.2cm}}
     \end{subfigure}
     \begin{subfigure}[b]{.8\textwidth}
         \centering
-        \includegraphics[width=\linewidth]{../../figures/281b/scenes/random_5/subplots.png}
+        \includegraphics[width=\linewidth]{../../figures/281b_for_thesis/scenes/random_5/subplots.png}
         \caption{Random, block-wise (8 blocks) feature selection.\vspace{.2cm}}
     \end{subfigure}
     \begin{subfigure}[b]{\textwidth}
         \centering
-        \includegraphics[width=\linewidth]{../../figures/281b/scenes/clustered_-1/subplots.png}
+        \includegraphics[width=\linewidth]{../../figures/281b_for_thesis/scenes/clustered_-1/subplots.png}
         \caption{Clustered (10 clusters), independent feature selection.\vspace{.2cm}}
     \end{subfigure}
     \begin{subfigure}[b]{\textwidth}
         \centering
-        \includegraphics[width=\linewidth]{../../figures/281b/scenes/clustered_5/subplots.png}
+        \includegraphics[width=\linewidth]{../../figures/281b_for_thesis/scenes/clustered_5/subplots.png}
         \caption{Clustered (10 clusters), block-wise (8 blocks) feature selection.\vspace{.2cm}}
     \end{subfigure}
-
-    \begin{subfigure}[b]{1\textwidth}
-        \centering
-        \tiny{\input{../../figures/281b/scenes/err_auc_table.tex}}
-        \caption{Areas under the Classification Error vs. Budget curves. Lower is better.}
-    \end{subfigure}
-    \begin{subfigure}[b]{1\textwidth}
-        \centering
-        \tiny{\input{../../figures/281b/scenes/rmse_auc_table.tex}}
-        \caption{Areas under the Reconstruction RMSE vs. Budget curves. Lower is better.}
-    \end{subfigure}
+    % \begin{subfigure}[b]{1\textwidth}
+    %     \centering
+    %     \tiny{\input{../../figures/281b_for_thesis/scenes/err_auc_table.tex}}
+    %     \caption{Areas under the Classification Error vs. Budget curves. Lower is better.}
+    % \end{subfigure}
+    % \begin{subfigure}[b]{1\textwidth}
+    %     \centering
+    %     \tiny{\input{../../figures/281b_for_thesis/scenes/rmse_auc_table.tex}}
+    %     \caption{Areas under the Reconstruction RMSE vs. Budget curves. Lower is better.}
+    % \end{subfigure}
     \caption{All results on the \textbf{Scenes-15} dataset.}
     \label{fig:scenes}
 \end{figure}
@@ -148,8 +134,4 @@ The conclusions are much the same as for the \textbf{Digits} dataset, with the f
 
 On both datasets, and for all feature selection approaches, we find that mean imputation (with a classifier trained on imputed data) is a well-performing approach.
 Nearest Neighbor and Gaussian methods perform best but are the most expensive; Gaussian scales poorly with number of features, while NN scales poorly with size of training set.
-
-We did not find that using Marginalized Corrupted Features loss function improved classification performance.
-In fact, the simple baseline approach of mean imputation with classifier retraining performed better.
-Training additional classifiers for clusters of observed feature subsets also did not improve performance on these datasets.
-Further study of this method is needed.
+Training additional classifiers for clusters of observed feature subsets also did not signficantly improve performance on these datasets.

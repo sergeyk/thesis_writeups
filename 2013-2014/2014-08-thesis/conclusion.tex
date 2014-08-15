@@ -1,7 +1,9 @@
 %!TEX root=paper/thesis.tex
 \chapter{Conclusion}
 
-\section{NIPS12 Conclusion}
+\todo{nearest neighbor methods are really good for partially observed evaluation. could speed up?}
+
+\PM{NIPS12}
 We presented a method for learning ``closed-loop'' policies for multi-class object recognition, given existing object detectors and classifiers and a metric to optimize.
 The method learns the optimal policy using reinforcement learning, by observing execution traces in training.
 If detection on an image is cut off after only half the detectors have been run, our method does $66\%$ better than a random ordering, and $14\%$ better than an intelligent baseline.
@@ -13,7 +15,7 @@ Although computation devoted to scheduling actions is less significant than the 
 Additionally, it is interesting to consider actions defined not just by object category but also by spatial region.
 The code for our method is available\footnote{\url{http://sergeykarayev.com/work/timely/}}.
 
-\section{CVPR14 Conclusion}
+\PM{CVPR14}
 We have shown how to optimize feature selection and classification strategies under an Anytime objective by modeling the associated process as a Markov Decision Process.
 Throughout the experiments we show how strategies that adapt the course of computation at test time lead to gains in performance and efficiency.
 Beyond the aspects of practical deployment of vision systems that our work is motivated by, we are curious to further investigate our model as a tool to study human cognition and the time course of visual perception.
