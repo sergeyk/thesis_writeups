@@ -30,6 +30,9 @@ For a weak learner $h_f$, the cost $c_f$ is composed of the cost of an underlyin
 Once $h_f$ is computed, its underlying feature $\phi$ is considered to be free for all other features $h_f'$ that share it, if any, such that $c_f' < c_f$.
 Note that in state-of-the-art object recognition systems, complex features and feature encodings are often followed by linear classifiers, and feature extraction cost dominates the total cost.
 
+\input{../feature_selection_sequence_fig}
+
 \PM{Train vs. Test}
 At training time, our computation is unbudgeted, and we can compute all features to have \emph{fully-observed} training instances.
 At test time, there is a budget and so the instances we classify will only be \emph{partially-observed}, as determined by the feature selection policy.
+\autoref{fig:feature_selection_sequence} shows the sequential process we are learning.
