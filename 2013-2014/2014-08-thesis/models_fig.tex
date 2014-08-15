@@ -1,0 +1,36 @@
+%!TEX root=paper/thesis.tex
+\begin{figure}[h!]
+\centering
+\begin{subfigure}[t]{0.48\linewidth}
+    \includegraphics[width=\linewidth]{../../figures/models/cascade}
+    \caption{
+\textbf{Cascade}
+In addition to the feature computation actions, the classifier is augmented with a rejection action.
+The cascade is Anytime in a limited way, as only the rejection answer can be given before all features are evaluated.
+Furthermore, the fixed order of the cascade is not robust to the fact that different images benefit from different features.
+}
+\end{subfigure}\hfill%
+\begin{subfigure}[t]{0.48\linewidth}
+    \includegraphics[width=\linewidth]{../../figures/models/tree}
+    \caption{
+Methods such as \cite{Xu-ICML-2012} find a tree-structured policy for computing features.
+Classification answers are given only at the leaf nodes.
+    }
+\end{subfigure}\\
+\begin{subfigure}[t]{0.48\linewidth}
+    \includegraphics[width=\linewidth]{../../figures/models/benbouzid}
+    \caption{
+The method of \cite{Benbouzid-ICML-2012} augments the traditional cascade with an additional Skip action, which allows learning a more robust policy.
+}
+\end{subfigure}\hfill%
+\begin{subfigure}[t]{0.48\linewidth}
+    \includegraphics[width=\linewidth]{../../figures/models/dag}
+    \caption{
+In this work and in methods such as \cite{Gao-NIPS-2011}, the policy is a DAG over selected-feature subsets, which allows actions to be taken in an entirely flexible order.
+We are also able to give the classification answer from all states, making our work truly Anytime.
+    }
+\end{subfigure}
+\caption{
+Different models for classification with sequential feature selection.
+}\label{fig:models}
+\end{figure}

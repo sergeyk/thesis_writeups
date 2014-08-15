@@ -35,9 +35,13 @@ For the commonly used PASCAL VOC dataset \cite{pascal-voc-2010}, GIST and other 
 
 \subsection{Classification}
 
+\input{../models_fig}
+
 \PM{Feature selection}
 The simplest way to limit the number of features used at test time is to $L_1$-regularize.
 This method does not explicitly consider feature cost, nor is it able to evaluate features one by one, or to give an answer before all features are computed.
+We consider more advanced methods, all of them treating feature selection as a sequential process.
+\autoref{fig:models} shows a few approaches to the problem (all additionally described below).
 
 \PM{Cascades}
 A well-known method to evaluate features sequentially is the cascaded boosted classifier of Viola \& Jones \parencite{Viola2004} (updated by Bourdev \& Brandt \parencite{Bourdev-CVPR-2005} with a soft threshold), which is able to quit evaluating an instance before all features are computed---but feature cost was not considered.

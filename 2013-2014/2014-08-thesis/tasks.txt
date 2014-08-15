@@ -15,7 +15,7 @@ x go over classifier training and eval sections, ensure flow and remove all ment
 - merge nips12 and cvpr14 abstracts and conclusions
 - take holistic pass over paper, ensuring notation consistency and marginal labels
 - go through slides and insert good figures into thesis
-    - add statespace exploration approaches figure to related work for classification
+    x add statespace exploration approaches figure to related work for classification
 
 If adding C-CNN
 ---------------
@@ -27,5 +27,4 @@ Little things
 
 Maybe
 -----
-- add figure of the fei-fei progressive scene recognition from oral.key
 - re-plot 281b results
