@@ -1,18 +1,17 @@
 %!TEX root=paper/thesis.tex
 \section{Method}\label{sec:clf_method}
 
+We model the \textbf{feature selection} policy $\pi(x): \mathcal{X} \mapsto 2^\mathcal{A}$ following the reinforcement learning approach as described in \autoref{sec:mdp_formulation}.
+The set of \textbf{actions} $\mathcal{A}$ is exactly the set of features $\mathcal{H}$.
+The policy learning approach remains the same, including implementation details.
+Three things are different: the reward definition, the state featurization function, and the additional dependence on a classifier.
+
 We defer discussion of learning the \textbf{feature combination} classifier $g(\mathcal{H}_\pi) : 2^\mathcal{H} \mapsto \mathcal{Y}$ to~\autoref{sec:classifier}.
 For now, we assume that $g$ can combine an arbitrary subset of features and provide a distribution $P(Y = y)$.
 For example, $g$ could be a Naive Bayes (NB) model trained on the fully-observed data.
-
-\todo{reference MDP formulation in \autoref{sec:mdp_formulation}.}
-
-\todo{The set of \textbf{actions} $\mathcal{A}$ is exactly the set of features $\mathcal{H}$.}
 
 \input{../clf_reward}
 
 \input{../clf_features}
 
-\input{../clf_classifier    }
-
-% \input{../281b_everything}
+\input{../clf_classifier}

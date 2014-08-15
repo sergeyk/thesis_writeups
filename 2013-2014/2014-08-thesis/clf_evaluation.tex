@@ -1,11 +1,13 @@
-\section{Evaluation}\label{sec:clf_eval}
+\section{Evaluation}\label{sec:clf_evaluation}
 
 We evaluate the following sequential selection baselines:
+
 \begin{itemize}
 \item \textbf{Static, greedy}: corresponds to best performance of a policy that does not observe feature values and selects actions greedily ($\gamma=0$).
 \item \textbf{Static, non-myopic}: policy that does not observe feature values but uses the MDP machinery with $\gamma=1$ to consider future action rewards.
 \item \textbf{Dynamic, greedy}: policy that observed feature values, but selects actions greedily.
 \end{itemize}
+
 Our method is the \textbf{Dynamic, non-myopic} policy: observed feature values, and full lookahead.
 
 We evaluate two forms of test-time efficient performance measure: the area under the curve and the performance at max budget, although note that all methods are trained only for the former measure.
@@ -33,7 +35,7 @@ The optimal policy on a new data point is to determine its orthant with cheap fe
 Note that both dynamic features and non-myopic learning are crucial to the optimal policy, which is successfully found by our approach.
 \autoref{fig:synthetic} shows the results of this optimal policy, a random policy, and of different baselines and our method, trained given the correct minimal budget.
 
-\subsection{Experiment: Scene recognition.}
+\subsection{Experiment: Scene recognition}
 
 \input{../eval_scenes_fig}
 
@@ -50,7 +52,7 @@ This dataset was split 60-40 into training and test sets for our experiments.
 For all evaluated budgets, our \emph{dynamic, non-myopic} method outperforms all others on the area under the error vs. cost curve metric.
 Our results on this dataset match the reported results of Active Classification \parencite{Gao-NIPS-2011} (Figure 2) and Greedy Miser \parencite{Xu-ICML-2012} (Figure 3), although both methods use an additional powerful feature channel (ObjectBank)\footnote{Detailed results for this and other experiments are on the project page (see front page for the \href{http://sergeykarayev.com/recognition-on-a-budget/}{link}).}.
 
-\subsection{Experiment: ImageNet and maximizing specificity.}
+\subsection{Experiment: ImageNet and maximizing specificity}
 
 \input{../eval_imagenet_fig}
 

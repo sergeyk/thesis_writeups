@@ -20,6 +20,7 @@ Our policy is at its base determined by a linear function of the features of the
 Since we want to be able to learn a dynamic policy, the observations $\mathbf{o}$ that are part of the state $s$ should play a role in determining the value of a potential action.
 
 We include the following quantities as features $\phi(s,a)$:
+
 \begin{tabularx}{0.8\linewidth}{p{0.23\linewidth}p{0.69\linewidth}}
 $P(C_a)$ & The prior probability of the class that corresponds to the detector of action $a$ (omitted for the scene-context action).\\
 $P(C_0|\mathbf{o}) \ldots P(C_K|\mathbf{o})$ & The probabilities for all classes, conditioned on the current set of observations.\\

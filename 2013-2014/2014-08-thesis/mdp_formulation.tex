@@ -1,11 +1,12 @@
 %!TEX root=paper/thesis.tex
 \subsection{MDP Formulation}\label{sec:mdp_formulation}
 
-To model the \textbf{feature selection} policy $\pi(x): \mathcal{X} \mapsto 2^\mathcal{A}$, we introduce the Markov Decision Process (MDP), which defines a single \emph{episode} of selecting features for some instance $x$.
+To model the \textbf{action selection} policy $\pi(x): \mathcal{X} \mapsto 2^\mathcal{A}$, we introduce the Markov Decision Process (MDP), which defines a single \emph{episode} of selecting features for some instance $x$.
 
 \begin{mydef} \label{def:MDP}
 The \textbf{feature selection MDP} consists of the tuple $(\mathcal{S}, \mathcal{A}, T(\cdot), R(\cdot), \gamma)$:
-\begin{itemize}\addtolength{\itemsep}{-.55\baselineskip}
+
+\begin{itemize}
 \item \textbf{State} $s \in \mathcal{S}$ stores the selected feature subset $\mathcal{H}_{\pi(x)}$ and their values and total cost $C_{\mathcal{H}_{\pi(x)}}$.
 \item The set of \textbf{actions} $\mathcal{A}$.
 \item The (stochastic) \textbf{state transition} distribution $T(s' \mid s, a)$ can depend on the instance $x$.
@@ -76,7 +77,9 @@ To prevent overfitting to the training data, we use $L_2$-regularized regression
 We run $15$ iterations of accumulating samples by running $350$ episodes, starting with a baseline policy which will be described in \autoref{sec:evaluation}, and cross-validating the regularization parameter at each iteration.
 Samples are not thrown away between iterations.
 
-\subsubsection{Greedy vs non-myopic policy.}
+\subsubsection{Greedy vs non-myopic policy}
+
+\PM{Discount}
 The $\gamma$ parameter of the MDP controls the level of \emph{discounting} of rewards of future action in computing the value \eqref{eq:expected_reward}.
 Note that the expected value of the final evaluation can be written recursively in terms of the value function:
 \begin{align} \label{eq:recursive_value}

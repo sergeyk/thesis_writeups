@@ -1,5 +1,5 @@
 %!TEX root=paper/thesis.tex
-\subsection{Learning the classifier.}\label{sec:classifier}
+\subsection{Learning the classifier}\label{sec:classifier}
 
 \PM{Logistic regression}
 We have so far assumed that $g$ can combine an arbitrary subset of features and provide a distribution $P(Y = y)$---for example, a Gaussian Naive Bayes (NB) model trained on the fully-observed data.
@@ -151,7 +151,7 @@ In addition to the $k$-NN classifier described above, we consider three linear c
   \item Logistic loss on synthetically re-imputed version of the data: we obtain $X^m$ through applying $o(x, b)$ on each $x^c$, and then imputing the missing values with the methods described.
 \end{enumerate}
 
-\subsubsection{Learning more than one classifier.}
+\subsubsection{Learning more than one classifier}
 
 As illustrated in \hyperref[fig:state_space]{Figure~\ref*{fig:state_space}}, the policy $\pi$ selects some feature subsets more frequently than others.
 Instead of learning only one classifier $g$ that must be robust to all observed feature subsets, we can learn several classifiers, one for each of the most frequent subsets.
