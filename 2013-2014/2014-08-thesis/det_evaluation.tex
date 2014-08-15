@@ -24,10 +24,18 @@ The results are given in rows of \autoref{tab:results}.
 
 \begin{figure}[h!]
 \centering
+\begin{subfigure}[b]{.48\linewidth}
+\includegraphics[width=\linewidth]{../../../2011-2012/figures/apvst_expl.pdf}
+\caption{
+Graphically representing our reward function.
+}\label{fig:det_rewards}
+\end{subfigure}
+\begin{subfigure}[b]{.48\linewidth}
 \includegraphics[width=\linewidth]{../../../2011-2012/figures/final1_515.png}
 \caption{
 AP vs. Time curves for Random, Oracle, the Fixed Order baseline, and our best-performing policy.
 }\label{fig:results1}
+\end{subfigure}
 \end{figure}
 
 We establish the first baseline for our system by selecting actions randomly at each step.
