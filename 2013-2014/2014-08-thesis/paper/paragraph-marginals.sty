@@ -34,4 +34,5 @@ node[left,rotate=+90,PMnodeformat]{\PMformat{#1}};
 node[right,rotate=-90,PMnodeformat]{\PMformat{#1}};
 }\relax\ignorespaces}
 
-\newcommand{\PM}[1]{\checkoddpage\ifoddpage \PModd{#1} \else \PMeven{#1}\fi}
+% \newcommand{\PM}[1]{\checkoddpage\ifoddpage \PModd{#1} \else \PMeven{#1}\fi}
+\newcommand{\PM}[1]{\PModd{#1}}
