@@ -1,7 +1,7 @@
 %!TEX root=paper/thesis.tex
 \section{Problem Definition}\label{sec:det_problem}
 
-\input{../nips12_figure1}
+\input{../det_figure1}
 
 \PM{Types of problems}
 We deal with a dataset of images $\mathcal{D}$, where each image $x$ contains zero or more objects.
@@ -31,7 +31,7 @@ The specific actions we consider in the following exposition are detector action
 Although we do not showcase this here, note that our system easily handles multiple detector actions per class.
 
 \PM{Anytime metric}
-As shown in Figure~\ref{fig:nips12_figure1}, the system is given two times: the setup time $T_s$ and deadline $T_d$.
+As shown in \autoref{fig:det_figure1}, the system is given two times: the setup time $T_s$ and deadline $T_d$.
 We want to obtain the best possible answer if stopped at any given time between the setup time and the deadline.
 A single-number metric that corresponds to this objective is the area captured under the curve between the start and deadline bounds, normalized by the total area.
 We evaluate policies by this more robust metric and not simply by the final performance at deadline time for the same reason that Average Precision is used instead of a fixed Precision vs. Recall point in the conventional evaluations.

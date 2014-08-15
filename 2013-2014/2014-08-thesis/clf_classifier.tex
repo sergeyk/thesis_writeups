@@ -74,7 +74,7 @@ In this case, the distribution over unobserved variables conditioned on the obse
 \mathbf{x}^\text{u} \mid \mathbf{x}^\text{o} \sim \mathcal{N} \left( \mathbf{C}^T \mathbf{A}^{-1} \mathbf{x}^\text{o},\, \mathbf{B} - \mathbf{C}^T \mathbf{A}^{-1} \mathbf{C} \right)
 \end{equation}
 
-\PM{Computational Complexity}
+\PM{Complexity}
 After computing the complete covariance matrix $\Sigma$, which takes $O(N^3)$ time, we need to make $N'$ test-time predictions.
 In the course of the predictions, we may need to compute at most $\min(N', 2^F)$ unique matrix inversions (again in $O(N^3)$).
 The size of the matrices being inverted is proportional to the budget $b$, making this method slower for larger budgets.
@@ -89,7 +89,7 @@ For $\mathbf{X}^m$, we find the $k$ nearest neighbors with the highest dot produ
 For \textbf{imputation}, the unobserved values are set to the average across these nearest neighbors for that dimension.
 Similarly, we do \textbf{classification} by returning the mode label of the nearest neighbors.
 
-\PM{Computational Complexity}
+\PM{Complexity}
 Finding the nearest neighbors by dot product similarity is $O(NF'^2)$, and Euclidean distance is the same with an additional constant term.
 $F'S$ is the number of observed dimensions, which grows proportionally with budget $b$, making this method more expensive with increased budget.
 

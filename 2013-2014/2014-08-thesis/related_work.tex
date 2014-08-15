@@ -87,8 +87,3 @@ Our main motivating case is the problem of test-time dynamic feature selection.
 Locally-weighted regression, corresponding to a mixture of Gaussians model, was used for the classification task in \cite{Gao-NIPS-2011}.
 If the number of possible observed subsets is bounded, then a separate classifier can be learned for each subset---this is done in the tree-structured dynamic policy of \cite{Xu-ICML-2013}.
 We do not want to be limited to a tree structure, and so would like a more general method.
-
-\PM{Modifying loss}
-An interesting related problem is explored in work on feature corruption, for example the ``Nightmare at test time'' scenario of \cite{Globerson-ICML-2006}, and the Marginalized Corrupted Features of \cite{Maaten-ICML-2013}.
-These approaches modify the loss function of a linear classifier with, respectively, the worst-case or the expected-case of feature corruption.
-Because they provide additional regularization of the classifier weights, such approaches may increase performance even if there is no test-time corruption.

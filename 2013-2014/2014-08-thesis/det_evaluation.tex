@@ -39,7 +39,7 @@ AP vs. Time curves for Random, Oracle, the Fixed Order baseline, and our best-pe
 \end{figure}
 
 We establish the first baseline for our system by selecting actions randomly at each step.
-As shown in Figure~\autoref{fig:results1}, the \textbf{Random} policy results in a roughly linear gain of AP vs. time.
+As shown in Figure~\autoref{fig:det_results1}, the \textbf{Random} policy results in a roughly linear gain of AP vs. time.
 This is expected: the detectors are capable of obtaining a certain level of performance; if half the detectors are run, the expected performance level is half of the maximum level.
 
 To establish an upper bound on performance, we plot the \textbf{Oracle} policy, obtained by re-ordering the actions at the end of each detection episode in the order of AP gains they produced.
@@ -58,7 +58,7 @@ This setting always uses the MRF model to properly update the class probabilitie
 This brings another small boost in performance.
 The results are shown in \autoref{tab:results}.
 
-Visualizing the learned weights in~\autoref{fig:weights}, we note that the GIST action is learned to never be taken in the greedy ($\gamma=0$) setting, but is learned to be taken with a higher value of $\gamma$.
+Visualizing the learned weights in~\autoref{fig:det_weights}, we note that the GIST action is learned to never be taken in the greedy ($\gamma=0$) setting, but is learned to be taken with a higher value of $\gamma$.
 It is additionally informative to consider the action trajectories of different policies in~\autoref{fig:trajectories}.
 
 \begin{figure}[h!]
