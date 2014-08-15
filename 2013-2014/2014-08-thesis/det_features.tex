@@ -40,7 +40,7 @@ Our initial solution to the problem of partial observability is to include featu
 As an illustration, we visualize the learned weights on these features in \autoref{fig:det_weights}, reshaped such that each row shows the weights learned for an action, with the top row representing the scene context action and then next $20$ rows corresponding to the PASCAL VOC class detector actions.
 \todo{say something about this}
 
-\subsubsection{Updating with observations}\label{sec:updating}
+\subsubsection{Updating with observations}\label{sec:det_features_updating}
 
 \PM{Class correlations}
 The bulk of our feature representation is formed by probability of individual class occurrence, conditioned on the observations so far: $P(C_0|\mathbf{o}) \ldots P(C_K|\mathbf{o})$.

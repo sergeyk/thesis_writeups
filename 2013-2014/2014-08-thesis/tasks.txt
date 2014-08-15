@@ -1,11 +1,3 @@
-Maybe
------
-- add figure of the fei-fei progressive scene recognition from oral.key
-
-Definitely
-----------
-- add statespace exploration approaches figure to related work for classification
-
 Draft
 -----
 x get in all content from cvpr14 paper into a chapter, make sure everything compiles
@@ -19,10 +11,18 @@ x move all MDP method setup to detection chapter: have to rewrite a little bit
 x add 281b report as section to cvpr14 chapter
 - go over classifier training and eval sections, ensure flow and remove all mentions of MCF (fine to leave in figures for now)
 - merge nips12 and cvpr14 abstracts and conclusions
-- take holistic pass over paper
+- take holistic pass over paper, ensuring notation consistency and marginal labels
 - go through slides and insert good figures into thesis
+    - add statespace exploration approaches figure to related work for classification
 
 If adding C-CNN
 ---------------
 - add R-CNN stuff to detection section
 - add C-CNN paper as chapter
+
+Little things
+-------------
+
+Maybe
+-----
+- add figure of the fei-fei progressive scene recognition from oral.key
