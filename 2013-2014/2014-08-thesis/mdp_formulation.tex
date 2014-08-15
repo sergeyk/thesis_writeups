@@ -56,10 +56,13 @@ Specifically, the policy is defined as
 where $Z$ is the appropriate normalization and $\tau$ is a temperature parameter that controls the level of exploration vs. exploitation in the policy.
 As $\tau \rightarrow 0$, ${\pi(a \mid s)}$ becomes highly peaked at $\argmax_a Q(s,a)$; it becomes uniform as $\tau \rightarrow \infty$.
 
+\input{../qiteration_explanation_fig}
+
 \PM{Sampling Q-function}
 While we can't directly compute the expectation in \eqref{eq:recursive_value}, we can sample it by running actual episodes to gather $<s,a,r,s'>$ samples, where $r$ is the reward obtained by taking action $a$ in state $s$, and $s'$ is the following state.
 We then learn the optimal policy by repeatedly gathering samples with the current policy, minimizing the error between the discounted reward to the end of the episode as predicted by our current $Q(s^j,a)$ and the actual values gathered, and updating the policy with the resulting weights.
 This method is akin to fitted Q-iteration, a variant of generalized policy iteration \cite{Ernst2005,Sutton1998}.
+\autoref{fig:qiteration_explanation} shows a step of this process.
 
 \PM{Gathering trajectories}
 During training, we gather samples starting from either a random feasible state, with probability $\epsilon$, or from the initial empty state otherwise.
