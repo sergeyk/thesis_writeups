@@ -1,24 +1,38 @@
 %!TEX root=paper/thesis.tex
-\chapter{Conclusion}
+\chapter{Conclusion}\label{sec:conclusion}
 
-\todo{nearest neighbor methods are really good for partially observed evaluation. could speed up?}
+\PM{Contribution}
+We note a significant problem that has received little research attention: Anytime visual recognition.
+The problem is motivated both by the qualities of human visual perception and by the need to schedule computationally expensive state-of-the-art computer vision methods  to optimally fit different computational budgets.
+We approach the problem from the perspective of reinforcement learning, and effectively find fully general policies for selecting detector and classifier actions.
+To evaluate our approaches, we introduce a new metric of Anytime performance, based on the area of performance vs. cost curve.
+In all experiments, we show that having a dynamic state (allowing closed-loop policies) and planning ahead increases performance.
 
-\PM{NIPS12}
+\PM{Detection}
 We presented a method for learning ``closed-loop'' policies for multi-class object recognition, given existing object detectors and classifiers and a metric to optimize.
 The method learns the optimal policy using reinforcement learning, by observing execution traces in training.
+As always with reinforcement learning problems, defining the reward function requires some manual work.
+Here, we derive it for the novel detection AP vs. Time evaluation that we suggest is useful for evaluating efficiency in recognition.
 If detection on an image is cut off after only half the detectors have been run, our method does $66\%$ better than a random ordering, and $14\%$ better than an intelligent baseline.
 In particular, our method learns to take action with no intermediate reward in order to improve the overall performance of the system.
 
-As always with reinforcement learning problems, defining the reward function requires some manual work.
-Here, we derive it for the novel detection AP vs. Time evaluation that we suggest is useful for evaluating efficiency in recognition.
-Although computation devoted to scheduling actions is less significant than the computation due to running the actions, the next research direction is to explicitly consider this decision-making cost; the same goes for feature computation costs.
-Additionally, it is interesting to consider actions defined not just by object category but also by spatial region.
-The code for our method is available\footnote{\url{http://sergeykarayev.com/work/timely/}}.
+\PM{Classification}
+For the classification task, we additionally need to train classifiers for partially-observed sets of features.
+We investigate methods such as different forms of imputation and classifier clustering for this task.
+The reward function and the featurization of the state also need to be adjusted.
+Our general formulation accomodates many types of features and classifiers.
+We show improved Anytime performance on one synthetic classification task and two real visual recognition tasks using our method.
+On a hierarchically-structured dataset, we additionally show that accuracy of predictions can be held constant for all budgets, while the specificty of predictions increases.
 
-\PM{CVPR14}
-We have shown how to optimize feature selection and classification strategies under an Anytime objective by modeling the associated process as a Markov Decision Process.
-Throughout the experiments we show how strategies that adapt the course of computation at test time lead to gains in performance and efficiency.
+\section{Future work}
+
+\PM{Decisions}
+Although computation devoted to scheduling actions is less significant than the computation due to running the actions in all of our work, our framework does not explicitly consider this decision-making cost.
+A welcome extension would explicitly model this, perhaps drawing on eixsting theoretical work on meta-reasoning.
+
+\PM{Classification}
+Nearest-neighbor method work really well for settings with partially observed sets of features, but were too slow in our evaluation.
+Hashing methods may provide a solution to this.
+
+\PM{Perception}
 Beyond the aspects of practical deployment of vision systems that our work is motivated by, we are curious to further investigate our model as a tool to study human cognition and the time course of visual perception.
-
-Lastly, the recent successes of convolutional neural nets for visual recognition open an exciting new avenue for exploring cost-sensitivity.
-Layers of a deep network can be seen as features in our system, through which a properly learned policy can optimally direct computation.
