@@ -1,25 +1,25 @@
 %!TEX root=paper/thesis.tex
 \begin{abstract}
 
-\PM{NIPS12}
-In a large visual multi-class detection framework, the timeliness of results can be crucial.
+Humans are capable of perceiving a scene at a glance, and obtain deeper understanding with additional time.
+Similarly, visual recognition deployments should be robust to varying computational budgets.
+Such situations require Anytime recognition ability, which is rarely considered in computer vision research.
+
+We present a method for learning dynamic policies to optimize Anytime performance in visual architectures.
 Our method for \emph{timely} multi-class detection aims to give the best possible performance at any single point after a start time; it is terminated at a deadline time.
 Toward this goal, we formulate a dynamic, closed-loop policy that infers the contents of the image in order to decide which detector to deploy next.
+Crucially, we approach this problem from the perspective of Markov Decision Processes, and use reinforcement learning techniques in learning.
+We explain our effective decisions in structuring the reward function and featurizing the MDP state.
 In contrast to previous work, our method significantly diverges from the predominant greedy strategies, and is able to learn to take actions with deferred values.
-We evaluate our method with a novel \emph{timeliness} measure, computed as the area under an Average Precision vs. Time curve.
+
 Experiments are conducted on the PASCAL VOC object detection dataset.
+We evaluate our method with a novel \emph{timeliness} measure, computed as the area under an Average Precision vs. Time curve.
 If execution is stopped when only half the detectors have been run, our method obtains $66\%$ better AP than a random ordering, and $14\%$ better performance than an intelligent baseline.
 On the timeliness measure, our method obtains at least $11\%$ better performance.
 Our method is easily extensible, as it treats detectors and classifiers as black boxes and learns from execution traces using reinforcement learning.
 
-\PM{CVPR14}
-Humans are capable of perceiving a scene at a glance, and obtain deeper understanding with additional time.
-Similarly, visual recognition deployments should be robust to varying computational budgets.
-Such situations require Anytime recognition ability, which is rarely considered in computer vision research.
-We present a method for learning dynamic policies to optimize Anytime performance in visual architectures.
-Our model sequentially orders feature computation and performs subsequent classification.
+On classification tasks, our model sequentially orders feature computation and performs subsequent classification.
 Crucially, decisions are made at test time and depend on observed data and intermediate results.
 We show the applicability of this system to standard problems in scene and object recognition.
 On suitable datasets, we can incorporate a semantic back-off strategy that gives maximally specific predictions for a desired level of accuracy; this provides a new view on the time course of human visual perception.
-
 \end{abstract}
