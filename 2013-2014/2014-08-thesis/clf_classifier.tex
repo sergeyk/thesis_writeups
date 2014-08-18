@@ -1,17 +1,17 @@
 %!TEX root=paper/paper.tex
 \subsection{Learning the classifier}\label{sec:clf_classifier}
 
-\PM{Logistic regression and NN}
+\PM{Classifiers}
 We have so far assumed that $g$ can combine an arbitrary subset of features and provide a distribution $P(Y = y)$---for example, a Gaussian Naive Bayes (NB) model trained on the fully-observed data.
 However, a Naive Bayes classifier suffers from its restrictive independence assumptions.
 Since discriminative classifiers commonly provide better performance, we'd like to use a \textbf{logistic regression} classifier.
 Nearest Neighbor methods also provide a robust classifier for partially observed data, but are slow for large datasets.
-We consider them in this exposition, but do not use them in final policy learning experiments due to this problem.
+We consider them in this exposition and in preliminary experiments reported in \autoref{sec:imputation_evaluation}, but do not use them in final policy learning experiments due to this problem.
 
 \PM{Missing features}
-This presents a new challenge: at test time, some feature values are missing.
+Note that at test time, some feature values are missing.
 If the classifier is trained exclusively on fully-observed data, then the feature value statistics at test time will not match, resulting in poor performance.
-Therefore, we need to learn classifier weights on a distribution of data that exhibits the pattern of missing features induces by the policy $\pi$.
+Therefore, we need to learn classifier weights on a distribution of data that exhibits the pattern of missing features induces by the policy $\pi$, and/or try to intelligently impute unobserved values.
 
 \input{../clf_algorithm}
 
@@ -21,7 +21,6 @@ For this reason, the policy and classifier need to be learned jointly: \autoref{
 In summary, we start from random $\pi$ and $g$, gather a batch of trajectories.
 The batch is used to update both $g$ and $\pi$.
 Then new trajectories are generated with the updated $\pi$, rewards are computed using the updated $g$, and the process is repeated.
-This is a variant of generalized policy iteration \cite{Sutton1998}.
 
 \subsubsection{Unobserved value imputation}
 
@@ -36,8 +35,7 @@ Applied to $x$, $o(x, b)$ gives the binary selection vector $\mathbf{o}$ which s
 $X^c$ denotes the fully observed $N \times F$ training set.
 We assume that we have only sequential access to the missing-feature test instances $\mathbf{x}^m$.
 
-\paragraph{Mean imputation}
-
+\PM{Mean imputation}
 A basic strategy is \textbf{mean imputation}: filling in with the mean value of the feature.
 We simply replace the missing value in $X^m$ with their row mean in $X^c$.
 Because our data is always zero-mean, this amounts to simply replacing the value with $0$.
@@ -48,43 +46,25 @@ Because our data is always zero-mean, this amounts to simply replacing the value
 \end{array} \right. \right]
 \end{align}
 
-\paragraph{Joint Gaussian model}
-
 \PM{Gaussian Imputation}
 If we assume that $\mathbf{x}$ is distributed according to a multivariate Gaussian $\mathbf{x} \sim \mathcal{N}(\mathbf{0}, \Sigma)$, where $\Sigma$ is the sample covariance $X^T X$ and the data is standardized to have zero mean, then it is possible to do \textbf{Gaussian imputation}.
 Given a feature subset $\mathcal{H}_\pi$, we write:
 \begin{equation}
 \mathbf{x}_\pi = \begin{bmatrix} \mathbf{x}^\text{o}\\  \mathbf{x}^\text{u} \end{bmatrix} \sim \mathcal{N} \left( \mathbf{0}, \begin{bmatrix} \mathbf{A} & \mathbf{C}\\ \mathbf{C}^T & \mathbf{B} \end{bmatrix} \right)
 \end{equation}
-where $\mathbf{x}^\text{o}$ and $\mathbf{x}^\text{u}$ represent the respectively observed and unobserved parts of the full feature vector $\mathbf{x}$, $\mathbf{A}$ is the covariance matrix of $\mathbf{x}^\text{o}$, $\mathbf{B}$ is the covariance matrix of $\mathbf{x}^\text{u}$, and $C$ is the cross-variance matrix that has as many rows as the size of $\mathbf{x}^\text{o}$ and as many columns as the size of $\mathbf{x}^\text{u}$ \parencite{Roweis-gaussian-identities}.
+where $\mathbf{x}^\text{o}$ and $\mathbf{x}^\text{u}$ represent the respectively observed and unobserved parts of the full feature vector $\mathbf{x}$, $\mathbf{A}$ is the covariance matrix of (here and elsewhere, the part of $X^c$ corresponding to) $\mathbf{x}^\text{o}$, $\mathbf{B}$ is the covariance matrix of $\mathbf{x}^\text{u}$, and $C$ is the cross-variance matrix that has as many rows as the size of $\mathbf{x}^\text{o}$ and as many columns as the size of $\mathbf{x}^\text{u}$ \parencite{Roweis-gaussian-identities}.
 In this case, the distribution over unobserved variables conditioned on the observed variables is given as
 $\mathbf{x}^\text{u} \mid \mathbf{x}^\text{o} \sim \mathcal{N} \left( \mathbf{C}^T \mathbf{A}^{-1} \mathbf{x}^\text{o},\, \mathbf{B} - \mathbf{C}^T \mathbf{A}^{-1} \mathbf{C} \right)$.
-
-We can make a modeling assumption that allows another imputation method.
-Specifically, we assume that $\mathbf{x}$ is distributed according to a multivariate Gaussian $\mathbf{x} \sim \mathcal{N}(\mathbf{0}, \Sigma)$, where $\Sigma$ is the sample covariance $X^T X$ and the data is standardized to have zero mean.
-
-For a test instance with missing features, we can write
-\begin{equation}
-\mathbf{x} = \begin{bmatrix} \mathbf{x}^\text{o}\\  \mathbf{x}^\text{u} \end{bmatrix} \sim \mathcal{N} \left( \mathbf{0}, \begin{bmatrix} \mathbf{A} & \mathbf{C}\\ \mathbf{C}^T & \mathbf{B} \end{bmatrix} \right)
-\end{equation}
-where $\mathbf{A}$ is the covariance matrix of $\mathbf{x}^\text{o}$, $\mathbf{B}$ is the covariance matrix of $\mathbf{x}^\text{u}$, and $C$ is the cross-variance matrix that has as many rows as the size of $\mathbf{x}^\text{o}$ and as many columns as the size of $\mathbf{x}^\text{u}$ \cite{Roweis-gaussian-identities}.
-
-In this case, the distribution over unobserved variables conditioned on the observed variables is given by
-\begin{equation}
-\mathbf{x}^\text{u} \mid \mathbf{x}^\text{o} \sim \mathcal{N} \left( \mathbf{C}^T \mathbf{A}^{-1} \mathbf{x}^\text{o},\, \mathbf{B} - \mathbf{C}^T \mathbf{A}^{-1} \mathbf{C} \right)
-\end{equation}
 
 \PM{Complexity}
 After computing the complete covariance matrix $\Sigma$, which takes $O(N^3)$ time, we need to make $N'$ test-time predictions.
 In the course of the predictions, we may need to compute at most $\min(N', 2^F)$ unique matrix inversions (again in $O(N^3)$).
 The size of the matrices being inverted is proportional to the budget $b$, making this method slower for larger budgets.
 
-\paragraph{k-NN Imputation and Prediction}
-In the Gaussian method, we want to use some knowledge of the feature covariance to fill in the missing values.
-Instead of learning anything, we could go directly to the source of the covariances---the actual feature values for all points in the training set.
+\PM{k-NN Imputation and Prediction}
+Instead of assuming anything, we could go directly to the source of the covariances---the actual feature values for all points in the training set.
 The family of Nearest Neighbor methods takes this approach.
 The algorithm for imputation is simple: find the nearest neighbors in the observed dimensions, and use their averaged values to fill in the unobserved dimensions.
-
 For $\mathbf{X}^m$, we find the $k$ nearest neighbors with the highest dot product similarity $\mathbf{x}^{cT} \mathbf{x^m}$ or lowest Euclidean distance $\| \mathbf{x}^{c} - \mathbf{x}^{m} \|$, using only the features that are observed in $\mathbf{x}^{m}$.
 For \textbf{imputation}, the unobserved values are set to the average across these nearest neighbors for that dimension.
 Similarly, we do \textbf{classification} by returning the mode label of the nearest neighbors.

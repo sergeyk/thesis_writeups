@@ -12,19 +12,17 @@ x add 281b report as section to cvpr14 chapter
 x go over classifier training and eval sections, ensure flow and remove all mentions of MCF (fine to leave in figures for now)
     x move imputation evaluation to appendix1
     x remove all mention of retraining and remove tables
-- merge nips12 and cvpr14 abstracts and conclusions
-- take holistic pass over paper, ensuring notation consistency and marginal labels
-- go through slides and insert good figures into thesis
+x merge nips12 and cvpr14 abstracts and conclusions
+x take first holistic pass over paper, ensuring notation consistency and marginal labels
+x go through slides and insert good figures into thesis
     x add statespace exploration approaches figure to related work for classification
-
-If adding C-CNN
----------------
-- add R-CNN stuff to detection section
-- add C-CNN paper as chapter
-
-Little things
--------------
+- add C-CNN as a chapter
+    - add R-CNN paragraph to intro
+    - add R-CNN related work to related work
+    - add to abstract and conclusion
+- take second holistic pass, focusing on abstract, conclusion, and appendix
 
 Maybe
 -----
 - re-plot 281b results
+- could add submodularity lit review as appendix chapter, with disclaimer that it didn't lead anywhere
