@@ -3,17 +3,17 @@
 
 \input{../det_figure1}
 
-\PM{Types of problems}
+\PM{Definitions}
 We deal with a dataset of images $\mathcal{D}$, where each image $x$ contains zero or more objects.
 Each object is labeled with exactly one category label $k \in \{1, \dots, K\}$.
-The multi-class, multi-label \textbf{classification} problem asks whether $\mathcal{I}$ contains at least one object of class $k$.
+The multi-class, multi-label \textbf{classification} problem asks whether $x$ contains at least one object of class $k$.
 We write the ground truth for an image as $\mathbf{C}=\{C_1, \dots, C_K\}$, where $C_k \in \{0, 1\}$ is set to $1$ if an object of class $k$ is present.
-The \textbf{detection} problem is to output a list of bounding boxes (sub-images defined by four coordinates), each with a real-valued confidence that it encloses a single instance of an object of class $k$, for each $k$.
-The answer for a single class $k$ is given by an algorithm $\emph{detect}(\mathcal{I},k)$, which outputs a list of sub-image bounding boxes $B$ and their associated confidences.
+The \textbf{detection} problem is to output a list of bounding boxes (sub-images defined by four coordinates), each with a real-valued confidence that it encloses a single instance of an object of class $k$.
+The answer for a single class $k$ is given by an algorithm $\emph{detect}(x,k)$, which outputs a list of sub-image bounding boxes $B$ and their associated confidences.
 
-\PM{Evaluation}
+\PM{Evaluation metric}
 Performance is evaluated by plotting precision vs. recall across dataset $\mathcal{D}$ (by progressively lowering the confidence threshold for a positive detection).
-The area under the curve yields the Average Precision (AP) metric, which has become the standard evaluation for recognition performance on challenging datasets in vision \cite{pascal-voc-2010}.
+The area under the curve yields the Average Precision (AP) metric, which has become the standard evaluation for recognition performance on challenging datasets in vision \parencite{pascal-voc-2010}.
 A common measure of a correct detection is the PASCAL overlap: two bounding boxes are considered to match if they have the same class label and the ratio of their intersection to their union is at least $\frac{1}{2}$.
 Multi-class performance is evaluated by averaging the individual per-class AP values.
 In a specialized system such as the advertising case study from~\autoref{sec:introduction}, the metric generalizes to a weighted average, with the weights set by the \emph{values} of the classes.

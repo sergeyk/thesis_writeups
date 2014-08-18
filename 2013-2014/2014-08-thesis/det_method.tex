@@ -3,16 +3,10 @@
 
 \input{../mdp_formulation}
 
-\input{../det_reward}
-
-\input{../det_features}
-
-\subsection{Summary}
-
 \input{../pomdp_summary_fig}
 
 Our sequential method is visually summarized in \autoref{fig:pomdp_summary}.
-We learn the $\theta$ by \emph{policy iteration}.
-First, we gather $(s, a, r, s')$ samples by running episodes (to completion) with the current policy parameters $\theta_i$.
-From these samples, $\hat{Q}(s, a)$ values are computed, and $\theta_{i+1}$ are given by $L_2$-regularized least squares solution to $\hat{Q}(s, a) = \theta^T \phi(s, a)$, on all states that we have seen in training.
-With pre-computed detections on the PASCAL VOC 2007 dataset, the training procedure takes about $4$ hours on an $8$-core \emph{Xeon E5620} machine.
+
+\input{../det_reward}
+
+\input{../det_features}
