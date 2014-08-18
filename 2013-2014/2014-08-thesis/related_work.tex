@@ -10,8 +10,9 @@ For state-of-the-art performance, the object-sized window models are augmented w
 We employ the widely used Deformable Part Model detector \parencite{Felzenszwalb2010a}.
 
 \PM{CNNs}
-Most recently, best performance is obtained not with hand-designed features but with those learned on large-scale labeled datasets by a deep convolutional architecture \parencite{Krizhevsky-NIPS-2012,Girshick-CVPR-2014}.
-The method of \cite{Girshick-CVPR-2014} in particular is powerful but slow, requiring costly processing of many windows.
+Most recently, best performance is obtained not with hand-designed features but with those learned on large-scale labeled datasets such as ImageNet \parencite{Deng-CVPR-2009} by a deep convolutional neural network (CNN) such as AlexNet \parencite{Krizhevsky-NIPS-2012}.
+This has prompted attempts to apply these computationally expensive methods to detection \parencite{Erhan-CVPR-2014,Sermanet-ICLR-2014} .
+The ``R-CNN'' method of \cite{Girshick-CVPR-2014} in particular is powerful but slow, requiring costly processing of many windows.
 
 \PM{Windows}
 Window proposal is most often done exhaustively over the image space as a ``sliding window'', or inexhaustively with a bottom-up segmentation approach \parencite{Uijlings-IJCV-2013}.

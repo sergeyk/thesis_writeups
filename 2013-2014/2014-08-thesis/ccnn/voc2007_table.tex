@@ -1,0 +1,20 @@
+\begin{table}[ht]
+\centering
+\caption{
+Full table of AP vs. Time results on PASCAL VOC 2007.
+Best performance for each time point is in bold.
+}\label{tab:results}
+\small{
+\begin{tabular}{lrrrrrrrr}
+\toprule
+Time allotted (ms)                  & 0 & 300            & 600            & 1300           & 1800           & 3600           & 7200           & 10000 \\
+\midrule
+Original                            & 0 & 0.000          & 0.176          & 0.211          & 0.244          & 0.368          & 0.496          & 0.544 \\
+Random                              & 0 & 0.000          & 0.295          & 0.381          & 0.426          & 0.504          & 0.536          & 0.544 \\
+C-CNN                               & 0 & \textbf{0.327} & 0.430          & 0.493          & 0.510          & 0.528          & 0.528          & - \\
+Region Selection w/ Gradient        & 0 & 0.000          & 0.424          & 0.469          & 0.490          & 0.526          & \textbf{0.542} & 0.544 \\
+C-CNN, Region Selection w/ Gradient & 0 & 0.198          & \textbf{0.442} & \textbf{0.502} & \textbf{0.517} & \textbf{0.528} & 0.528          & - \\
+\bottomrule
+\end{tabular}
+}
+\end{table}

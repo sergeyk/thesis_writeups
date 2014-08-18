@@ -1,25 +1,36 @@
 %!TEX root=paper/paper.tex
 \begin{abstract}
 
+\PM{Motivation}
 Humans are capable of perceiving a scene at a glance, and obtain deeper understanding with additional time.
 Similarly, visual recognition deployments should be robust to varying computational budgets.
 Such situations require Anytime recognition ability, which is rarely considered in computer vision research.
 
-We present a method for learning dynamic policies to optimize Anytime performance in visual architectures.
-Our method for \emph{timely} multi-class detection aims to give the best possible performance at any single point after a start time; it is terminated at a deadline time.
-Toward this goal, we formulate a dynamic, closed-loop policy that infers the contents of the image in order to decide which detector to deploy next.
-Crucially, we approach this problem from the perspective of Markov Decision Processes, and use reinforcement learning techniques in learning.
+\PM{Reinforcement Learning}
+We present a general method for learning dynamic policies to optimize Anytime performance in visual architectures.
+Crucially, we approach this problem from the perspective of Markov Decision Processes, and use reinforcement learning techniques.
+Our method is easily extensible, as it treats detectors and classifiers as black boxes and learns from execution traces.
 We explain our effective decisions in structuring the reward function and featurizing the MDP state.
 In contrast to previous work, our method significantly diverges from the predominant greedy strategies, and is able to learn to take actions with deferred values.
+Crucially, decisions are made at test time and depend on observed data and intermediate results.
 
+\PM{Detection}
+For the detection task, we formulate a dynamic, closed-loop policy that infers the contents of the image in order to decide which detector to deploy next.
 Experiments are conducted on the PASCAL VOC object detection dataset.
 We evaluate our method with a novel \emph{costliness} measure, computed as the area under an Average Precision vs. Time curve.
 If execution is stopped when only half the detectors have been run, our method obtains $66\%$ better AP than a random ordering, and $14\%$ better performance than an intelligent baseline.
 On the costliness measure, our method obtains at least $11\%$ better performance.
-Our method is easily extensible, as it treats detectors and classifiers as black boxes and learns from execution traces using reinforcement learning.
 
-On classification tasks, our model sequentially orders feature computation and performs subsequent classification.
-Crucially, decisions are made at test time and depend on observed data and intermediate results.
-We show the applicability of this system to standard problems in scene and object recognition.
+\PM{Classification}
+On classification tasks, where actions are less costly than running detectors, our model quickly orders feature computation and performs subsequent classification.
+We explain strategies for dealing with unobserved feature values that are necessary to effectively classify from any state in the sequential process.
+We show the applicability of this system to a challenging synthetic problem as well as standard problems in scene and object recognition.
 On suitable datasets, we can incorporate a semantic back-off strategy that gives maximally specific predictions for a desired level of accuracy; this provides a new view on the time course of human visual perception.
+
+\PM{Cascaded CNN}
+We additionally propose a novel cascaded approach for speeding up Convolutional Neural Networks (CNNs) and evaluate it on the recently introduced R-CNN object detection system.
+R-CNN has excellent detection accuracy, but is slow, running at 10 seconds per image on a GPU.
+Most of R-CNN's time is spent classifying roughly 2k regions of interest per image without sharing computation between them.
+Along with a novel region selection method using quick-to-compute features, our approach introduces a \emph{reject} option between layers in the CNN, allowing the network to terminate computation early, as in a traditional cascade.
+We achieve a 8x speed-up while losing no more than 10\% of the top R-CNN detection performance -- or a 16x speed-up while losing no more than 20\%.
 \end{abstract}

@@ -27,8 +27,10 @@ Additionally, different instances benefit from different subsets of features.
 For example, simple binary features are sufficient to quickly detect faces \parencite{Viola2004} but not more varied visual objects, while the features most useful for separating landscapes from indoor scenes \parencite{Xiao-CVPR-2010} are different from those most useful for recognizing fine distinctions between bird species \parencite{Farrell-ICCV-2011}.
 
 \PM{Detection}
-State-of-the-art object detectors are slow, and need to process many regions of each image \parencite{Felzenszwalb2010a,Girshick-CVPR-2014}.
-Scene and inter-object contextual cues can be exploited in two ways.
+State-of-the-art object detectors are slow, and need to process many regions of each image \parencite{Felzenszwalb2010a}.
+This is true even for recent approaches based on Convolutional Neural Networks (CNNs) \parencite{Girshick-CVPR-2014}.
+While convolutional models are efficient to implement due to the availability of high-performance primitives, the amount of work to perform complete inference at all candidate region windows is still considerable.
+To maximize early performance gains, scene and inter-object contextual cues can be exploited in two ways.
 First, detectors can be ordered according so as to maximize the chance of finding objects actually present in the image.
 Second, regions can be processed in an intelligent order, with most likely locations selected first.
 
@@ -47,18 +49,19 @@ With different settings of parameters, we can learn policies ranging from \textb
 For detection, the actions are time-consuming detectors applied to the whole image, as well as a quick scene classifier.
 We run scene context and object class detectors over the whole image sequentially, using the results of detection obtained so far to select the next actions.
 Since the actions are time-consuming, we use a powerful inference mechanism to select the best next action.
+We evaluate on the PASCAL VOC dataset and obtain better performance than all baselines when there is less time available than is needed to exhaustively run all detectors.
 
 \PM{Classification}
 Classification actions are much faster than detectors, and the action-selection method accordingly needs to be fast.
 Because different features can be selected for different instances, and because our system may be called upon to give an answer at any point during its execution, the feature combination method needs to be robust to a large number of different observed-feature subsets.
 To this end, we consider several value-imputation methods, and present a method for learning several classifiers for different clusters of observed-feature subsets.
-
-\todo{Paragraph motivating Cascaded-CNN.}
-
-\PM{Evaluation}
-For the detection task, we evaluate on the PASCAL VOC dataset and obtain better performance than all baselines when there is less time available than is needed to exhaustively run all detectors.
-\todo{On the same dataset, our Cascaded CNN method obtains nearly state-of-the-art performance with a 16x speed-up}.
-For the classification task, we evaluate our method on several multi-class datasets.
 We first demonstrate on synthetic data that our algorithm learns to pick features most useful for the specific test instance.
 We demonstrate the advantage of non-myopic over greedy, and of dynamic over static on this and the Scene-15 visual classification dataset.
 Then we show results on a subset of the hierarchical ImageNet dataset, where we additionally learn to provide the most specific answers for any desired cost budget and accuracy level.
+
+\PM{Cascaded CNN}
+We additionally investigate a novel approach for speeding up a state-of-the-art CNN-based detection method, and propose a general technique for accelerating CNNs applied to class imbalanced data.
+We bring the classic idea of the cascade to CNNs by inserting a \emph{reject} option between CNN layers.
+When the CNN processes batches of images, which is standard for many applications, the reject layers allows the CNN to ``thin'' the batch as it progresses through the network, thus saving processing time.
+We also consider a variety of strong baselines for speeding up R-CNN.
+On the PASCAL VOC dataset, the Cascaded CNN method obtains nearly the state-of-the-art performance of \cite{Girshick-CVPR-2014} with a 8x speed-up.

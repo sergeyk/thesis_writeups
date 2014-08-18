@@ -17,8 +17,9 @@ x take first holistic pass over paper, ensuring notation consistency and margina
 x go through slides and insert good figures into thesis
     x add statespace exploration approaches figure to related work for classification
 - add C-CNN as a chapter
-    - add R-CNN paragraph to intro
-    - add R-CNN related work to related work
+    x add R-CNN paragraph to intro
+    x add R-CNN related work to related work
+    x add method/evaluation chapter
     - add to abstract and conclusion
 - take second holistic pass, focusing on abstract, conclusion, and appendix
 
