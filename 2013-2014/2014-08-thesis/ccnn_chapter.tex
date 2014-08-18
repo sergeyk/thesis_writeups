@@ -1,7 +1,11 @@
 %!TEX root=paper/paper.tex
-\chapter{Cascaded CNN recognition}
+\chapter{Detection with the Cascaded CNN}
 
-\todo{define problem}
+\PM{Motivation}
+With the rise of Convolutional Neural Networks (CNNs) for visual recognition, the state-of-the-art in detection has shifted.
+Whereas in \autoref{sec:det_problem}, a detector model was trained per class, and evaluated densely on the image, currently best-performing methods train one detector for all classes, and evaluate on a subset of possible image regions \parencite{Girshick-CVPR-2014}.
+The method is still computationally expensive, taking about 10 seconds per image even with multi-threaded matrix and convolution operations.
+The strategy to speed detection up, however, has to change.
 
 \input{../ccnn/method}
 

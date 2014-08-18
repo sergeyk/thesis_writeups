@@ -1,15 +1,13 @@
 %!TEX root=paper/paper.tex
-\begin{abstract}
+\begin{abstract}\label{sec:abstract}
 
-\PM{Motivation}
+\PM{Motivation and method}
 Humans are capable of perceiving a scene at a glance, and obtain deeper understanding with additional time.
 Similarly, visual recognition deployments should be robust to varying computational budgets.
 Such situations require Anytime recognition ability, which is rarely considered in computer vision research.
-
-\PM{Reinforcement Learning}
 We present a general method for learning dynamic policies to optimize Anytime performance in visual architectures.
 Crucially, we approach this problem from the perspective of Markov Decision Processes, and use reinforcement learning techniques.
-Our method is easily extensible, as it treats detectors and classifiers as black boxes and learns from execution traces.
+Our method is easily extensible, treating detectors and classifiers as black boxes and learning from execution traces.
 We explain our effective decisions in structuring the reward function and featurizing the MDP state.
 In contrast to previous work, our method significantly diverges from the predominant greedy strategies, and is able to learn to take actions with deferred values.
 Crucially, decisions are made at test time and depend on observed data and intermediate results.
@@ -28,9 +26,7 @@ We show the applicability of this system to a challenging synthetic problem as w
 On suitable datasets, we can incorporate a semantic back-off strategy that gives maximally specific predictions for a desired level of accuracy; this provides a new view on the time course of human visual perception.
 
 \PM{Cascaded CNN}
-We additionally propose a novel cascaded approach for speeding up Convolutional Neural Networks (CNNs) and evaluate it on the recently introduced R-CNN object detection system.
-R-CNN has excellent detection accuracy, but is slow, running at 10 seconds per image on a GPU.
-Most of R-CNN's time is spent classifying roughly 2k regions of interest per image without sharing computation between them.
+We additionally propose a novel cascaded approach for speeding up Convolutional Neural Networks (CNNs) and evaluate it on the recently introduced R-CNN object detection system, which has excellent detection accuracy but high computational cost, most of it spent on classifying roughly 2k regions of interest per image.
 Along with a novel region selection method using quick-to-compute features, our approach introduces a \emph{reject} option between layers in the CNN, allowing the network to terminate computation early, as in a traditional cascade.
-We achieve a 8x speed-up while losing no more than 10\% of the top R-CNN detection performance -- or a 16x speed-up while losing no more than 20\%.
+On the PASCAL VOC, we achieve a 8x speed-up while losing no more than 10\% of the top R-CNN detection performance -- or a 16x speed-up while losing no more than 20\%.
 \end{abstract}

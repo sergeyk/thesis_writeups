@@ -78,7 +78,7 @@ The weight $\alpha$ of the regularization term is tied across the $F$ separate r
 We run $15$ iterations of accumulating samples by running $350$ episodes, starting with a baseline policy which will be described in \autoref{sec:det_evaluation}, and cross-validating the regularization parameter at each iteration.
 Samples are not thrown away between iterations.
 
-\subsubsection{Greedy vs non-myopic policy}
+\subsubsection{Greedy vs non-myopic}
 
 \PM{Greedy}
 Note from \autoref{eq:recursive_value} that the $\gamma \in [0,1]$ parameter of the MDP controls the level of \emph{discounting} of rewards of future action in computing the value \autoref{eq:expected_reward}.

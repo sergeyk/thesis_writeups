@@ -9,19 +9,12 @@ x for cvpr14, see what's missing in method_new (vs method) and adjust accordingl
 x move evaluations to own sections
 x move all MDP method setup to detection chapter: have to rewrite a little bit
 x add 281b report as section to cvpr14 chapter
-x go over classifier training and eval sections, ensure flow and remove all mentions of MCF (fine to leave in figures for now)
-    x move imputation evaluation to appendix1
-    x remove all mention of retraining and remove tables
+x go over classifier training; move eval section to appendix, ensure flow, and remove all mentions of MCF (fine to leave in figures for now)
 x merge nips12 and cvpr14 abstracts and conclusions
 x take first holistic pass over paper, ensuring notation consistency and marginal labels
 x go through slides and insert good figures into thesis
-    x add statespace exploration approaches figure to related work for classification
-- add C-CNN as a chapter
-    x add R-CNN paragraph to intro
-    x add R-CNN related work to related work
-    x add method/evaluation chapter
-    - add to abstract and conclusion
-- take second holistic pass, focusing on abstract, conclusion, and appendix
+x add C-CNN as a chapter
+- take another holistic pass, focusing on abstract, conclusion, and appendix
 
 Maybe
 -----

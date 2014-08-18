@@ -1,14 +1,16 @@
 %!TEX root=../paper/paper.tex
 \section{Evaluation}\label{sec:ccnn_evaluation}
 
+\PM{Dataset}
 We evaluate on the standard object detection benchmark: the PASCAL VOC \cite{pascal-voc-2010}.
 In all cases, the CNN region classifiers are trained on the PASCAL VOC 2007 trainval set.
 The parameters of our methods are set by training or cross-validation on the VOC 2007 val set.
 We evaluate on the VOC 2007 test set.
+The result plots and details are shown in \autoref{fig:voc2007_results} and \autoref{tab:results}.
 
+\PM{Implementation}
 The scoring function for the quick-to-compute features is trained by a logistic regression classifier onto the max PASCAL overlap with any ground truth window on the validation dataset.
 The classifier is optimized by stochastic gradient descent, and its regularization parameter is cross-validated.
-
 The R-CNN software was used as available in June 2014.
 \footnote{\url{https://github.com/rbgirshick/rcnn}}
 That software relies on Selective Search \cite{Uijlings-IJCV-2013} region proposals.
@@ -18,13 +20,12 @@ An additional parameter is the size of each batch of regions that goes through t
 We set batch size to 100 regions, and observe that it takes on average 500 ms to process them with the CNN.
 In all experiments, we use Ubuntu 12.04, Intel i5 3.2GHz CPU, and NVIDIA Tesla K40 GPU.
 
-The result plots and details are shown in \autoref{fig:voc2007_results} and \autoref{tab:results}.
-
 \input{../ccnn/voc2007_fig}
 
 \input{../ccnn/voc2007_table}
 
-\subsection{Experiments}
+\PM{Settings}
+The experimental settings are
 \begin{description}
   \item[Original] \hfill \\
   The original order of the Selective Search regions of interest.
@@ -43,21 +44,9 @@ The result plots and details are shown in \autoref{fig:voc2007_results} and \aut
   The next two experiments also make use of the Region Selection methodology with the quick-to-compute feature.
 \end{description}
 
-\subsection{Analysis}
+\PM{Analysis}
 Since the time to process a full batch with a non-cascaded CNN is 500 ms, there are no results for non-cascaded baselines at 300 ms.
 At this time, the Cascaded CNN without any region ordering is best.
 A reason for why C-CNN with Region Selection is not as good at this point is that the region selection presents better region candidates, with fewer rejection opportunities, and thus has less coverage of the image.
-
 At 600 ms, C-CNN method have had more than one batch go through, and the Region Selection is giving it a lead over the simple C-CNN.
 Both method are better than the baseline non-cascaded methods for this entire duration.
-
-\begin{figure}
-\centering
-\includegraphics[width=0.52\linewidth]{../ccnn/figures/roi_hist.pdf}
-\hfill
-\includegraphics[width=0.4\linewidth]{../ccnn/figures/gradient.pdf}
-\caption{
-(left) Distribution of number of regions per image.
-(right) Example of the CNN gradient.
-}\label{fig:roi_hist_and_gradient}
-\end{figure}
