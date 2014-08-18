@@ -50,7 +50,7 @@ We consider more advanced methods, all of them treating feature selection as a s
 \autoref{fig:models} shows a few approaches to the problem (all additionally described below).
 
 \PM{Cascaded methods}
-A well-known method to evaluate features sequentially is the cascaded boosted classifier of \cite{Viola2004} (updated by \cite{Bourdev-CVPR-2005} with a soft threshold), which is able to quit evaluating an instance before all features are computed---but feature cost was not considered.
+A well-known method to evaluate features sequentially is the cascaded boosted classifier of \cite{Viola-IJCV-2004} (updated by \cite{Bourdev-CVPR-2005} with a soft threshold), which is able to quit evaluating an instance before all features are computed---but feature cost was not considered.
 The cost-sensitive cascade of \cite{Chen-AISTATS-2012} optimizes stage order and thresholds to jointly minimize classification error and feature computation cost.
 \cite{Xu-ICML-2012} and \cite{Grubb-AISTATS-2012} separately develop a variant of gradient boosting for training cost-sensitive classifiers; the latter prove near-optimality of their greedy algorithm with submodularity results.
 Their methods are tightly coupled to the stage-wise regression algorithm.

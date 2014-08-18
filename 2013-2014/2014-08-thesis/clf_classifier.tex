@@ -77,7 +77,8 @@ $F'S$ is the number of observed dimensions, which grows proportionally with budg
 
 \input{../mdp_masks_fig}
 
-As illustrated in \hyperref[fig:mdp_masks]{Figure~\ref*{fig:mdp_masks}}, the policy $\pi$ selects some feature subsets more frequently than others.
+\PM{Subset clustering}
+As illustrated in \autoref{fig:mdp_masks}, the policy $\pi$ selects some feature subsets more frequently than others.
 Instead of learning only one classifier $g$ that must be robust to all observed feature subsets, we can learn several classifiers, one for each of the most frequent subsets.
 This is done by maintaining a distribution over encountered feature subsets during training.
 

@@ -25,7 +25,7 @@ Instead, we put regions in random order, set a threshold for the quick-to-comput
 
 \PM{Region statistics}
 For the first source of information, we consider statistics about ROI location and overlap with other regions.
-For each ROI, we compute: its normalized location, its scale($\sqrt{\text{width} \times \text{height}}$), aspect ratio ($\log \sqrt{\text{width} / \text{height}}$), and normalized counts of overlapping regions, at several PASCAL overlap thresholds (0, 0.2, 0.6).
+For each ROI, we compute: its normalized location, its scale ($\sqrt{\text{width} \times \text{height}}$), aspect ratio ($\log \sqrt{\text{width} / \text{height}}$), and normalized counts of overlapping regions, at several PASCAL overlap thresholds (0, 0.2, 0.6).
 This simple feature works suprisingly well for filtering regions to process first.
 
 \PM{Pixel gradient}
@@ -54,7 +54,7 @@ For each region to be evaluated, we compute the image-normalized gradient sum, s
 
 \PM{Motivation}
 Despite the intentions of the region-proposal mechanism \parencite{Uijlings-IJCV-2013}, most ROIs that are scored in R-CNN do not contain any object of interest.
-As in the classic cascade of \cite{Viola2004}, it would be useful to quickly reject these regions, without expending the full amount of computation on them.
+As in the classic cascade of \cite{Viola-IJCV-2004}, it would be useful to quickly reject these regions, without expending the full amount of computation on them.
 The problem is that the deep neural network architecture is trained to always run all the way through.
 We need to introduce a new primitive to enable early termination.
 

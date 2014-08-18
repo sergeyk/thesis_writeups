@@ -59,7 +59,7 @@ The trained SVMs were evaluated on the images not used for training, resulting i
 This dataset was split 60-40 into training and test sets for our experiments.
 
 \PM{Results}
-\hyperref[fig:scenes]{Figure~\ref*{fig:scenes}} shows the results, including learned policy trajectories.
+\autoref{fig:clf_scenes} shows the results, including learned policy trajectories.
 For all evaluated budgets, our \emph{dynamic, non-myopic} method outperforms all others on the area under the error vs. cost curve metric.
 Our results on this dataset match the reported results of Active Classification \parencite{Gao-NIPS-2011} (Figure 2) and Greedy Miser \parencite{Xu-ICML-2012} (Figure 3), although both methods use an additional powerful feature channel (ObjectBank)\footnote{Detailed results for this and other experiments are on the project page (see front page for the \href{http://sergeykarayev.com/recognition-on-a-budget/}{link}).}.
 
@@ -76,7 +76,7 @@ Following \parencite{Deng-CVPR-2012}, accuracy is defined on all nodes, and inne
 
 \PM{Results}
 We combine our sequential feature selection with the ``Hedging Your Bets'' method for backing off prediction nodes using the ImageNet hierarchy to maintain guaranteed accuracy while giving maximally specific answers, given a cost budget.
-The results are given in \hyperref[fig:imagenet]{Figure~\ref*{fig:imagenet}}.
+The results are given in \autoref{fig:imagenet}.
 As the available budget increases, the \emph{specificity} (defined by normalized information gain in the hierarchy) of our predictions also increases, while accuracy remains constant.
 Visualizing this on the ILSVRC-65 hierarchy, we see that the fraction of predictions at the leaf nodes grows with available computation time.
 This formulation presents a novel angle on modeling the time course of human visual perception.

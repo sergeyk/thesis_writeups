@@ -27,7 +27,7 @@ In the first one, the start time is immediate and execution is cut off at $20$ s
 In the second one, execution is cut off after only $10$ seconds.
 Lastly, we measure performance between $5$ seconds and $15$ seconds.
 These operating points show how our method behaves when deployed in different conditions.
-The results are given in rows of \autoref{tab:results}.
+The results are given in rows of \autoref{tab:det_results}.
 
 \input{../det_reward_and_results_fig}
 
@@ -44,7 +44,7 @@ Then there are instantiations of our method, as described in the previous sectio
 As the \textbf{MRF} model consistently outperformed \textbf{Direct} by a small margin, we report results for that model only.
 In additional to the detector actions, we include a scene-level GIST feature that updates the posterior probabilities of all classes.
 This is considered one action, takes about $0.3$ seconds, and brings another boost in performance.
-The results are shown in \autoref{tab:results}.
+The results are shown in \autoref{tab:det_results}.
 
 \begin{figure}[h!]
   \centering
@@ -73,7 +73,7 @@ We note that the GIST action is learned to never be taken in the greedy ($\gamma
 
 \begin{table}[t]
 \caption{The areas under the AP vs. Time curve for different experimental conditions.}
-\label{tab:results}
+\label{tab:det_results}
 \centering
 \begin{tabular}{|c|c|c|c|c|c|}
 \hline

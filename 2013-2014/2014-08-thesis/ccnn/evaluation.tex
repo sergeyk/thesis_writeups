@@ -6,7 +6,7 @@ We evaluate on the standard object detection benchmark: the PASCAL VOC \cite{pas
 In all cases, the CNN region classifiers are trained on the PASCAL VOC 2007 trainval set.
 The parameters of our methods are set by training or cross-validation on the VOC 2007 val set.
 We evaluate on the VOC 2007 test set.
-The result plots and details are shown in \autoref{fig:voc2007_results} and \autoref{tab:results}.
+The result plots and details are shown in \autoref{fig:voc2007_results} and \autoref{tab:ccnn_results}.
 
 \PM{Implementation}
 The scoring function for the quick-to-compute features is trained by a logistic regression classifier onto the max PASCAL overlap with any ground truth window on the validation dataset.
@@ -35,7 +35,7 @@ The experimental settings are
   A completely blind permutation of the original order.
 
   \item[Region Selection] \hfill \\
-  The region statistics feature from \autoref{sec:region} is always used.
+  The region statistics feature is always used.
   Additionally, we consider the Pixel Gradient feature, with \emph{setup time} of the gradient forward-back propagation of 20 ms.
 
   \item[Cascaded CNN] \hfill \\
