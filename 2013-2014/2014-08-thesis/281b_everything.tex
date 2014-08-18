@@ -32,7 +32,7 @@ The goal of training is to minimize the \emph{loss} of the predictions with the 
 We look at a complication of this problem.
 While all features are available at training time, only a subset of features of each instance is observed at test time.
 Such situations can arise in real world deployments of predictive systems due to sensor failure.
-Another motivation for the problem comes from work on dynamic feature selection: to predict with minimum loss on a fixed time budget, different subsets of features are extracted for different instances \cite{Karayev-NIPS-2012, Xu-ICML-2013}.
+Another motivation for the problem comes from work on dynamic feature selection: to predict with minimum loss on a fixed time budget, different subsets of features are extracted for different instances \parencite{Karayev-NIPS-2012, Xu-ICML-2013}.
 
 Since the training set is fully observed, we can train a classifier with all features.
 At test time, we could attempt to impute the unobserved feature values given the observed ones, and use the classifier trained on the fully observed training set.
@@ -80,7 +80,7 @@ In addition to the $k$-NN classifier described above, we consider three linear c
 \begin{enumerate}
   \item Logistic loss on fully observed data: simply using $X^c$.
   \item Logistic loss on synthetically re-imputed version of the data: we obtain $X^m$ through applying $o(x, b)$ on each $x^c$, and then imputing the missing values with the methods described.
-  \item Logistic and quadratic loss derived with Marginalized Corrupted Features (MCF) \cite{Maaten-ICML-2013}.
+  \item Logistic and quadratic loss derived with Marginalized Corrupted Features (MCF) \parencite{Maaten-ICML-2013}.
 \end{enumerate}
 
 The idea of (3) is to move the expectation of feature corruption into the loss function, which is equivalent to adding an infinite amount of corrupted data to the training set.
@@ -91,7 +91,7 @@ For example, for blankout noise and logistic loss, we can derive the surrogate l
 \mathcal{L}(D; \mathbf{\theta}) \leq \sum_{n=1}^N \log \left( 1 + \prod_{f=1}^F \left[ q_f + (1 - q_f) e^{-y_n \theta_f \frac{1}{1 - q_d} x_{nf}} \right] \right)
 \end{equation}
 
-For additional loss functions, see \cite{Maaten-ICML-2013}.
+For additional loss functions, see \parencite{Maaten-ICML-2013}.
 
 \subsection{Clustering classifiers}
 

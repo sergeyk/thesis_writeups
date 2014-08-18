@@ -20,7 +20,7 @@ Feature selection had four experimental conditions.
 
 All datasets were first standardized by subtracting the row mean and dividing by the row standard deviation.
 
-\subsubsection{Digits}
+\section{Digits}
 The Digits dataset contains 8x8 grayscale images of hand-written digits 1-10.
 Each of the 10 classes has 200 samples, for a total of 2000 images and 64 features.
 
@@ -74,11 +74,11 @@ Figure~\ref{fig:digits} shows the results; here we summarize the conclusions:
     \label{fig:digits}
 \end{figure}
 
-\subsubsection{Scenes-15}
-The Scene-15 dataset \cite{Lazebnik-CVPR-2006} contains 4485 images from 15 visual scene classes.
+\section{Scenes-15}
+The Scene-15 dataset \parencite{Lazebnik-CVPR-2006} contains 4485 images from 15 visual scene classes.
 The task is to identify classify images according to scene.
 
-Following \cite{Xiao-CVPR-2010}, we extracted 14 different visual features (GIST, HOG, TinyImages, LBP, SIFT, Line Histograms, Self-Similarity, Textons, Color Histograms, and variations).
+Following \parencite{Xiao-CVPR-2010}, we extracted 14 different visual features (GIST, HOG, TinyImages, LBP, SIFT, Line Histograms, Self-Similarity, Textons, Color Histograms, and variations).
 Separate multi-class linear SVMs were trained on each feature channel, using a random 100 positive example images per class for training.
 We used the liblinear implementation, and cross-validated the penalty parameter $C$.
 
@@ -130,7 +130,7 @@ The conclusions are much the same as for the \textbf{Digits} dataset, with the f
     \label{fig:scenes}
 \end{figure}
 
-\subsubsection{Conclusion}
+\section{Conclusion}
 
 On both datasets, and for all feature selection approaches, we find that mean imputation (with a classifier trained on imputed data) is a well-performing approach.
 Nearest Neighbor and Gaussian methods perform best but are the most expensive; Gaussian scales poorly with number of features, while NN scales poorly with size of training set.

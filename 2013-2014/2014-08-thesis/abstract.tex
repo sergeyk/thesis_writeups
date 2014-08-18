@@ -13,9 +13,9 @@ We explain our effective decisions in structuring the reward function and featur
 In contrast to previous work, our method significantly diverges from the predominant greedy strategies, and is able to learn to take actions with deferred values.
 
 Experiments are conducted on the PASCAL VOC object detection dataset.
-We evaluate our method with a novel \emph{timeliness} measure, computed as the area under an Average Precision vs. Time curve.
+We evaluate our method with a novel \emph{costliness} measure, computed as the area under an Average Precision vs. Time curve.
 If execution is stopped when only half the detectors have been run, our method obtains $66\%$ better AP than a random ordering, and $14\%$ better performance than an intelligent baseline.
-On the timeliness measure, our method obtains at least $11\%$ better performance.
+On the costliness measure, our method obtains at least $11\%$ better performance.
 Our method is easily extensible, as it treats detectors and classifiers as black boxes and learns from execution traces using reinforcement learning.
 
 On classification tasks, our model sequentially orders feature computation and performs subsequent classification.
