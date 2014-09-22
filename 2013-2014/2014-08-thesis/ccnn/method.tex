@@ -35,19 +35,24 @@ Our method follows \cite{Simonyan-ICLR-2014} to the best of our knowledge.
 Images are resized to square and classified with an ``AlexNet'' \cite{Krizhevsky-NIPS-2012} CNN fine-tuned on the PASCAL VOC classification dataset with multi-label loss.
 (Unlike the ILSVRC, the PASCAL VOC is a multi-label prediction task, with at times multiple correct labels for an image.)
 At test-time, the gradient at the top is with respect to the indicator function of the max-scoring class, and is back-propagated all the way to the pixels, where it is summed across channels.
-A couple of example images are shown in \autoref{fig:roi_hist_and_gradient}.
+A couple of example images are shown in \autoref{fig:gradient_examples}.
 We compute an integral image on this pixel gradient map, allowing near-instant computation of sums in arbitrary regions.
 For each region to be evaluated, we compute the image-normalized gradient sum, sums for each of four corners, and ratio of in-region vs. out-of-region sums.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.52\linewidth]{../ccnn/figures/roi_hist.pdf}
-\hfill
-\includegraphics[width=0.4\linewidth]{../ccnn/figures/gradient.pdf}
+\includegraphics[width=\linewidth]{../ccnn/figures/roi_hist.pdf}
 \caption{
-(left) Distribution of number of regions per image.
-(right) Example of the CNN gradient.
-}\label{fig:roi_hist_and_gradient}
+Distribution of number of regions per image.
+}\label{fig:roi_hist}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{../ccnn/figures/gradient.pdf}
+\caption{
+Two different examples of the CNN gradient that we use as a quick-to-compute feature.
+}\label{fig:gradient_examples}
 \end{figure}
 
 \subsection{Cascaded CNN}\label{sec:ccnn}

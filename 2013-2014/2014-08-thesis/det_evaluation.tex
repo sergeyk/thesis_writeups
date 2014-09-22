@@ -46,18 +46,7 @@ In additional to the detector actions, we include a scene-level GIST feature tha
 This is considered one action, takes about $0.3$ seconds, and brings another boost in performance.
 The results are shown in \autoref{tab:det_results}.
 
-\begin{figure}[h!]
-  \centering
-  \includegraphics[width=\linewidth]{../../../2011-2012/figures/trajectories.pdf}
-  \caption{
-Visualizing the action trajectories of different policies.
-Action selection traces are plotted in orange over many episodes; the size of the blue circles correspond to the increase in AP obtained by the action.
-We see that the \textbf{Random} policy selects actions and obtains rewards randomly, while the \textbf{Oracle} policy obtains all rewards in the first few actions.
-The \textbf{Fixed Order} policy selects actions in a static optimal order.
-Our \textbf{RL w/ MRF} policy does not stick a static order but selects actions dynamically to maximize the rewards obtained early on.
-}
-  \label{fig:trajectories}
-\end{figure}
+\input{../det_trajectories_fig}
 
 \PM{Trajectories}
 In \autoref{fig:det_results1}, we can see that due to the dataset bias, the fixed-order policy performs well at first, as the person class is disproportionately likely to be in the image, but is significantly overtaken by our model as execution goes on and more rare classes have to be detected.

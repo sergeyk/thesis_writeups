@@ -1,6 +1,7 @@
 %% thesis.tex 2014/04/11
 \documentclass{ucbthesis}
 \usepackage[backend=bibtex,citestyle=authoryear-icomp,bibstyle=authoryear]{biblatex}
+\setlength{\bibitemsep}{.5\baselineskip}
 \addbibresource{../../mendeley_bibtex.bib}
 \addbibresource{../manual_additions.bib}
 \usepackage{indentfirst}
@@ -11,6 +12,7 @@
 \usepackage{amsthm}
 \usepackage{algorithm2e}
 \usepackage{booktabs}
+\setlength{\extrarowheight}{.33\baselineskip}
 \usepackage{url}
 \usepackage{titlesec}
 \usepackage{float}
@@ -55,8 +57,12 @@
 \degreeyear{2014}
 \degree{Doctor of Philosophy}
 \chair{Professor Trevor Darrell}
-\othermembers{Professor Pieter Abbeel \\Professor Ken Goldberg}
-\numberofmembers{3}
+\othermembers{
+Professor Pieter Abbeel\\
+Professor Mario Fritz\\
+Professor Ken Goldberg
+}
+\numberofmembers{4}
 \field{Computer Science}
 
 \input{../contents}

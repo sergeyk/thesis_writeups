@@ -1,7 +1,8 @@
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[width=0.98\columnwidth]{../ccnn/figures/combined.pdf}
-\caption{
+\caption[
+Summary of our method for dynamic region selection and cascaded CNN processing.]{
 Our method scores each region of interest with a fast feature (we evaluate several), allowing us to pick promising regions first.
 The regions are classified with the original CNN, or a sped-up Cascade-CNN.
 The properties of the regions can play a role in selecting the next batch of regions.

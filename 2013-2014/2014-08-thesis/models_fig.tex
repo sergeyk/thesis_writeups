@@ -1,29 +1,33 @@
 %!TEX root=paper/paper.tex
-\begin{figure}[h!]
+\begin{figure}[H]
 \centering
-\begin{subfigure}[b]{0.48\linewidth}
-    \includegraphics[width=\linewidth]{../../figures/models/cascade}
+\begin{subfigure}[b]{\linewidth}
+    \includegraphics[width=.9\linewidth]{../../figures/models/cascade}
     \caption{
 \textbf{Cascade}
 In addition to the feature computation actions, the classifier is augmented with a rejection action.
 The cascade is Anytime in a limited way, as only the rejection answer can be given before all features are evaluated.
 The fixed order of the cascade is not robust to the fact that different images benefit from different features.
 }
-\end{subfigure}\hfill%
-\begin{subfigure}[b]{0.48\linewidth}
+\end{subfigure}
+\begin{subfigure}[b]{.9\linewidth}
     \includegraphics[width=\linewidth]{../../figures/models/benbouzid}
     \caption{
 The \textbf{MD-DAG} method \parencite{Benbouzid-ICML-2012} augments the traditional cascade with an additional Skip action, which allows learning a more robust policy.
 }
-\end{subfigure}\\
-\begin{subfigure}[b]{0.48\linewidth}
+\end{subfigure}
+\end{figure}
+\begin{figure}[H]
+\ContinuedFloat % continue from previous page
+\centering
+\begin{subfigure}[b]{.9\linewidth}
     \includegraphics[width=\linewidth]{../../figures/models/tree}
     \caption{
 \textbf{Tree-based} methods such as \cite{Xu-ICML-2012} find a tree-structured policy for computing features.
 Classification answers are given only at the leaf nodes.
     }
-\end{subfigure}\hfill%
-\begin{subfigure}[b]{0.48\linewidth}
+\end{subfigure}
+\begin{subfigure}[b]{.9\linewidth}
     \includegraphics[width=\linewidth]{../../figures/models/dag}
     \caption{
 In this work and in methods such as \cite{Gao-NIPS-2011}, the policy is a \textbf{general DAG} over selected-feature subsets, which allows actions to be taken in an entirely flexible order.

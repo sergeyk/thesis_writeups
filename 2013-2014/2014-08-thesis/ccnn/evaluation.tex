@@ -15,7 +15,7 @@ The R-CNN software was used as available in June 2014.
 \footnote{\url{https://github.com/rbgirshick/rcnn}}
 That software relies on Selective Search \cite{Uijlings-IJCV-2013} region proposals.
 Different images are proposed different numbers of regions.
-\autoref{fig:roi_hist_and_gradient} shows the distribution of number of regions on the validation set, with the parameters of the R-CNN.
+\autoref{fig:roi_hist} shows the distribution of number of regions on the validation set, with the parameters of the R-CNN.
 An additional parameter is the size of each batch of regions that goes through the CNN.
 We set batch size to 100 regions, and observe that it takes on average 500 ms to process them with the CNN.
 In all experiments, we use Ubuntu 12.04, Intel i5 3.2GHz CPU, and NVIDIA Tesla K40 GPU.
