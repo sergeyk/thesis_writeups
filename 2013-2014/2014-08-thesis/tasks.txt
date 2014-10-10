@@ -20,7 +20,7 @@ x take another holistic pass, focusing on abstract, conclusion, and appendix
 Definitely
 ----------
 - adjust figures in style chapter
-    - give all figures short-version captions
+    x give all figures short-version captions
     - move some figures to appendix
 - add marginals to style chapter
 

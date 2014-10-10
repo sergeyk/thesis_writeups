@@ -201,7 +201,7 @@ To enable our classifiers to learn content-dependent style, we can take the oute
 \section{Experiments}
 
 \begin{table}
-\caption{
+\caption[Mean APs on AVA Style, Flickr Style, and Wikipaintings for single-channel features and their second-stage combinations.]{
     Mean APs on three datasets for the considered single-channel features and their second-stage combination.
     As some features were clearly worse than others on the AVA Style dataset, only the better features were evaluated on larger datasets.
 }
@@ -220,7 +220,6 @@ Wikipaintings     & \textbf{0.473}   & 0.356     & 0.441  & -           & -     
 \end{tabular}
 }
 \end{table}
-
 
 \subsection{Flickr Style}
 We learn and predict style labels on the 80,000 images labeled with 20 different visual styles of our new Flickr Style dataset, using 20\% of the data for testing, and another 20\% for parameter-tuning validation.
@@ -252,7 +251,7 @@ These features gave the best results, thus supporting the hypothesis.
 \begin{figure}[h]
 \centering
     \includegraphics[width=\linewidth]{../style/figures/content_correlation2/pascal_on_flickr.pdf}
-    \caption{
+    \caption[Correlation of PASCAL content classifier predictions against ground truth Flickr Style labels.]{
         Correlation of PASCAL content classifier predictions (rows) against ground truth Flickr Style labels (columns).
         We see, for instance, that the Macro style is highly correlated with presence of animals, and that Long Exposure and Sunny style photographs often feature vehicles.
     }\label{fig:content_correlation}
@@ -312,7 +311,7 @@ Interestingly, styles learned from photographs can be used to order paintings, a
 \begin{figure*}[ht]
 \centering
 \includegraphics[width=.95\linewidth]{../style/figures/style_by_style.pdf}
-\caption{
+\caption[Cross-dataset understanding of style demonstrated by applying Wikipaintings-learned classifiers to phoitographs, and Flickr-learned classifiers to paintings.]{
     Cross-dataset style.
     On the left are shown top scorers from the Wikipaintings set, for styles learned on the Flickr set.
     On the right, Flickr photographs are accordingly sorted by Painting style.
@@ -373,7 +372,9 @@ Interestingly, styles learned from photographs can be used to order paintings, a
     \caption{Query: ``flower''.}
 \end{subfigure}
 \\
-\caption{
+\caption[
+Example of filtering image search from Pinterest results by style, learned on Flickr Style.
+]{
     Example of filtering image search results by style.
     Our Flickr Style classifiers are applied to images found on Pinterest.
     The images are searched by the text contents of their captions, then filtered by the response of the style classifiers.
