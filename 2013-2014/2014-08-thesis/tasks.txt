@@ -21,7 +21,7 @@ Definitely
 ----------
 - adjust figures in style chapter
     x give all figures short-version captions
-    - move some figures to appendix
+    x move some figures to appendix
 - add marginals to style chapter
 
 Maybe
