@@ -128,7 +128,6 @@ At the outset, we decided on a set of 20 visual styles, further categorized into
 For each of these stylistic concepts, we found at least one dedicated Flickr Group with clearly defined membership rules.
 From these groups, we collected 4,000 positive examples for each label, for a total of 80,000 images.
 Example images are shown in \autoref{fig:flickr_style_examples}.
-The exact Flickr groups used are given in \autoref{tab:flickr_groups}.
 
 The derived labels are considered clean in the positive examples, but may be noisy in the negative examples, in the same way as the ImageNet dataset \parencite{Deng-CVPR-2009}.
 That is, a picture labeled as \emph{Sunny} is indeed \emph{Sunny}, but it may also be \emph{Romantic}, for which it is not labeled.
@@ -233,20 +232,22 @@ Per-class accuracies are computed on subsets of the data balanced by the binary 
 We follow these decisions in all following experiments.
 
 The best single-channel feature is DeCAF$_6$ with 0.336 mean AP; feature fusion obtains 0.368 mean AP.
-Per-class APs range from 0.17 [Depth of Field] to  0.62 [Macro].
-Per-class accuracies range from 68\% [Romantic, Depth of Field] to 85\% [Sunny, Noir, Macro].
+Per-class APs range from 0.17 [\emph{Depth of Field}] to  0.62 [\emph{Macro}].
+Per-class accuracies range from 68\% [\emph{Romantic}, \emph{Depth of Field}] to 85\% [\emph{Sunny}, \emph{Noir}, \emph{Macro}].
 The average per-class accuracy is 78\%.
-We show the most confident style classifications on the test set of Flickr Style in \autoref{fig:flickr_on_flickr1}-\autoref{fig:flickr_on_flickr3}.
+We show the most confident style classifications on the test set of Flickr Style in \autoref{fig:flickr_on_flickr1} through \autoref{fig:flickr_on_flickr3}.
 
-Upon inspection of the confusion matrices, we saw points of understandable confusion: Depth of Field vs.~Macro, Romantic vs.~Pastel, Vintage vs.~Melancholy.
-There are also surprising sources of mistakes: Macro vs.~Bright/Energetic, for example.
-To explain this particular confusion, we observed that lots of Macro photos contain bright flowers, insects, or birds, often against vibrant greenery.
+Upon inspection of the confusion matrices, we saw points of understandable confusion: \emph{Depth of Field} vs. \emph{Macro}, \emph{Romantic} vs. \emph{Pastel}, \emph{Vintage} vs. \emph{Melancholy}.
+There are also surprising sources of mistakes: \emph{Macro} vs. \emph{Bright/Energetic}, for example.
+To explain this particular confusion, we observed that lots of \emph{Macro} photos contain bright flowers, insects, or birds, often against vibrant greenery.
 Here, at least, the content of the image dominates its style label.
 
 To explore further content-style correlations, we plot the outputs of PASCAL object class classifiers (one of our features) on the Flickr dataset in~\autoref{fig:content_correlation}.
-We can observe that some styles have strong correlations to content (e.g., ``Hazy'' occurs with ``vehicle'', ``HDR'' doesn't occur with ``cat'').
+We can observe that some styles have strong correlations to content (e.g., \emph{Hazy} occurs with \emph{vehicle}, \emph{HDR} doesn't occur with \emph{cat}).
 
-We hypothesize that style is content-dependent: a Romantic portrait may have different low-level properties than a Romantic sunset. We form a new feature as an outer product of our content classifier features with the second-stage late fusion features (``Fusion $\times$ Content'' in all results figures).  These features gave the best results, thus supporting the hypothesis.
+We hypothesize that style is content-dependent: a \emph{Romantic} portrait may have different low-level properties than a \emph{Romantic} sunset.
+We form a new feature as an outer product of our content classifier features with the second-stage late fusion features (``Fusion $\times$ Content'' in all results figures).
+These features gave the best results, thus supporting the hypothesis.
 
 \begin{figure}[h]
 \centering
@@ -266,15 +267,15 @@ For efficiency, one quarter of the test set was used, and two redundant styles (
 Each test image was evaluated by 3 Turkers, and the majority vote taken as the human result for this image.
 
 Results are presented in \autoref{tab:flickr_vs_mturk}.
-In total, Turkers achieved 75\% mean accuracy (ranging from 61\% [Romantic] to 92\% [Macro]) across styles, in comparison to 78\% mean accuracy (ranging from 68\% [Depth of Field] to 87\% [Macro]) of our best method.
-Our algorithm did significantly worse than Turkers on Macro and Horror, and significantly better on Vintage, Romantic, Pastel, Detailed, HDR, and Long Exposure styles.
+In total, Turkers achieved 75\% mean accuracy (ranging from 61\% [\emph{Romantic}] to 92\% [\emph{Macro}]) across styles, in comparison to 78\% mean accuracy (ranging from 68\% [\emph{Depth of Field}] to 87\% [\emph{Macro}]) of our best method.
+Our algorithm did significantly worse than Turkers on \emph{Macro} and \emph{Horror}, and significantly better on \emph{Vintage}, \emph{Romantic}, \emph{Pastel}, \emph{Detailed}, \emph{HDR}, and \emph{Long Exposure} styles.
 
 Some of this variance may be due to subtle difference from the Turk tasks that we provided, as compared to the definitions of the Flickr groups, but may also due to the Flickr groups' incorporating images that do not quite fit the common definition of the given style.
-For example, there may be a mismatch between different notions of ``romantic'' and ``vintage,'' and how inclusively these terms are defined.
+For example, there may be a mismatch between different notions of \emph{Romantic} and \emph{vintage}, and how inclusively these terms are defined.
 
 We additionally used the Turker opinion as ground truth for our method's predictions.
 In switching from the default Flickr to the MTurk ground truth, our method's accuracy hardly changed from 78\% to 77\%.
-However, we saw that the accuracy of our Vintage, Detailed, Long Exposure, Minimal, HDR, and Sunny style classifiers significantly decreased, indicating machine-human disagreement on those styles.
+However, we saw that the accuracy of our \emph{Vintage}, \emph{Detailed}, \emph{Long Exposure}, \emph{Minimal}, \emph{HDR}, and \emph{Sunny} style classifiers significantly decreased, indicating machine-human disagreement on those styles.
 
 \subsubsection{MTurk Study Details}\label{sec:mech_turk_details}
 Test images were grouped into 10 images per Human Interface Task (HIT). Each task asks the Turker to evaluate the style (e.g., ``Is this image VINTAGE?'') for each image.  For each style, we provided a short blurb describing the style in words, and provided 12-15 hand-chosen positive and negative examples for each Flickr Group.
@@ -285,7 +286,7 @@ Turkers were paid $0.10$ per HIT, and were allowed to perform multiple hits.  Ma
 With the same setup and features as in the Flickr experiments, we evaluate 85,000 images labeled with 25 different art styles.
 Detailed results are provided in \autoref{tab:wikipaintings_ap_table} and \autoref{tab:wp_accuracies}.
 The best single-channel feature is MC-bit with 0.441 mean AP; feature fusion obtains 0.473 mean AP.
-Per-class accuracies range from 72\% [Symbolism, Expressionism, Art Nouveau] to 94\% [Ukiyo-e, Minimalism, Color Field Painting].
+Per-class accuracies range from 72\% [\emph{Symbolism}, \emph{Expressionism}, \emph{Art Nouveau}] to 94\% [\emph{Ukiyo-e}, \emph{Minimalism}, \emph{Color Field Painting}].
 
 \subsection{AVA Style}
 AVA \parencite{Murray-CVPR-2012} is a dataset of 250K images from \texttt{dpchallenge.net}.
@@ -546,37 +547,6 @@ Understanding and improving on these results is fertile ground for future work.
 }\label{fig:flickr_on_flickr3}
 \end{figure}
 
-\begin{table}
-\centering
-\caption{Exact Flickr group names, and their sizes.}\label{tab:flickr_groups}
-\vspace{1em}
-\begin{tabular}{rl}
-    \textbf{Style}        & \textbf{Group names [num images]} \\
-    \midrule
-    Bokeh                 & Bokeh Photography (1/day) [187K] \\
-    Bright                & Colour Mania [100K] \\
-    Depth of Field        & Depth of Field [116K], Finest DoF [54K] \\
-    Detailed              & Details aller Art - Details of all kind [22K], Detail pictures [5K] \\
-    Ethereal              & Ethereal World [21K] \\
-    Geometric Composition & Geometric Beauty [168K] \\
-    Hazy                  & Misty hazy smokey [14K] \\
-    HDR                   & HDR ADDICTED [374K]\\
-    Horror                & Horror [16K] \\
-    Long Exposure         & Long Exposure [619K] \\
-    Macro                 & Closer and Closer Macro Photography [990K] \\
-    Melancholy            & melancholy [106K] \\
-    Minimal               & Less Is More... [44K] \\
-    Noir                  & Film Noir Mood [7K] \\
-    Romantic              & Romantic Images [20K] \\
-    Serene                & \~ Serene \~ [68K] \\
-    Pastel                & pastel and dreamy [120K], Pastel Soft tone [7K] \\
-    Sunny                 & Sun, sun and more sun [23K] \\
-    Texture               & Texture [103K] \\
-    Vintage               & Vintage Feelings [4K], Vintage \& Retro [61K] \\
-    \bottomrule
-\end{tabular}
-\end{table}
-
 \begin{figure}[th]
 \centering
 \includegraphics[width=\linewidth]{../style/figures/wikipaintings_style.pdf}\\
@@ -586,7 +556,7 @@ Understanding and improving on these results is fertile ground for future work.
 \label{fig:wikipaintings_data}
 \end{figure}
 
-\begin{table*}[h!]
+\begin{table*}[ht!]
 \caption{
     All per-class APs on all evaluated features on the AVA Style dataset.
 }\label{tab:ava_style_ap_table}
@@ -619,7 +589,7 @@ mean                  & 0.581  & 0.579     & 0.539  & 0.539  & 0.288  & 0.220 & 
 }
 \end{table*}
 
-\begin{table*}[h!]
+\begin{table*}[ht!]
 \caption{
     All per-class APs on all evaluated features on the Flickr dataset.
 }\label{tab:flickr_ap_table}
@@ -656,7 +626,7 @@ mean                   & 0.368            & 0.336     & 0.316 \\
 
 \end{table*}
 
-\begin{table*}[h!]
+\begin{table*}[ht!]
 \centering
 \caption{
     All per-class APs on all evaluated features on the Wikipaintings dataset.
@@ -699,7 +669,7 @@ mean                           & 0.473            & 0.441  & 0.356      \\
 
 \end{table*}
 
-\begin{table*}[h!]
+\begin{table*}[ht!]
 \caption
 [Comparison of Flickr Style per-class accuracies for our method and Mech Turkers.]
 {
@@ -796,7 +766,7 @@ Art Informel                 &         82.09 &                              &   
 \end{tabular}
 \end{table*}
 
-\begin{figure*}[h!]
+\begin{figure*}[ht!]
 \centering
 \includegraphics[width=\linewidth]{../style/figures/evaluation/ava_style_conf.pdf}
 \caption
@@ -809,7 +779,7 @@ The confusions are mostly understandable: ``Soft Focus'' vs. ``Motion Blur'' for
 \label{fig:ava_style_conf}
 \end{figure*}
 
-\begin{figure*}[h!]
+\begin{figure*}[ht!]
 \centering
 \includegraphics[width=1\linewidth]{../style/figures/evaluation/flickr_conf.pdf}
 \caption
@@ -818,7 +788,7 @@ The confusions are mostly understandable: ``Soft Focus'' vs. ``Motion Blur'' for
 \label{fig:flickr_conf}
 \end{figure*}
 
-\begin{figure*}[h!]
+\begin{figure*}[ht!]
 \centering
 \includegraphics[width=1\linewidth]{../style/figures/evaluation/wikipaintings_conf.pdf}
 \caption
