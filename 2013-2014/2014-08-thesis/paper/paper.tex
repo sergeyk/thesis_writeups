@@ -3,9 +3,10 @@
 \usepackage[backend=bibtex,citestyle=authoryear-icomp,bibstyle=authoryear]{biblatex}
 \setlength{\bibitemsep}{.5\baselineskip}
 \addbibresource{../../mendeley_bibtex.bib}
+\addbibresource{../style/mendeley_bibtex_edited.bib}
 \addbibresource{../manual_additions.bib}
 \usepackage{indentfirst}
-\usepackage[usenames,dvipsnames]{color}
+\usepackage[usenames,dvipsnames]{xcolor}
 \usepackage[pdftex]{graphicx}
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -20,6 +21,10 @@
 \usepackage{enumitem}
 \usepackage{multirow}
 \usepackage{paragraph-marginals}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{rotating}
+\usepackage{enumerate}
 \usepackage[colorlinks]{hyperref}
 \hypersetup{
   citecolor=Cerulean,
@@ -31,12 +36,8 @@
 \raggedbottom
 
 % Format paragraphs as sections
-\setcounter{tocdepth}{4}
-\setcounter{secnumdepth}{4}
-\titleformat{\paragraph}
-{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
-\titlespacing*{\paragraph}
-{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{3}
 
 %% Math commands
 \newtheorem{theorem}{Theorem}
@@ -45,8 +46,6 @@
 \DeclareMathOperator*{\argmax}{arg\,max}
 
 %% Misc commands
-\newcommand\gray[1]{\textcolor{Gray}{#1}}
-\newcommand\todo[1]{\textcolor{BrickRed}{todo: #1}}
 \def\algorithmautorefname{Algorithm}
 \def\subsectionautorefname{Section}
 

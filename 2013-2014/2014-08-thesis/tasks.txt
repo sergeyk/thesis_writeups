@@ -17,6 +17,13 @@ x add C-CNN as a chapter
 x take another holistic pass, focusing on abstract, conclusion, and appendix
 - expand on figure 1.1 (different models of sequential feature selection)
 
+Definitely
+----------
+- adjust figures in style chapter
+    - give all figures short-version captions
+    - move some figures to appendix
+- add marginals to style chapter
+
 Maybe
 -----
 - add 281b tables as tables

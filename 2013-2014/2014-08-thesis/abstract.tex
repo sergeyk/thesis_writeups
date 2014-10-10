@@ -29,4 +29,13 @@ On suitable datasets, we can incorporate a semantic back-off strategy that gives
 We additionally propose a novel cascaded approach for speeding up Convolutional Neural Networks (CNNs) and evaluate it on the recently introduced R-CNN object detection system, which has excellent detection accuracy but high computational cost, most of it spent on classifying roughly 2k regions of interest per image.
 Along with a novel region selection method using quick-to-compute features, our approach introduces a \emph{reject} option between layers in the CNN, allowing the network to terminate computation early, as in a traditional cascade.
 On the PASCAL VOC, we achieve a 8x speed-up while losing no more than 10\% of the top R-CNN detection performance -- or a 16x speed-up while losing no more than 20\%.
+
+\PM{Image Style}
+The style of an image plays a significant role in how it is viewed, but style has received little attention in computer vision research.
+We describe an approach to predicting style of images, and perform a thorough evaluation of different image features for these tasks.
+We find that features learned in a multi-layer network generally perform best -- even when trained with object class (not style) labels.
+Our large-scale learning methods results in the best published performance on an existing dataset of aesthetic ratings and photographic style annotations.
+We present two novel datasets: 80K Flickr photographs annotated with 20 curated style labels, and 85K paintings annotated with 25 style/genre labels.
+Our approach shows excellent classification performance on both datasets.
+We use the learned classifiers to extend traditional tag-based image search to consider stylistic constraints, and demonstrate cross-dataset understanding of style.
 \end{abstract}
