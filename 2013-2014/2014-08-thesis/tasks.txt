@@ -15,17 +15,32 @@ x take first holistic pass over paper, ensuring notation consistency and margina
 x go through slides and insert good figures into thesis
 x add C-CNN as a chapter
 x take another holistic pass, focusing on abstract, conclusion, and appendix
-- expand on figure 1.1 (different models of sequential feature selection)
+x adjust figures in style chapter
 
 Definitely
 ----------
-- adjust figures in style chapter
-    x give all figures short-version captions
-    x move some figures to appendix
+- add figures to introduction from dissertation slides
+    x features.pdf
+    x imagenet_tree.pdf
+    x pascal1.pdf / pascal2.pdf
+    - gradient_backprop.pdf (replace the old gradient fig with this)
+- incorporate trevor's edits
+- in related work, expand on figure 1.1 (different models of sequential feature selection)
+- use lengthier related work version for the style chapter
 - add marginals to style chapter
+- add a more related work for detection
+- add more future work discussion
+    - anytime CNN
+        - can add diagram for this
+    - submodularity discussion
+        - could add lots of equations from 270 slides -- could almost have an appendix chapter
+- redo cascaded CNN figure
+
+Fix
+---
+- change citation for viola jones to remove "One Microsoft Way"
 
 Maybe
 -----
-- add 281b tables as tables
-- re-plot 281b results
-- could add submodularity lit review as appendix chapter, with disclaimer that it didn't lead anywhere
+- add 281b tables
+- re-plot 281b results or use less plots (there's a new summary.pdf)
