@@ -3,26 +3,27 @@
 
 \PM{Perception}
 It is a well-known fact that human perception is Anytime, meaning that a scene can be described after even a short presentation.
-Perception is also progressive, meaning that the quality of description increases with more time, as found by multiple studies \parencite{Vanrullen-1996,Fei-Fei-Vision-2007}.
-There is also evidence that such progressive enhancement occurs in an ontologically meaningful way.
+Perception is also progressive, meaning that the quality of description increases with more time.
+The progressive time course of visual perception has been confirmed by multiple studies \parencite{Vanrullen-1996,Fei-Fei-Vision-2007}, and some studies have also provided evidence that such progressive enhancement occurs in an ontologically meaningful way.
 For example, people tend to recognize something as an animal before recognizing it as a dog \parencite{Mace-PloS-2009}.
-The underlying mechanisms of this behavior are unknown, and only a few attempts have been made to explain such temporal dynamics (e.g. via sequential decision processes in \textcite{Hegde-Neuro-2008}).
+The underlying mechanisms of this behavior are unknown, and only a few attempts have been made to explain the temporal dynamics.
+For instance, a promising work has employed the framework of sequential decision processes \parencite{Hegde-Neuro-2008}.
 
 \PM{Applications}
-Computer visual recognition has achieved levels of performance that allow useful real-world implementation.
+Meanwhile, automated visual recognition has achieved levels of performance that allow useful real-world implementation.
 As recognition methods are applied at scale, managing their resource (power or cpu-time) cost becomes increasingly important.
 For tasks such as personal robotics, it is crucial to be able to deploy varying levels of processing to different stimuli, depending on computational demands on the robot.
 However, state-of-the-art methods tend to be computationally expensive and insensitive to Anytime demands.
 
-\PM{Example}
+\PM{Case Study}
 A hypothetical system for vision-based advertising presents another example: companies pay money to have their products detected in images on the internet.
 The system has different values (in terms of cost per click) and accuracies for different classes of objects, and the queue of unprocessed images varies in size.
-The recognition strategy to maximize profit in such an environment has to exploit every signal available to it, because there is not enough time to run detection for all classes.
-Furthermore, the quality of the answers could be Anytime, depending on the length of the queue.
+The recognition strategy to maximize profit in such an environment has to exploit every signal available to it if there is not enough time to run detection for all classes.
+The quality of the detections could be Anytime, depending on the length of the queue (lowering recall when queue pressure grows).
 
 \PM{Features}
 For most state-of-the-art classification methods, different features are extracted from an image instance at different costs, and contribute differently to decreasing classification error.
-Although ``the more features, the better,'' high accuracy can be achieved with only a small subset of features for some instances.
+Although it can generally be truthfully said that ``the more features, the better,'' high accuracy can of course be achieved with only a small subset of features for some instances.
 Additionally, different instances benefit from different subsets of features.
 For example, simple binary features are sufficient to quickly detect faces \parencite{Viola-IJCV-2004} but not more varied visual objects, while the features most useful for separating landscapes from indoor scenes \parencite{Xiao-CVPR-2010} are different from those most useful for recognizing fine distinctions between bird species \parencite{Farrell-ICCV-2011}.
 
