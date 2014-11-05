@@ -66,10 +66,11 @@ Our results on this dataset match the reported results of Active Classification 
 
 \subsection{Experiment: ImageNet and maximizing specificity}
 
-\input{../eval_imagenet_fig}
+\input{../imagenet_tree_fig}
 
 \PM{Setup}
 The full ImageNet dataset has over 10K categories and over a million images \parencite{Deng-ECCV-2010}.
+\autoref{fig:imagenet_tree} shows the hierarchical organization of the dataset.
 The classes are organized in a hierarchical structure, which can be exploited for novel recognition tasks.
 We evaluate on a 65-class subset introduced in ``Hedging Your Bets'' \parencite{Deng-CVPR-2012}.
 In this evaluation, we consider the situation where the initial feature computation has already happened, and the task is to find a path through existing one-vs-all classifiers: features correspond to Platt-scaled SVM confidences of leaf-node classifiers (trained on SIFT-LLC features), and each has cost 1 \parencite{Deng-ECCV-2010}.
@@ -81,3 +82,5 @@ The results are given in \autoref{fig:imagenet}.
 As the available budget increases, the \emph{specificity} (defined by normalized information gain in the hierarchy) of our predictions also increases, while accuracy remains constant.
 Visualizing this on the ILSVRC-65 hierarchy, we see that the fraction of predictions at the leaf nodes grows with available computation time.
 This formulation presents a novel angle on modeling the time course of human visual perception.
+
+\input{../eval_imagenet_fig}
