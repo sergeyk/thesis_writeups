@@ -49,9 +49,10 @@ Distribution of number of regions per image.
 
 \begin{figure}
 \centering
-\includegraphics[width=.66\linewidth]{../ccnn/figures/gradient.pdf}
-\caption{
-Two different examples of the CNN gradient that we use as a quick-to-compute feature.
+\includegraphics[width=.66\linewidth]{../../figures/gradient_backprop.pdf}
+\caption[Explanation of the gradient back-propagation quick feature.]{
+As a quick feature, we back-propagate the gradient from the top classification layer all the way to the input pixels.
+This induces a kind of saliency map on the image, which is useful signal for selecting image sub-regions to classify with the CNN.
 }\label{fig:gradient_examples}
 \end{figure}
 
