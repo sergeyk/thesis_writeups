@@ -1,10 +1,13 @@
 %!TEX root=paper/paper.tex
 \section{Evaluation}\label{sec:det_evaluation}
 
+\input{../pascal_fig}
+
 \PM{Dataset}
 We evaluate our system on the multi-class, multi-label detection task, as previously described.
 Each detection episode takes an image and outputs detections with associated times, based on the order of actions taken.
 We evaluate on a popular detection challenge task: the PASCAL VOC 2007 dataset \parencite{pascal-voc-2010}.
+Example images from the dataset are shown in \autoref{fig:pascal}.
 This datasets exhibits only a modest amount of class co-occurrence: the ``person'' class is highly likely to occur, and less than $10\%$ of the images have more than two classes.
 
 \PM{Metric}
