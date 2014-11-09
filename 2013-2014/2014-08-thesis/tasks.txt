@@ -16,31 +16,30 @@ x go through slides and insert good figures into thesis
 x add C-CNN as a chapter
 x take another holistic pass, focusing on abstract, conclusion, and appendix
 x adjust figures in style chapter
+x add figures to introduction from dissertation slides
 
 Definitely
 ----------
-- add figures to introduction from dissertation slides
-    x features.pdf
-    x imagenet_tree.pdf
-    x pascal1.pdf / pascal2.pdf
-    - gradient_backprop.pdf (replace the old gradient fig with this)
+- write some text about visual features in related work section
 - incorporate trevor's edits
 - in related work, expand on figure 1.1 (different models of sequential feature selection)
 - use lengthier related work version for the style chapter
 - add marginals to style chapter
-- add a more related work for detection
+- redo cascaded CNN figure
 - add more future work discussion
     - anytime CNN
         - can add diagram for this
     - submodularity discussion
+        - cite sherwin and active detection
         - could add lots of equations from 270 slides -- could almost have an appendix chapter
-- redo cascaded CNN figure
+
 
 Fix
 ---
-- change citation for viola jones to remove "One Microsoft Way"
+
 
 Maybe
 -----
+- add more related work for detection
 - add 281b tables
 - re-plot 281b results or use less plots (there's a new summary.pdf)
