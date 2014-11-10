@@ -58,12 +58,12 @@ Recently, middle layers of CNN's trained on large image categorization datasets 
 \PM{Feature selection}
 The simplest way to limit the number of features used at test time is to $L_1$-regularize.
 This method does not explicitly consider feature cost, nor is it able to evaluate features one by one, or to give an answer before all features are computed.
-We consider more advanced methods, all of them treating feature selection as a sequential process.
-\autoref{fig:models} shows a few approaches to the problem (all additionally described below).
+In Figures \ref{fig:model_cascade}, \ref{fig:model_mddag}, \ref{fig:model_tree}, \ref{fig:model_dag} and in the paragraphs below we explain more advanced methods, all of them treating feature selection as a sequential process.
 
 \PM{Cascaded methods}
 A well-known method to evaluate features sequentially is the cascaded boosted classifier of \cite{Viola-IJCV-2004} (updated by \cite{Bourdev-CVPR-2005} with a soft threshold), which is able to quit evaluating an instance before all features are computed---but feature cost was not considered.
 The cost-sensitive cascade of \cite{Chen-AISTATS-2012} optimizes stage order and thresholds to jointly minimize classification error and feature computation cost.
+\autoref{fig:model_cascade} represents this model.
 \cite{Xu-ICML-2012} and \cite{Grubb-AISTATS-2012} separately develop a variant of gradient boosting for training cost-sensitive classifiers; the latter prove near-optimality of their greedy algorithm with submodularity results.
 Their methods are tightly coupled to the stage-wise regression algorithm.
 Cascades are not dynamic policies: they cannot change the order of execution based on observations obtained during execution, which is our goal.
@@ -71,19 +71,26 @@ Cascades are not dynamic policies: they cannot change the order of execution bas
 \PM{Dynamic methods}
 In contrast, \emph{Label trees} guide an instance through a tree of classifiers; their structure is determined by the confusion matrix or learned jointly with weights \parencite{Deng-NIPS-2011}.
 \cite{Xu-ICML-2013} learn a cost-sensitive binary tree of weak learners using an approach similar to the cyclic optimization of \parencite{Chen-AISTATS-2012}.
-\cite{Gao-NIPS-2011} propose a method for \emph{active classification}: myopically selecting the next feature based on expected information gain given the values of the already selected features.
-The method is based on locally weighted regression, highly costly at test time.
+The state space of such tree methods is visualized in \autoref{fig:model_tree}.
+A fully general DAG -- instead of a tree  -- over the state space is proposed by \cite{Gao-NIPS-2011} under the name of \emph{active classification}, and visualized in \autoref{fig:model_dag}.
+Their method myopically selects the next feature based on expected information gain given the values of the already selected features.
+Since it is based on locally weighted regression, \emph{active classification} is highly costly at test time.
 \cite{Ji-PR-2007} also formulate cost-sensitive feature selection generatively, as an HMM conditioned on actions, but select actions myopically, again at signficant test time cost.
 
 \PM{Reinforcement Learning}
+Just like active classification, our method and the three methods below can learn any possible policy.
 \cite{DulacArnold-ML-2012} present an MDP-based solution to ``datum-wise classification'', with an action space comprised of all features and labels, recently extended to region-based processing \parencite{DulacArnold-ICLR-2014}.
-\cite{HeHe-ICMLW-2012} also formulate an MDP with features and a single classification step as actions, but solve it via imitation learning of a greedy policy.
-\cite{Benbouzid-ICML-2012} formulate an MDP that simply extends the traditional sequential boosted classifier with an additional \emph{skip} action, significantly limiting the space of learnable policies.
-\cite{Trapeznikov-ML-2012} provides another variation on this problem.
+This independently-conducted work is closely related to ours, with differences in defining the action space and learning mechanism.
+\cite{HeHe-ICMLW-2012} formulate an MDP with features and a single classification step as actions, but solve it via imitation learning of a greedy policy.
+\cite{Trapeznikov-ML-2012} provides another variation on this formulation.
+Another notable work is the method of \cite{Benbouzid-ICML-2012}, graphically presented in \autoref{fig:model_mddag}, which formulates an MDP that simply extends the traditional sequential boosted classifier with an additional \emph{skip} action, significantly limiting the space of learnable policies.
+This ``MD-DAG'' method is able to learn only a subset of all possible policies.
 
 \PM{Misc}
-Less directly related---but exciting for its novelty---is the work of \parencite{Weiss-ICCV-2013}, who apply simple introspection to structured models for a significant speedup of human pose estimation.
-Another exciting direction is theoretical analysis, based on adaptive submodularity \parencite{Golovin-and-Krause-2010-JAIR} of near-optimal policies with humans in the loop \parencite{Chen-2014-ICML}.
+Less directly related -- but exciting for its novelty -- is the work of \parencite{Weiss-ICCV-2013}, who apply simple introspection to structured models for a significant speedup of human pose estimation.
+Another exciting direction is theoretical analysis based on adaptive submodularity \parencite{Golovin-and-Krause-2010-JAIR}.
+In vision, there is an application of such results to detection with humans in the loop \parencite{Chen-2014-ICML}.
+In robotics, an adaptively submodular objective was successfully formulated for the problem of grasping \parencite{Javdani2012}.
 
 \input{../models_fig}
 
