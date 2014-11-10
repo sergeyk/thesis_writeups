@@ -1,18 +1,23 @@
 %!TEX root=paper/paper.tex
 \section{Related Work}\label{sec:related_work}
 
+Our work spans across several sub-fields of computer vision.
+Here we cover the necessary background, ordered by applicability to each chapter of this thesis.
+
 \subsection{Detection}
 
 \PM{Features}
-The best recent performance has come from detectors that use gradient-based features to represent objects as either a collection of local patches or as object-sized windows \parencite{Dalal2005,Lowe2004}.
+Classically, the best recent performance has come from detectors that use gradient-based features to represent objects as either a collection of local patches or as object-sized windows \parencite{Dalal2005,Lowe2004}.
 Classifiers are then used to distinguish between featurizations of a given class and all other possible contents of an image window.
 For state-of-the-art performance, the object-sized window models are augmented with parts \parencite{Felzenszwalb2010a}, and the bag-of-visual-words models employ non-linear classifiers \parencite{Vedaldi2009}.
-We employ the widely used Deformable Part Model detector \parencite{Felzenszwalb2010a}.
+In \autoref{sec:det_chapter}, we employ the widely used Deformable Part Model detector \parencite{Felzenszwalb2010a}.
 
 \PM{CNNs}
 Most recently, best performance is obtained not with hand-designed features but with those learned on large-scale labeled datasets such as ImageNet \parencite{Deng-CVPR-2009} by a deep convolutional neural network (CNN) such as AlexNet \parencite{Krizhevsky-NIPS-2012}.
-This has prompted attempts to apply these computationally expensive methods to detection \parencite{Erhan-CVPR-2014,Sermanet-ICLR-2014} .
-The ``R-CNN'' method of \cite{Girshick-CVPR-2014} in particular is powerful but slow, requiring costly processing of many windows.
+This has prompted attempts to apply these computationally expensive methods to detection \parencite{Erhan-CVPR-2014,Sermanet-ICLR-2014}.
+The \emph{R-CNN} method of \cite{Girshick-CVPR-2014} in particular is powerful but slow, requiring costly processing of many windows.
+Recent work from \cite{He-ECCV-2014} (SPP-net) sustained the high performance of R-CNN while decreasing the running time by an order of magnitude.
+Our work in \autoref{sec:ccnn_chapter} is evaluated in the R-CNN framework, but applies to the SPP-net method also.
 
 \PM{Windows}
 Window proposal is most often done exhaustively over the image space as a ``sliding window'', or inexhaustively with a bottom-up segmentation approach \parencite{Uijlings-IJCV-2013}.
@@ -41,9 +46,15 @@ For the commonly used PASCAL VOC dataset \parencite{pascal-voc-2010}, GIST and o
 
 \subsection{Classification}
 
-\input{../models_fig}
-
+\PM{Features}
 \input{../features_fig.tex}
+
+\PM{Visual features}
+The field of computer vision has built up a small arsenal of features extracted from whole images or fixed-size patches.
+These features differ in computational cost and target different sources of data -- for instance, the Haar wavelets feature of \cite{Viola-IJCV-2004} was designed for sequential appication in face recognition datasets, while the HOG feature of \cite{Dalal2005} was designed for template matching in pedestrian-detection datasets.
+\autoref{fig:features} presents a sampling of the most used ones.
+Recently, middle layers of CNN's trained on large image categorization datasets have provided a generally applicable feature that obtains top performance on a multitude of datasets \parencite{Donahue2013a}.
+
 \PM{Feature selection}
 The simplest way to limit the number of features used at test time is to $L_1$-regularize.
 This method does not explicitly consider feature cost, nor is it able to evaluate features one by one, or to give an answer before all features are computed.
@@ -74,17 +85,47 @@ The method is based on locally weighted regression, highly costly at test time.
 Less directly related---but exciting for its novelty---is the work of \parencite{Weiss-ICCV-2013}, who apply simple introspection to structured models for a significant speedup of human pose estimation.
 Another exciting direction is theoretical analysis, based on adaptive submodularity \parencite{Golovin-and-Krause-2010-JAIR} of near-optimal policies with humans in the loop \parencite{Chen-2014-ICML}.
 
+\input{../models_fig}
+
 \subsubsection{Feature Combination}
 
-\PM{Boosting and MKL}
-\emph{Boosting} is a method for combining weak learners into a more powerful classifier \parencite{Hastie2009}.
-A popular use of boosting is in introducing non-linearities by training depth-limited decision trees as weak learners---the boosting trick.
+\PM{Multiple Kernel Learning}
 For SVM-based classifiers, \emph{Multiple Kernel Learning} (MKL) provides a way to train classifiers using an automatically weighted combination of kernels \parencite{Lanckriet2004}.
 It has been shown that MKL is outperformed by boosting single-kernel classifiers \parencite{Gehler2009}.
 Of course, if all classifiers are linear, then combining outputs of classifiers trained on different feature channel with another classifier is equivalent to training one classifier on all features at once.
 
-\PM{Imputing values}
+\PM{Value imputation}
 The imputation problem is faced in the \emph{collaborative filtering} literature, working on problems such as the Netflix Prize \parencite{Koren-2009}.
 Matrix factorization methods, commonly based on the Singular Value Decomposition (SVD), are often employed.
 Our problem is significantly different in that at training time, all values are fully observed --- and the final task is classification, not simple imputation.
 Imputation approaches have also been explored in genomics work, where the real-world data is often missing a large portion of the observations \parencite{Hastie-1999}.
+
+\section{Style Recognition}
+
+Most research in computer vision addresses recognition and reconstruction, independent of image style.
+A few previous works have focused directly on image composition, particularly on the high-level attributes of beauty, interestingness, and memorability.
+
+\PM{Aesthetic Rating}
+Most commonly, several previous authors have described methods to predict aesthetic quality of photographs.
+Datta et al.~\parencite{Datta-ECCV-2006}, designed visual features to represent concepts such as colorfulness, saturation, rule-of-thirds, and depth-of-field, and evaluated aesthetic rating predictions on photographs; The same approach was further applied to a small set of Impressionist paintings~\parencite{Li-SP-2009}.
+The feature space was expanded with more high-level descriptive features such as ``presence of animals'' and ``opposing colors'' by Dhar et al., who also attempted to predict Flickr's proprietary ``interestingness'' measure, which is determined by social activity on the website~\parencite{Dhar-CVPR-2011}.
+Gygli et al.~\parencite{Gygli-ICCV-2013} gathered and predicted human evaluation of image interestingness, building on work by Isola et al.~\parencite{Isola-CVPR-2011}, who used various high-level features to predict human judgements of image memorability.
+In a similar task, Borth et al.~\parencite{Borth-MM-2013} performed sentiment analysis on images using object classifiers trained on adjective-noun pairs.
+
+\PM{AVA and Attributes}
+Murray et al.~\parencite{Murray-CVPR-2012} introduced the Aesthetic Visual Analysis (AVA) dataset, annotated with ratings by users of DPChallenge, a photographic skill competition website.
+The AVA dataset contains some photographic style labels (e.g., ``Duotones,'' ``HDR''), derived from the titles and descriptions of the photographic challenges to which photos were submitted.
+Using images from this dataset, Marchesotti and Peronnin~\parencite{Marchesotti-BMVC-2013} gathered bi-grams from user comments on the website, and used a simple sparse feature selection method to find ones predictive of aesthetic rating.
+The attributes they found to be informative (e.g., ``lovely photo,'' ``nice detail'') are not specific to image style.
+
+\PM{Visual Art}
+Features based on image statistics have been successfully employed to detect artistic forgeries \parencite{Lyu-PNAS-2004}.
+Such work focuses on extremely fine-scale discrimination between two very similar classes, and has not been applied to broader style classification.
+Several previous authors have developed systems to classify classic painting styles, including \parencite{keren2002,shamir2010}.
+These works consider only a handful of styles (less than ten apiece), with styles that are visually very distinct, e.g., Pollock vs.~Dal\'{\i}.
+These datasets comprise less than 60 images per style, for both testing and training.
+\cite{Mensink2014} provide a larger dataset of artworks, but do not consider style classification as its own problem.
+
+\PM{Style vs. Content}
+Separate from the application domain of vision, some machine learning research has attempted to separate style from content \parencite{Tenenbaum2000}.
+In particular, Neural Network researchers have provided interesting recent results: \cite{Taylor-ICML-2009} use a Restricted Boltzmann Machine to separately consider style and content for the problem of human gait recognition, and \cite{Graves-arxiv-2013} uses a Long Short-Term Memory recurrent neural network to generate realistic handwriting in a multitude of styles.

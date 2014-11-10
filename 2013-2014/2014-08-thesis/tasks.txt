@@ -17,22 +17,22 @@ x add C-CNN as a chapter
 x take another holistic pass, focusing on abstract, conclusion, and appendix
 x adjust figures in style chapter
 x add figures to introduction from dissertation slides
+x write some text about visual features in related work section
+x move style related work to related work and expand a little
 
 Definitely
 ----------
-- write some text about visual features in related work section
 - incorporate trevor's edits
 - in related work, expand on figure 1.1 (different models of sequential feature selection)
-- use lengthier related work version for the style chapter
 - add marginals to style chapter
 - redo cascaded CNN figure
-- add more future work discussion
-    - anytime CNN
-        - can add diagram for this
+- add more future work discussion to conclusion section
     - submodularity discussion
         - cite sherwin and active detection
         - could add lots of equations from 270 slides -- could almost have an appendix chapter
-
+    - anytime CNN
+        - can add diagram for this
+- run spell-checker
 
 Fix
 ---
