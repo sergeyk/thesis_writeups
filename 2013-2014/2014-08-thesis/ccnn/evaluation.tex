@@ -49,3 +49,8 @@ At this time, the Cascaded CNN without any region ordering is best.
 A reason for why C-CNN with Region Selection is not as good at this point is that the region selection presents better region candidates, with fewer rejection opportunities, and thus has less coverage of the image.
 At 600 ms, C-CNN method have had more than one batch go through, and the Region Selection is giving it a lead over the simple C-CNN.
 Both method are better than the baseline non-cascaded methods for this entire duration.
+
+\PM{Future Applications}
+The Cascaded CNN is shown to be a strong method for speeding up CNN-based detection approaches.
+Its general structure of simply ``thinning'' input batches as they travel through the network is agnostic to the underlying mechanism.
+Although in this work we evaluate on the R-CNN method on the PASCAL dataset, the Cascaded CNN can be applied to the SPP-net method of \cite{He-ECCV-2014}, or the part-based method of \cite{Zhang-ECCV-2014}.

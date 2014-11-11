@@ -10,7 +10,7 @@ The state also keeps track of the time into episode $t$, and the setup and deadl
 
 \PM{Open vs Closed Loop}
 An \emph{open-loop} policy, such as the common classifier cascade \parencite{Viola-IJCV-2004}, takes actions in a sequence that does not depend on observations received from previous actions.
-In contrast, our goal is to learn a dynamic, or \emph{closed-loop}, policy, which would exploit the signal in scene and inter-object context for a maximally efficient path through the actions.
+In contrast, as presented in \autoref{fig:pomdp_summary}, our goal is to learn a dynamic, or \emph{closed-loop}, policy, which would exploit the signal in scene and inter-object context for a maximally efficient path through the actions.
 Recall from \autoref{eq:policy} that our policy is determined by a linear function of the features of the state.
 
 \PM{Dynamic features}

@@ -19,11 +19,11 @@ x adjust figures in style chapter
 x add figures to introduction from dissertation slides
 x write some text about visual features in related work section
 x move style related work to related work and expand a little
+x incorporate trevor's edits
 
 Definitely
 ----------
-- incorporate trevor's edits
-- in related work, expand on figure 1.1 (different models of sequential feature selection)
+- add citations to myself in the evaluation sections
 - add marginals to style chapter
 - redo cascaded CNN figure
 - add more future work discussion to conclusion section
@@ -40,6 +40,6 @@ Fix
 
 Maybe
 -----
-- add more related work for detection
+- organize related detection work in same way as in intro (break down by proposal and classification methods)
 - add 281b tables
 - re-plot 281b results or use less plots (there's a new summary.pdf)

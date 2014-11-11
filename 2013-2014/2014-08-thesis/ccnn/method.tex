@@ -31,7 +31,7 @@ This simple feature works suprisingly well for filtering regions to process firs
 \PM{Pixel gradient}
 In concatenation, we also consider the \emph{pixel gradient}, back-propagated throgh a classification CNN applied to the whole image.
 This feature corresponds to a kind of saliency map, giving an estimate of the importance of each pixel to the final classification of the image.
-Our method follows \cite{Simonyan-ICLR-2014} to the best of our knowledge.
+Our method is independently developed, but agrees with the concurrently published work of \cite{Simonyan-ICLR-2014} quite closely.
 Images are resized to square and classified with an ``AlexNet'' \cite{Krizhevsky-NIPS-2012} CNN fine-tuned on the PASCAL VOC classification dataset with multi-label loss.
 (Unlike the ILSVRC, the PASCAL VOC is a multi-label prediction task, with at times multiple correct labels for an image.)
 At test-time, the gradient at the top is with respect to the indicator function of the max-scoring class, and is back-propagated all the way to the pixels, where it is summed across channels.

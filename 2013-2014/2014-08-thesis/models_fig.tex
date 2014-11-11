@@ -14,7 +14,7 @@ The fixed order of the cascade is not robust to the fact that different images b
 \centering
 \includegraphics[width=.9\linewidth]{../../figures/models/benbouzid}
 \caption[Sequential feature selection: Markov Decision DAG]{
-The \textbf{MD-DAG} method \parencite{Benbouzid-ICML-2012} augments the traditional cascade with an additional Skip action, which allows learning a more robust policy.
+The \textbf{MD-DAG} method \parencite{Benbouzid-ICML-2012} augments the traditional cascade with an additional Skip action, which allows learning a more robust policy, but does not fully cover the space of possible policies (the initial ordering sets the limit).
 }\label{fig:model_mddag}
 \end{figure}
 
@@ -22,8 +22,9 @@ The \textbf{MD-DAG} method \parencite{Benbouzid-ICML-2012} augments the traditio
 \centering
 \includegraphics[width=.9\linewidth]{../../figures/models/tree}
 \caption[Sequential feature selection: tree-based]{
-\textbf{Tree-based} methods such as \cite{Xu-ICML-2012} find a tree-structured policy for computing features.
+\textbf{Tree-based} methods find a tree-structured policy for computing features.
 Classification answers are given only at the leaf nodes.
+The tree structure can be found by direct optimization of some problem, such as cost-senstive classification, as in \cite{Xu-ICML-2012}, or induced by a tangential problem, as in \cite{Deng-NIPS-2011}, who use the confusion matrix to set the structure of their Label Tree.
 }\label{fig:model_tree}
 \end{figure}
 
@@ -31,6 +32,6 @@ Classification answers are given only at the leaf nodes.
 \includegraphics[width=\linewidth]{../../figures/models/dag}
 \caption[Sequential feature selection: general DAG]{
 In this work and in methods such as \cite{Gao-NIPS-2011}, the policy is a \textbf{general DAG} over selected-feature subsets, which allows actions to be taken in an entirely flexible order.
-We are also able to give the classification answer from all states, making our work truly Anytime.
+In our work, we are also able to give the classification answer from all states, making our work truly Anytime.
 }\label{fig:model_dag}
 \end{figure}

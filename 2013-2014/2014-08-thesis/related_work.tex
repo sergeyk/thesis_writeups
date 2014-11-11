@@ -59,6 +59,7 @@ Recently, middle layers of CNN's trained on large image categorization datasets 
 The simplest way to limit the number of features used at test time is to $L_1$-regularize.
 This method does not explicitly consider feature cost, nor is it able to evaluate features one by one, or to give an answer before all features are computed.
 In Figures \ref{fig:model_cascade}, \ref{fig:model_mddag}, \ref{fig:model_tree}, \ref{fig:model_dag} and in the paragraphs below we explain more advanced methods, all of them treating feature selection as a sequential process.
+A note about the figures: the rounded rectangles represent feature sets, with shaded features $\phi$ representing selected features.
 
 \PM{Cascaded methods}
 A well-known method to evaluate features sequentially is the cascaded boosted classifier of \cite{Viola-IJCV-2004} (updated by \cite{Bourdev-CVPR-2005} with a soft threshold), which is able to quit evaluating an instance before all features are computed---but feature cost was not considered.
