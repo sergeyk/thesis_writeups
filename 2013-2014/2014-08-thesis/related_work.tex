@@ -46,7 +46,6 @@ For the commonly used PASCAL VOC dataset \parencite{pascal-voc-2010}, GIST and o
 
 \subsection{Classification}
 
-\PM{Features}
 \input{../features_fig.tex}
 
 \PM{Visual features}
@@ -54,6 +53,8 @@ The field of computer vision has built up a small arsenal of features extracted 
 These features differ in computational cost and target different sources of data -- for instance, the Haar wavelets feature of \cite{Viola-IJCV-2004} was designed for sequential appication in face recognition datasets, while the HOG feature of \cite{Dalal2005} was designed for template matching in pedestrian-detection datasets.
 \autoref{fig:features} presents a sampling of the most used ones.
 Recently, middle layers of CNN's trained on large image categorization datasets have provided a generally applicable feature that obtains top performance on a multitude of datasets \parencite{Donahue2013a}.
+
+\input{../models_fig}
 
 \PM{Feature selection}
 The simplest way to limit the number of features used at test time is to $L_1$-regularize.
@@ -92,8 +93,6 @@ Less directly related -- but exciting for its novelty -- is the work of \parenci
 Another exciting direction is theoretical analysis based on adaptive submodularity \parencite{Golovin-and-Krause-2010-JAIR}.
 In vision, there is an application of such results to detection with humans in the loop \parencite{Chen-2014-ICML}.
 In robotics, an adaptively submodular objective was successfully formulated for the problem of grasping \parencite{Javdani2012}.
-
-\input{../models_fig}
 
 \subsubsection{Feature Combination}
 

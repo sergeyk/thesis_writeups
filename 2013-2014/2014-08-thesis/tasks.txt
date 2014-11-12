@@ -20,12 +20,14 @@ x add figures to introduction from dissertation slides
 x write some text about visual features in related work section
 x move style related work to related work and expand a little
 x incorporate trevor's edits
+x add citations to myself
+x add marginals to style chapter
+x get bibliography to print all author names
 
 Definitely
 ----------
-- add citations to myself in the evaluation sections
-- add marginals to style chapter
-- redo cascaded CNN figure
+- add links to all code in the intro
+- add discussion of Anytime to the style conclusion
 - add more future work discussion to conclusion section
     - submodularity discussion
         - cite sherwin and active detection
@@ -34,12 +36,9 @@ Definitely
         - can add diagram for this
 - run spell-checker
 
-Fix
----
-
-
 Maybe
 -----
+- redo cascaded CNN figure
 - organize related detection work in same way as in intro (break down by proposal and classification methods)
 - add 281b tables
 - re-plot 281b results or use less plots (there's a new summary.pdf)

@@ -1,5 +1,5 @@
 %!TEX root=paper/paper.tex
-\begin{figure}[H]
+\begin{figure}[t]
 \centering
 \includegraphics[width=.9\linewidth]{../../figures/models/cascade}
 \caption[Sequential feature selection: cascade models]{
@@ -10,7 +10,7 @@ The fixed order of the cascade is not robust to the fact that different images b
 }\label{fig:model_cascade}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[t]
 \centering
 \includegraphics[width=.9\linewidth]{../../figures/models/benbouzid}
 \caption[Sequential feature selection: Markov Decision DAG]{
@@ -18,9 +18,9 @@ The \textbf{MD-DAG} method \parencite{Benbouzid-ICML-2012} augments the traditio
 }\label{fig:model_mddag}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[t]
 \centering
-\includegraphics[width=.9\linewidth]{../../figures/models/tree}
+\includegraphics[width=.8\linewidth]{../../figures/models/tree}
 \caption[Sequential feature selection: tree-based]{
 \textbf{Tree-based} methods find a tree-structured policy for computing features.
 Classification answers are given only at the leaf nodes.
@@ -28,7 +28,7 @@ The tree structure can be found by direct optimization of some problem, such as 
 }\label{fig:model_tree}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[t]
 \includegraphics[width=\linewidth]{../../figures/models/dag}
 \caption[Sequential feature selection: general DAG]{
 In this work and in methods such as \cite{Gao-NIPS-2011}, the policy is a \textbf{general DAG} over selected-feature subsets, which allows actions to be taken in an entirely flexible order.

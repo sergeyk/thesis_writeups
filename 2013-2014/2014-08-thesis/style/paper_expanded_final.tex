@@ -1,7 +1,6 @@
 %!TEX root=../paper/paper.tex
 \chapter{Recognizing Image Style}\label{sec:style_chapter}
 
-\section{Introduction}
 \begin{figure}[t]
 \small{
 \centering
@@ -39,7 +38,7 @@
     Abs. Expressionism & Color Field Painting \\
     \end{tabular}
     \caption{
-        Wikipaintings: 85K images for 25 art genres.
+        Wikipaintings: 85K images for 25 genres.
     }\label{fig:wikipaintings_style_examples}
 \end{subfigure}
 }
@@ -48,53 +47,56 @@
 }\label{fig:style_examples}
 \end{figure}
 
+\PM{Motivation}
 Deliberately-created images convey meaning, and \textit{visual style} is often a significant component of image meaning.
 For example, a political candidate portrait made in the lush colors of a Renoir painting tells a different story than if it were in the harsh, dark tones of a horror movie.
 Distinct visual styles are apparent in art, cinematography, advertising, and have become extremely popular in amateur photography, with apps like Instagram leading the way.
 While understanding style is crucial to image understanding, very little research in computer vision has explored visual style.
 
-Although is it very recognizable to human observers, visual style is a difficult concept to rigorously define.
-Most academic discussion of style has been in an art history context, but the distinctions between, say, Rococo versus pre-Rafaelite style are less relevant to modern photography and design.
-There has been some previous research in image style, but this has principally been limited to recognizing a few, well-defined optical properties, such as depth-of-field.
-
+\PM{Definition}
 We define several different \textit{types} of image style, and gather a new, large-scale dataset of photographs annotated with style labels.
 This dataset embodies several different aspects of visual style, including photographic techniques  (``Macro,'' ``HDR''), composition styles (``Minimal,'' ``Geometric''), moods (``Serene,'' ``Melancholy''), genres (``Vintage,'' ``Romantic,'' ``Horror''), and types of scenes (``Hazy,'' ``Sunny'').
 These styles are not mutually exclusive, and represent different attributes of style.
-We  also gather a large dataset of visual art (mostly paintings) annotated with art historical style labels, ranging from Renaissance to modern art.
+We also gather a large dataset of visual art (mostly paintings) annotated with art historical style labels, ranging from Renaissance to modern art.
 \autoref{fig:style_examples} shows some samples.
+Analyzing style of non-photorealistic media is interesting as much of our present understanding of visual style arises out of thousands of years of developments in fine art, marked by distinct historical styles.
 
+\section{Method}\label{sec:style_method}
+
+\PM{Approach}
 We test existing classification algorithms on these styles, evaluating several state-of-the-art image features.
 Most previous work in aesthetic style analysis has  used hand-tuned features, such as color histograms.
 We find that deep convolutional neural network (CNN) features perform best for the task.
 This is surprising for several reasons: these features were trained on object class categories (ImageNet), and many styles appear to be primarily about color choices, yet the CNN features handily beat color histogram features.
 This leads to one conclusion of our work: mid-level features derived from object datasets are generic for style recognition, and superior to hand-tuned features.
-
 We compare our predictors to human observers, using Amazon Mechanical Turk experiments, and find that our classifiers predict Group membership at essentially the same level of accuracy as Turkers.
 We also test on the AVA aesthetic prediction task \parencite{Murray-CVPR-2012}, and show that using the ``deep'' object recognition features improves over the state-of-the-art results.
 
-\paragraph{Applications and code.}
+\PM{Applications and code}
 First, we demonstrate an example of using our method to search for images by style.
 This could be useful for applications such as product search, storytelling, and creating slide presentations.
 In the same vein, visual similarity search results could be filtered by visual style, making possible queries such as ``similar to this image, but more Film Noir.''
 Second, style tags may provide valuable mid-level features for other image understanding tasks.
 For example, there has increasing recent effort in understanding image meaning, aesthetics, interestingness, popularity, and emotion (for example, \parencite{Gygli-ICCV-2013,Isola-CVPR-2011,joo2014,khosla2014}), and style is an important part of meaning.
 Finally, learned predictors could be a useful component in modifying the style of an image.
-
 All data, trained predictors, and code (including results viewing interface) are available at \url{http://sergeykarayev.com/recognizing-image-style/}.
 
-\section{Data Sources}
+\subsection{Data Sources}
 
+\PM{Motivation}
 Building an effective model of photographic style requires annotated training data.  To our knowledge, there is only one existing dataset annotated with visual style, and only a narrow range of photographic styles is represented~\parencite{Murray-CVPR-2012}.
 We would like to study a broader range of styles, including different \textit{types} of styles ranging from genres, compositional styles, and moods.
 Morever, large datasets are desirable in order to obtain effective results, and so we would like to obtain data from online communities, such as Flickr.
 
-\paragraph{Flickr Style.}
+\subsubsection{Flickr Style}
+
+\PM{Source}
 Although Flickr users often provide free-form tags for their uploaded images, the tags tend to be quite unreliable.
 Instead, we turn to Flickr groups, which are community-curated collections of visual concepts.
 For example, the Flickr Group ``Geometry Beauty'' is described, in part, as ``Circles, triangles, rectangles, symmetric objects, repeated patterns'', and contains over 167K images at time of writing; the ``Film Noir Mood'' group is described as ``Not just  black and white photography, but a dark, gritty, moody feel...'' and comprises over 7K images.
 
 At the outset, we decided on a set of 20 visual styles, further categorized into types:
-\begin{itemize}
+\begin{itemize} \itemsep0.5pt
 \item \textbf{Optical techniques:} Macro, Bokeh, Depth-of-Field, Long Exposure, HDR
 \item \textbf{Atmosphere:} Hazy, Sunny
 \item \textbf{Mood:} Serene, Melancholy, Ethereal
@@ -107,27 +109,28 @@ For each of these stylistic concepts, we found at least one dedicated Flickr Gro
 From these groups, we collected 4,000 positive examples for each label, for a total of 80,000 images.
 Example images are shown in \autoref{fig:flickr_style_examples}.
 
+\PM{Dealing with Noise}
 The derived labels are considered clean in the positive examples, but may be noisy in the negative examples, in the same way as the ImageNet dataset \parencite{Deng-CVPR-2009}.
 That is, a picture labeled as \emph{Sunny} is indeed \emph{Sunny}, but it may also be \emph{Romantic}, for which it is not labeled.
 We consider this an unfortunate but acceptable reality of working with a large-scale dataset.
 Following ImageNet, we still treat the absence of a label as indication that the image is a negative example for that label.
 Mechanical Turk experiments described in \autoref{sec:mech_turk_evaluation} serve to allay our concerns.
 
-\paragraph{Wikipaintings.}
+\subsubsection{Wikipaintings}
+
+\PM{Source}
 We also provide a new dataset for classifying painting style.
 To our knowledge, no previous large-scale dataset exists for this task -- although very recently a large dataset of artwork did appear for other tasks \parencite{Mensink2014}.
 We collect a dataset of 100,000 high-art images -- mostly paintings -- labeled with artist, style, genre, date, and free-form tag information by a community of experts on the \texttt{Wikipaintings.org} website.
-
-Analyzing style of non-photorealistic media is an interesting problem, as much of our present understanding of visual style arises out of thousands of years of developments in fine art, marked by distinct historical styles.
 Our dataset presents significant stylistic diversity, primarily spanning Renaissance styles to modern art movements (\autoref{fig:wikipaintings_data} provides further breakdowns).
 We select 25 styles with more than 1,000 examples, for a total of 85,000 images.
 Example images are shown in~\autoref{fig:wikipaintings_style_examples}.
 
-\section{Learning algorithm}
+\subsection{Learning algorithm}
 
+\PM{Multi-Class Logistic Regression via SGD}
 We learn to classify novel images according to their style, using the labels assembled in the previous section.
 Because the datasets we deal with are quite large and some of the features are high-dimensional, we consider only linear classifiers, relying on sophisticated features to provide robustiness.
-
 We use an open-source implementation of Stochastic Gradient Descent with adaptive subgradient \parencite{Agarwal-JMLR-2012}.
 The learning process optimizes the function \[
 \underset{w}{\text{min }} \lambda_1 \|w\|_1 + \frac{\lambda_2}{2} \Vert w \Vert_2^2 + \sum_i \ell(x_i, y_i, w)
@@ -137,8 +140,9 @@ For the loss $\ell(x, y, w)$, we consider the hinge ($\max(0, 1 - y \cdot w^T x)
 We set the initial learning rate to $0.5$, and use adaptive subgradient optimization~\parencite{duchi2011adaptive}.
 Our setup is of multi-class classification; we use the One vs. All reduction to binary classifiers.
 
-\section{Image Features}
+\subsection{Image Features}
 
+\PM{Motivation}
 In order to classify styles, we must choose appropriate image features.  We hypothesize that image style may be related to many different features, including low-level statistics \parencite{Lyu-PNAS-2004}, color choices, composition, and content.  Hence, we test features that embody these different elements, including features from the object recognition literature.
 We evaluate single-feature performance, as well as second-stage fusion of multiple features.
 
@@ -169,14 +173,14 @@ The features are 8,000- and 4,000-dimensional and are computed from images cente
 Following Dhar et al.~\parencite{Dhar-CVPR-2011}, who use high-level classifiers as features for their aesthetic rating prediction task, we evaluate using object classifier confidences as features.
 Specifically, we train classifiers for all 20 classes of the PASCAL VOC \parencite{pascal-voc-2010} using the DeCAF$_6$ feature.
 The resulting classifiers are quite reliable, obtaining $0.7$ mean AP on the VOC 2012.
-
 We aggregate the data to train four classifiers for ``animals'', ``vehicles'', ``indoor objects'' and ``people''.
+
+\paragraph{Fusion.}
 These aggregate classes are presumed to discriminate between vastly different types of images -- types for which different style signals may apply.
 For example, a \emph{Romantic} scene with people may be largely about the composition of the scene, whereas, \emph{Romantic} scenes with vehicles may be largely described by color.
-
 To enable our classifiers to learn content-dependent style, we can take the outer product of a feature channel with the four aggregate content classifiers.
 
-\section{Experiments}
+\section{Evaluation}\label{sec:style_evaluation}
 
 \begin{table}
 \caption[Mean APs on AVA Style, Flickr Style, and Wikipaintings for single-channel features and their second-stage combinations.]{
@@ -199,29 +203,32 @@ Wikipaintings     & \textbf{0.473}   & 0.356     & 0.441  & -           & -     
 }
 \end{table}
 
-\subsection{Flickr Style}
-We learn and predict style labels on the 80,000 images labeled with 20 different visual styles of our new Flickr Style dataset, using 20\% of the data for testing, and another 20\% for parameter-tuning validation.
+\subsection{Experiment: Flickr Style}
 
+\PM{Setup}
+We learn and predict style labels on the 80,000 images labeled with 20 different visual styles of our new Flickr Style dataset, using 20\% of the data for testing, and another 20\% for parameter-tuning validation.
 There are several performance metrics we consider.
 Average Precision evaluation (as reported in \autoref{tab:mean_aps} and in \autoref{tab:flickr_ap_table}) is computed on a random class-balanced subset of the test data (each class has equal prevalence).
 We compute confusion matrices (\autoref{fig:flickr_conf}, \autoref{fig:wp_conf}, \autoref{fig:ava_style_conf}) on the same data.
 Per-class accuracies are computed on subsets of the data balanced by the binary label, such that chance performance is 50\%.
 We follow these decisions in all following experiments.
 
+\PM{Single features}
 The best single-channel feature is DeCAF$_6$ with 0.336 mean AP; feature fusion obtains 0.368 mean AP.
 Per-class APs range from 0.17 [\emph{Depth of Field}] to  0.62 [\emph{Macro}].
 Per-class accuracies range from 68\% [\emph{Romantic}, \emph{Depth of Field}] to 85\% [\emph{Sunny}, \emph{Noir}, \emph{Macro}].
 The average per-class accuracy is 78\%.
 We show the most confident style classifications on the test set of Flickr Style in \autoref{fig:flickr_on_flickr1} through \autoref{fig:flickr_on_flickr3}.
 
+\PM{Analysis}
 Upon inspection of the confusion matrices, we saw points of understandable confusion: \emph{Depth of Field} vs. \emph{Macro}, \emph{Romantic} vs. \emph{Pastel}, \emph{Vintage} vs. \emph{Melancholy}.
 There are also surprising sources of mistakes: \emph{Macro} vs. \emph{Bright/Energetic}, for example.
 To explain this particular confusion, we observed that lots of \emph{Macro} photos contain bright flowers, insects, or birds, often against vibrant greenery.
 Here, at least, the content of the image dominates its style label.
-
 To explore further content-style correlations, we plot the outputs of PASCAL object class classifiers (one of our features) on the Flickr dataset in~\autoref{fig:content_correlation}.
 We can observe that some styles have strong correlations to content (e.g., \emph{Hazy} occurs with \emph{vehicle}, \emph{HDR} doesn't occur with \emph{cat}).
 
+\PM{Fusion}
 We hypothesize that style is content-dependent: a \emph{Romantic} portrait may have different low-level properties than a \emph{Romantic} sunset.
 We form a new feature as an outer product of our content classifier features with the second-stage late fusion features (``Fusion $\times$ Content'' in all results figures).
 These features gave the best results, thus supporting the hypothesis.
@@ -235,54 +242,65 @@ These features gave the best results, thus supporting the hypothesis.
     }\label{fig:content_correlation}
 \end{figure}
 
-\subsection{Mechanical Turk Evaluation.}\label{sec:mech_turk_evaluation}
+\subsubsection{Mechanical Turk Evaluation}\label{sec:mech_turk_evaluation}
+
+\PM{Setup}
 In order to provide a human baseline for evaluation, we performed a Mechanical Turk study.
 For each style, Turkers were shown positive and negative examples for each Flickr Group, and then they evaluated whether each image in the test set was part of the given style.
 We treat the Flickr group memberships as ground truth as before, and then evaluate Turkers' ability to accurately determine group membership.
-Measures were taken to remove spam workers; see \autoref{sec:mech_turk_details} for our experimental setup.
+Measures were taken to remove spam workers, as described below.
 For efficiency, one quarter of the test set was used, and two redundant styles (Bokeh and Detailed) were removed.
 Each test image was evaluated by 3 Turkers, and the majority vote taken as the human result for this image.
 
+\PM{Details}
+Test images were grouped into 10 images per Human Interface Task (HIT). Each task asks the Turker to evaluate the style (e.g., ``Is this image VINTAGE?'') for each image.  For each style, we provided a short blurb describing the style in words, and provided 12-15 hand-chosen positive and negative examples for each Flickr Group.
+To defend against spammers, each HIT included 2 sentinels: images which were very clearly positives and similar to the examples.  HITs were rejected when Turkers got both sentinels wrong.
+Turkers were paid $0.10$ per HIT, and were allowed to perform multiple hits.  Manual inspection of the results indicate that the Turkers understood the task and were performing effectively.  A few Turkers sent unsolicited feedback indicating that they were really enjoying the HITs (``some of the photos are beautiful'') and wanted to perform them as effectively as possible.
+
+\PM{Results}
 Results are presented in \autoref{tab:flickr_vs_mturk} and \autoref{tab:flickr_vs_mturk2}.
 In total, Turkers achieved 75\% mean accuracy (ranging from 61\% [\emph{Romantic}] to 92\% [\emph{Macro}]) across styles, in comparison to 78\% mean accuracy (ranging from 68\% [\emph{Depth of Field}] to 87\% [\emph{Macro}]) of our best method.
 Our algorithm did significantly worse than Turkers on \emph{Macro} and \emph{Horror}, and significantly better on \emph{Vintage}, \emph{Romantic}, \emph{Pastel}, \emph{Detailed}, \emph{HDR}, and \emph{Long Exposure} styles.
-
-Some of this variance may be due to subtle difference from the Turk tasks that we provided, as compared to the definitions of the Flickr groups, but may also due to the Flickr groups' incorporating images that do not quite fit the common definition of the given style.
-For example, there may be a mismatch between different notions of \emph{Romantic} and \emph{vintage}, and how inclusively these terms are defined.
-
 We additionally used the Turker opinion as ground truth for our method's predictions.
 In switching from the default Flickr to the MTurk ground truth, our method's accuracy hardly changed from 78\% to 77\%.
 However, we saw that the accuracy of our \emph{Vintage}, \emph{Detailed}, \emph{Long Exposure}, \emph{Minimal}, \emph{HDR}, and \emph{Sunny} style classifiers significantly decreased, indicating machine-human disagreement on those styles.
 
-\subsubsection{MTurk Study Details}\label{sec:mech_turk_details}
-Test images were grouped into 10 images per Human Interface Task (HIT). Each task asks the Turker to evaluate the style (e.g., ``Is this image VINTAGE?'') for each image.  For each style, we provided a short blurb describing the style in words, and provided 12-15 hand-chosen positive and negative examples for each Flickr Group.
-Each HIT included 2 sentinels: images which were very clearly positives and similar to the examples.  HITs were rejected when Turkers got both sentinels wrong.
-Turkers were paid $0.10$ per HIT, and were allowed to perform multiple hits.  Manual inspection of the results indicate that the Turkers understood the task and were performing effectively.  A few Turkers sent unsolicited feedback indicating that they were really enjoying the HITs (``some of the photos are beautiful'') and wanted to perform them as effectively as possible.
+\PM{Analysis}
+Some of this variance may be due to subtle difference from the Turk tasks that we provided, as compared to the definitions of the Flickr groups, but may also due to the Flickr groups' incorporating images that do not quite fit the common definition of the given style.
+For example, there may be a mismatch between different notions of \emph{Romantic} and \emph{vintage}, and how inclusively these terms are defined.
+Regardless, the high agreement seen in study validates our choice of data source.
 
-\subsection{Wikipaintings}
+\subsection{Experiment: Wikipaintings}
+
+\PM{Setup and Results}
 With the same setup and features as in the Flickr experiments, we evaluate 85,000 images labeled with 25 different art styles.
 Detailed results are provided in \autoref{tab:wikipaintings_ap_table} and \autoref{tab:wp_accuracies}.
 The best single-channel feature is MC-bit with 0.441 mean AP; feature fusion obtains 0.473 mean AP.
 Per-class accuracies range from 72\% [\emph{Symbolism}, \emph{Expressionism}, \emph{Art Nouveau}] to 94\% [\emph{Ukiyo-e}, \emph{Minimalism}, \emph{Color Field Painting}].
+We did not perform a Mechanical Turk analysis of this dataset, as the Wikipainting community-of-experts labels were deemed inherently less noisy than Flickr Groups.
 
-\subsection{AVA Style}
+\subsection{Experiment: AVA Style}
+
+\PM{Setup and Results}
 AVA \parencite{Murray-CVPR-2012} is a dataset of 250K images from \texttt{dpchallenge.net}.
 We evaluate classification of aesthetic rating and of 14 different photographic style labels on the 14,000 images of the AVA dataset that have such labels.
 For the style labels, the publishers of the dataset provide a train/test split, where training images have only one label, but test images may have more than one label \parencite{Murray-CVPR-2012}.
 Our results are presented in \autoref{tab:ava_style_ap_table}.
 For style classification, the best single feature is the DeCAF$_6$ convolution network feature, obtaining 0.579 mean AP.
 Feature fusion improves the result to 0.581 mean AP; both results beat the previous state-of-the-art of 0.538 mean AP \parencite{Murray-CVPR-2012}.
-\footnote{Our results beat 0.54 mAP using both the AVA-provided class-imbalanced test split, and the class-balanced subsample that we consider to be more correct evaluation, and for which we provide numbers.}
+Our results beat 0.54 mAP using both the AVA-provided class-imbalanced test split, and the class-balanced subsample that we consider to be more correct evaluation, and for which we provide numbers.
 
+\PM{Low-level features}
 In all metrics, the DeCAF and MC-bit features significantly outperformed more low-level features on this dataset.
-Accordingly, we do not evaluate the low-level features on the larger Flickr and Wikipaintings datasets.
+For this reason, we did not evaluate the low-level features on the larger Flickr and Wikipaintings datasets (the AVA experiment was chronologically first).
 
 \subsection{Application: Style-Based Image Search}
+
+\PM{Cross-dataset style}
 Style classifiers learned on our datasets can be used toward novel goals.
 For example, sources of stock photography or design inspiration may be better navigated with a vocabulary of style.
 Currently, companies expend labor to manually annotate stock photography with such labels.
 With our approach, any image collection can be searchable and rankable by style.
-
 To demonstrate, we apply our Flickr-learned style classifiers to a new dataset of 80K images gathered on Pinterest (also available with our code release); some results are shown in \autoref{fig:flickr_on_pinterest}.
 Interestingly, styles learned from photographs can be used to order paintings, and styles learned from paintings can be used to order photographs, as illustrated in \autoref{fig:photo_painting}.
 
@@ -360,22 +378,19 @@ Filtering Pinterest image search results by style, predicted by Flickr Style cla
 }\label{fig:flickr_on_pinterest}
 \end{figure}
 
-
 \subsection{Discussion}
-
+\PM{Summary}
 We have made significant progress in defining the problem of understanding photographic style.
 We provide a novel dataset that exhibits several types of styles not previously considered in the literature, and we demonstrate state-of-the-art results in prediction of both style and aesthetic quality.
 These results are comparable to human performance.
 We also show that style is highly content-dependent.
 
-Style plays a significant role in much of the manmade imagery we experience daily, and there is considering need for future work to further answer the question ``What is style?''
-
+\PM{General visual features}
 One of the most interesting outcomes of this work is the success of features trained for object detection for both aesthetic and style classification.
 We propose several possible hypotheses to explain these results.
 Perhaps the network layers that we use as features are extremely good as general visual features for image representation in general.
 Another explanation is that object recognition depends on object appearance, e.g., distinguishing red from white wine, or different kinds of terriers, and that the model learns to repurpose these features for image style.
 Understanding and improving on these results is fertile ground for future work.
-
 
 \begin{figure}
 \centering
