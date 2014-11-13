@@ -1,14 +1,5 @@
 %!TEX root=../paper/paper.tex
-\chapter{Image Style Recognition Detailed Results}\label{sec:style_appendix}
-
-% \begin{figure}[th]
-% \centering
-% \includegraphics[width=\linewidth]{../style/figures/wikipaintings_style.pdf}\\
-% \includegraphics[width=\linewidth]{../style/figures/wikipaintings_genre.pdf}\\
-% \includegraphics[width=\linewidth]{../style/figures/wikipaintings_date.pdf}
-% \caption{Distribution of image style, genre, and date in the Wikipaintings dataset.}
-% \label{fig:wikipaintings_data}
-% \end{figure}
+\chapter{Recognizing Image Style: Detailed Results}\label{sec:style_appendix}
 
 \begin{table*}[ht!]
 \caption{
@@ -41,6 +32,109 @@ mean                  & 0.581  & 0.579     & 0.539  & 0.539  & 0.288  & 0.220 & 
 \end{tabular}
 }
 \end{table*}
+
+\begin{figure*}[ht!]
+\centering
+\includegraphics[width=\linewidth]{../style/figures/evaluation/ava_style_conf.pdf}
+\caption
+[Confusion matrix of our best classifier on the AVA Style dataset.]
+{
+Confusion matrix of our best classifier (\mbox{Late-fusion $\times$ Content}) on the AVA Style dataset.
+The right-most ``prior'' column reflects the distribution of ground-truth labels in the test set.
+The confusions are mostly understandable: ``Soft Focus'' vs. ``Motion Blur'' for example.
+}
+\label{fig:ava_style_conf}
+\end{figure*}
+
+\begin{figure}
+\centering
+    \begin{tabular}{m{.01\linewidth} m{.16\linewidth} m{.16\linewidth} m{.16\linewidth} m{.16\linewidth} m{.16\linewidth}}
+    \begin{turn}{90}{Horror}\end{turn} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Horror/0.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Horror/1.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Horror/2.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Horror/3.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Horror/4.jpg} \\
+    \begin{turn}{90}{Long Exposure}\end{turn} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Long_Exposure/0.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Long_Exposure/1.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Long_Exposure/2.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Long_Exposure/3.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Long_Exposure/4.jpg} \\
+    \begin{turn}{90}{Macro}\end{turn} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Macro/0.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Macro/1.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Macro/2.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Macro/3.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Macro/4.jpg} \\
+    \begin{turn}{90}{Melancholy}\end{turn} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Melancholy/0.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Melancholy/1.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Melancholy/2.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Melancholy/3.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Melancholy/4.jpg} \\
+    \begin{turn}{90}{Minimal}\end{turn} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Minimal/0.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Minimal/1.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Minimal/2.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Minimal/3.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Minimal/4.jpg} \\
+    \begin{turn}{90}{Noir}\end{turn} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Noir/0.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Noir/1.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Noir/2.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Noir/3.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Noir/4.jpg}
+\end{tabular}
+\caption{
+    Top five most confident predictions on the Flickr Style test set: styles 9-14.
+}\label{fig:flickr_on_flickr2}
+\end{figure}
+
+\begin{figure}
+\centering
+    \begin{tabular}{m{.01\linewidth} m{.16\linewidth} m{.16\linewidth} m{.16\linewidth} m{.16\linewidth} m{.16\linewidth}}
+    \begin{turn}{90}{Pastel}\end{turn} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Pastel/0.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Pastel/1.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Pastel/2.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Pastel/3.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Pastel/4.jpg} \\
+    \begin{turn}{90}{Romantic}\end{turn} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Romantic/0.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Romantic/1.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Romantic/2.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Romantic/3.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Romantic/4.jpg} \\
+    \begin{turn}{90}{Serene}\end{turn} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Serene/0.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Serene/1.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Serene/2.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Serene/3.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Serene/4.jpg} \\
+    \begin{turn}{90}{Sunny}\end{turn} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Sunny/0.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Sunny/1.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Sunny/2.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Sunny/3.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Sunny/4.jpg} \\
+    \begin{turn}{90}{Texture}\end{turn} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Texture/0.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Texture/1.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Texture/2.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Texture/3.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Texture/4.jpg} \\
+    \begin{turn}{90}{Vintage}\end{turn} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Vintage/0.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Vintage/1.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Vintage/2.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Vintage/3.jpg} &
+    \includegraphics[width=\linewidth]{../style/figures/flickr_on_flickr/pred_style_Vintage/4.jpg}
+\end{tabular}
+\caption{
+    Top five most confident predictions on the Flickr Style test set: styles 15-20.
+}\label{fig:flickr_on_flickr3}
+\end{figure}
 
 \begin{table*}[ht!]
 \caption{
@@ -140,6 +234,15 @@ Detailed               & 75.25                     & 63.30                      
 }
 \end{table*}
 
+\begin{figure*}[ht!]
+\centering
+\includegraphics[width=1\linewidth]{../style/figures/evaluation/flickr_conf.pdf}
+\caption
+[Confusion matrix of our best classifier on the Flickr dataset.]
+{Confusion matrix of our best classifier (\mbox{Late-fusion $\times$ Content}) on the Flickr dataset.}
+\label{fig:flickr_conf}
+\end{figure*}
+
 \begin{table*}[ht!]
 \centering
 \caption{
@@ -208,28 +311,6 @@ Art Informel                 &         82.09 &                              &   
 \end{tabular}
 \end{table*}
 
-% \begin{figure*}[ht!]
-% \centering
-% \includegraphics[width=\linewidth]{../style/figures/evaluation/ava_style_conf.pdf}
-% \caption
-% [Confusion matrix of our best classifier on the AVA Style dataset.]
-% {
-% Confusion matrix of our best classifier (\mbox{Late-fusion $\times$ Content}) on the AVA Style dataset.
-% The right-most ``prior'' column reflects the distribution of ground-truth labels in the test set.
-% The confusions are mostly understandable: ``Soft Focus'' vs. ``Motion Blur'' for example.
-% }
-% \label{fig:ava_style_conf}
-% \end{figure*}
-
-\begin{figure*}[ht!]
-\centering
-\includegraphics[width=1\linewidth]{../style/figures/evaluation/flickr_conf.pdf}
-\caption
-[Confusion matrix of our best classifier on the Flickr dataset.]
-{Confusion matrix of our best classifier (\mbox{Late-fusion $\times$ Content}) on the Flickr dataset.}
-\label{fig:flickr_conf}
-\end{figure*}
-
 \begin{figure*}[ht!]
 \centering
 \includegraphics[width=1\linewidth]{../style/figures/evaluation/wikipaintings_conf.pdf}
@@ -238,3 +319,13 @@ Art Informel                 &         82.09 &                              &   
 {Confusion matrix of our best classifier (\mbox{Late-fusion $\times$ Content}) on the Wikipaintings dataset.}
 \label{fig:wp_conf}
 \end{figure*}
+
+% \begin{figure}[th]
+% \centering
+% \includegraphics[width=\linewidth]{../style/figures/wikipaintings_style.pdf}\\
+% \includegraphics[width=\linewidth]{../style/figures/wikipaintings_genre.pdf}\\
+% \includegraphics[width=\linewidth]{../style/figures/wikipaintings_date.pdf}
+% \caption{Distribution of image style, genre, and date in the Wikipaintings dataset.}
+% \label{fig:wikipaintings_data}
+% \end{figure}
+
