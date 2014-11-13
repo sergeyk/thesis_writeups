@@ -1,46 +1,34 @@
 %!TEX root=paper/paper.tex
 \begin{abstract}\label{sec:abstract}
-
-\PM{Motivation and method}
 Humans are capable of perceiving a scene at a glance, and obtain deeper understanding with additional time.
-Similarly, visual recognition implementations should be robust to varying computational budgets.
-Such situations compel Anytime recognition ability, which is rarely considered in computer vision research.
+Computer visual recognition should be similarly robust to varying computational budgets --- a property we call Anytime recognition.
+Despite value to real-world deployments, this topic is underappreciated in the field.
 We present a general method for learning dynamic policies to optimize Anytime performance in visual recognition.
 We approach this problem from the perspective of Markov Decision Processes, and use reinforcement learning techniques.
 Crucially, decisions are made at test time and depend on observed data and intermediate results.
 Our method is easily extensible, learning from execution traces of existing detectors and classifiers.
 
-\PM{Detection}
 For the object detection task, we formulate a dynamic, closed-loop policy that infers the contents of the image in order to decide which detector to deploy next.
-We explain our effective decisions in structuring the reward function and featurizing the MDP state.
-Experiments are conducted on the PASCAL VOC object detection dataset.
-We evaluate our method with a novel \emph{costliness} measure, computed as the area under an Average Precision vs. Time curve.
+We explain effective decisions for reward function definition and state-space featurization.
+We evaluate our method on the PASCAL VOC dataset with a novel \emph{costliness} measure, computed as the area under an Average Precision vs. Time curve.
 In contrast to previous work, our method significantly diverges from predominant greedy strategies, and is able to learn to take actions with deferred values.
 If execution is stopped when only half the detectors have been run, our method obtains $66\%$ better AP than a random ordering, and $14\%$ better performance than an intelligent baseline.
-On the costliness measure, our method obtains at least $11\%$ better performance.
 
-\PM{Classification}
 On classification tasks, where actions are less costly than running detectors, our model quickly orders feature computation and performs subsequent classification.
 We explain strategies for dealing with unobserved feature values that are necessary to effectively classify from any state in the sequential process.
 We show the applicability of this system to a challenging synthetic problem as well as standard problems in scene and object recognition.
 On suitable datasets, we can incorporate a semantic back-off strategy that gives maximally specific predictions for a desired level of accuracy.
 Our method delivers best results on the costliness meaasure and provides a new view on the time course of human visual perception.
 
-\PM{Cascaded CNN}
 Traditional visual recognition obtains significant advantages from the use of many features in classification.
-Recently, however, a single learned feature learned with multi-layer convolutional networks (CNNs) has outperformed all other approaches on several main recognition datasets.
-The recently introduced Region CNN (R-CNN) object detection system, in particular, has excellent detection accuracy but high computational cost.
-We propose several Anytime-motivated methods for speeding up R-CNN while maintaing its high accuracy.
-First, we introduce a novel dynamic region selection method using quick-to-compute features.
-We also introduce a novel cascaded approach to CNNs, adding a \emph{reject} option between expensive convolutional layers and allowing the network to terminate computation early.
-On the PASCAL VOC dataset, we achieve an 8x speed-up while losing no more than 10\% of the top R-CNN detection performance -- or a 16x speed-up while losing no more than 20\%.
+Recently, however, a single feature learned with multi-layer convolutional networks (CNNs) has outperformed all other approaches on the main recognition datasets.
+We propose Anytime-motivated methods for speeding up CNN-based detection approaches while maintaining high accuracy: (1) a dynamic region selection method using novel quick-to-compute features; and (2) the Cascade CNN, which adds a \emph{reject} option between expensive convolutional layers and allows the network to terminate some computation early.
+On the PASCAL VOC dataset, we achieve an 8x speed-up while losing no more than 10\% of the top detection performance -- or a 16x speed-up while losing no more than 20\%.
 
-\PM{Image Style}
-We also gather and present first results on a pair of novel datasets for image style recognition.
-The style of an image plays a significant role in how it is viewed, but has received little attention in computer vision research.
-We present two novel datasets -- 80K Flickr photographs annotated with 20 curated style labels, and 85K paintings annotated with 25 style/genre labels -- and describe an approach to predicting their visual style.
-In preparation for an Anytime approach, we perform a thorough evaluation of different image features for these tasks.
-We find that features learned in a multi-layer network perform best, even when trained with object class (not style) labels.
-Our large-scale learning method results in the best published performance on an existing dataset of aesthetic ratings and photographic style annotations.
+Lastly, we address the problem of image style recognition, which has received little research attention despite the significant role of visual style in conveying meaning.
+We present two novel datasets: 80K Flickr photographs annotated with curated style labels, and 85K paintings annotated with style/genre labels.
+In preparation for Anytime recognition, we perform a thorough evaluation of different image features for image style prediction.
+We find that features learned in a multi-layer network perform best, even when trained with object category (not style) labels.
+Our large-scale learning method also results in the best published performance on an existing dataset of aesthetic ratings and photographic style annotations.
 We use the learned classifiers to extend traditional tag-based image search to consider stylistic constraints, and demonstrate cross-dataset understanding of style.
 \end{abstract}
