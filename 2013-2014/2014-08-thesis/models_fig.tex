@@ -2,7 +2,7 @@
 \begin{figure}[t]
 \centering
 \includegraphics[width=.9\linewidth]{../../figures/models/cascade}
-\caption[Sequential feature selection: cascade models]{
+\caption[Sequential feature selection: Cascade models]{
 Sequential feature selection: \textbf{Cascade}.
 In addition to the feature computation actions, the classifier is augmented with a rejection action.
 The cascade is Anytime in a limited way, as only the rejection answer can be given before all features are evaluated.
@@ -21,7 +21,7 @@ The \textbf{MD-DAG} method \parencite{Benbouzid-ICML-2012} augments the traditio
 \begin{figure}[t]
 \centering
 \includegraphics[width=.8\linewidth]{../../figures/models/tree}
-\caption[Sequential feature selection: tree-based]{
+\caption[Sequential feature selection: Tree-based]{
 \textbf{Tree-based} methods find a tree-structured policy for computing features.
 Classification answers are given only at the leaf nodes.
 The tree structure can be found by direct optimization of some problem, such as cost-senstive classification, as in \cite{Xu-ICML-2012}, or induced by a tangential problem, as in \cite{Deng-NIPS-2011}, who use the confusion matrix to set the structure of their Label Tree.
@@ -30,7 +30,7 @@ The tree structure can be found by direct optimization of some problem, such as 
 
 \begin{figure}[t]
 \includegraphics[width=\linewidth]{../../figures/models/dag}
-\caption[Sequential feature selection: general DAG]{
+\caption[Sequential feature selection: General DAG]{
 In this work and in methods such as \cite{Gao-NIPS-2011}, the policy is a \textbf{general DAG} over selected-feature subsets, which allows actions to be taken in an entirely flexible order.
 In our work, we are also able to give the classification answer from all states, making our work truly Anytime.
 }\label{fig:model_dag}

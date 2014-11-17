@@ -94,14 +94,12 @@ Another exciting direction is theoretical analysis based on adaptive submodulari
 In vision, there is an application of such results to detection with humans in the loop \parencite{Chen-2014-ICML}.
 In robotics, an adaptively submodular objective was successfully formulated for the problem of grasping \parencite{Javdani2012}.
 
-\subsubsection{Feature Combination}
-
-\PM{Multiple Kernel Learning}
+\PM{Feature Combination}
 For SVM-based classifiers, \emph{Multiple Kernel Learning} (MKL) provides a way to train classifiers using an automatically weighted combination of kernels \parencite{Lanckriet2004}.
 It has been shown that MKL is outperformed by boosting single-kernel classifiers \parencite{Gehler2009}.
 Of course, if all classifiers are linear, then combining outputs of classifiers trained on different feature channel with another classifier is equivalent to training one classifier on all features at once.
 
-\PM{Value imputation}
+\PM{Value Imputation}
 The imputation problem is faced in the \emph{collaborative filtering} literature, working on problems such as the Netflix Prize \parencite{Koren-2009}.
 Matrix factorization methods, commonly based on the Singular Value Decomposition (SVD), are often employed.
 Our problem is significantly different in that at training time, all values are fully observed --- and the final task is classification, not simple imputation.

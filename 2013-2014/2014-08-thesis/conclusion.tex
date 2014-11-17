@@ -1,7 +1,7 @@
 %!TEX root=paper/paper.tex
 \chapter{Conclusion}\label{sec:conclusion}
 
-\PM{Contribution}
+\PM{Main Contribution}
 We note a significant problem that has received little research attention: Anytime visual recognition.
 The problem is motivated by the properties of human visual perception and by the need to effectively schedule computationally expensive state-of-the-art computer vision methods for different computational budgets.
 We approach the problem from the perspective of reinforcement learning, and successfully learn fully general policies for selecting detector and classifier actions.
@@ -11,7 +11,7 @@ In all experiments, we show that having a dynamic state (allowing closed-loop po
 \PM{Detection}
 We present a method for learning ``closed-loop'' policies for multi-class object detection, given existing object detectors and classifiers and a metric to optimize.
 The method learns the optimal policy using reinforcement learning, by observing execution traces in training.
-As always with reinforcement learning problems, defining the reward function requires some manual work.
+As with most reinforcement learning problems, the reward function is defined manually, with domain knowledge.
 Here, we derive it for the novel detection AP vs. Time evaluation that we suggest is useful for evaluating efficiency in recognition.
 If detection on an image is cut off after only half the detectors have been run, our method does $66\%$ better than a random ordering, and $14\%$ better than an intelligent baseline.
 In particular, our method learns to take action with no intermediate reward in order to improve the overall performance of the system.
@@ -19,28 +19,86 @@ In particular, our method learns to take action with no intermediate reward in o
 \PM{Classification}
 For the classification task, we additionally need to train classifiers for partially-observed sets of features.
 We investigate methods such as different forms of imputation and classifier clustering for this task, and adjust the reward function and the featurization of the state.
-We show improved Anytime performance on one synthetic classification task and two real visual recognition tasks using our method.
+Using our method, we show improved Anytime performance on a synthetic classification task and two benchmark visual recognition tasks.
 On a hierarchically-structured dataset, we additionally show that accuracy of predictions can be held constant for all budgets, while the specificty of predictions increases.
 
-\PM{C-CNN}
+\PM{Anytime CNN Detection}
+Using the recent state-of-the-art CNN-based detection methods can be computationally expensive.
 We first consider approaches which can effectively reorder the sequence of regions to maximize the chance that correct detections will be found early, based on inference from relatively lightweight features.
 We show that basic strategies, such as simply randomly reordering the boxes such that they do not have a degenerate spatial layout, provides a surprising boost, and that very simple features such as region and gradient statistics can effectively prioritize regions.
-The main contribution, however, is the Cascaded CNN model, which adds a novel Reject layer to the AlexNet architecture and obtains an almost 10x speedup of the R-CNN detection method with only a 10\% degradation of state-of-the-art performance on PASCAL VOC detection.
+Our main contribution is the Cascade CNN model, which adds a novel Reject layer between convolutional layers in the architecture.
+C-CNN obtains an almost 10x speedup of the R-CNN detection method with only a 10\% degradation of state-of-the-art performance on PASCAL VOC detection.
 
-\section{Future work}
+\PM{Recognizing Style}
+We have also made significant progress in defining the problem of recognizing image style.
+We provide a novel dataset of several types of visual style -- including for visual art -- not previously considered in the literature.
+In preparation for an Anytime approach, we evaluate several types of visual features on the dataset, and demonstrate state-of-the-art results in prediction of both style and aesthetic quality (on an existing dataset).
+We confirm that our results are comparable to human performance, show that style is highly content-dependent, and demonstrate an image search application where results are queried by content and filtered by style.
 
-\PM{Decisions}
+\section{Future Work}
+
+There are several strands of further research that arise from our work.
+Here we organize them by section.
+
+\subsection{Detection and Classification}
+
+\PM{Decision cost}
 Although computation devoted to scheduling actions is less significant than the computation due to running the actions in all of our work, our framework does not explicitly consider this decision-making cost.
-A welcome extension would explicitly model this, perhaps drawing on eixsting theoretical work on meta-reasoning \parencite{Hay2012}.
-This principle can also be applied to neural networks; we currently learn rejection thresholds in a process separate from the CNN training.
-Future work should learn these thresholds jointly with the convolutional filters and the rest of the network layers.
+A welcome extension would explicitly model this by drawing on existing theoretical work on meta-reasoning such as \cite{Hay2012}.
 
-\PM{Classification}
-Nearest-neighbor method work really well for settings with partially observed sets of features, but were too slow in our evaluation.
-Locality-sensitive hashign methods may provide an effective solution.
-In particular, the method of \cite{Gao-NIPS-2011} could be valuably extended with hashing to maintain its model-free advantages at an acceptable speed.
+\PM{Nearest-neighbor}
+Nearest-neighbor methods work really well for settings with partially observed sets of features, but are too slow for our purposes.
+Locality-sensitive hashing methods may provide an effective solution \parencite{Kulis2009b}.
+In particular, the method of \cite{Gao-NIPS-2011} could potentially be extended with hashing to maintain its model-free advantages over a rigidly parametrized model at an acceptable speed.
 
 \PM{Perception}
 Beyond the aspects of practical deployment of vision systems that our work is motivated by, we are curious to further investigate our model as a tool to study human cognition and the time course of visual perception.
 Only a few attempts have been made to explain this: for example, via sequential decision processes in \textcite{Hegde-Neuro-2008}.
 While we have not made any claims about the biological mechanism of perception, our work in reinforcement learning-based feature selection as well as convolutional neural networks has explanatory potential if more tightly integrated in future work.
+
+\PM{Adaptive Submodularity}
+The most intriguing future direction is in theoretical analysis of our Anytime method.
+Our MDP-based formulation is empirically successful, but fundamentally heuristic.
+Adaptive submodularity \parencite{Golovin-and-Krause-2010-JAIR}, a recently developed framework for obtaining famous near-optimality results of \cite{Nemhauser1978} in the context of learning policies.
+Just as that work proved that greedy selection can be near-optimal if some conditions of the set function are satisfied, \cite{Golovin-and-Krause-2010-JAIR} prove that greedy policies can also be near-optimal under certain conditions.
+
+\PM{Submodular Ideas}
+Unfortunately, designing an appropriate objective function for our task of visual recognition is not straightforward.
+Information gain, a component of our reward function, can be shown to not be submodular \cite{Krause-UAI-2005}, so the easy solution has a roadblock.
+The most promising way forward is pointed by recent work on active learning and robotic grasping.
+In \cite{Golovin-2010}, an adaptively submodular objective based on hypothesis space pruning is developed for an active learning task.
+In \cite{Javdani2012}, robotic grasping is linked to a submodular set cover problem --- and another set cover analogy is developed in \cite{Chen-2014-ICML} for the problem of picking computer vision detections to evaluate with an oracle.
+An adaptively submodular objective for the general classification problem feels close.
+
+\subsection{CNN-based recognition}
+
+\PM{Cascade CNN}
+The general structure of the Cascade CNN general structure of simply ``thinning'' input batches as they travel through the network is agnostic to the underlying mechanism.
+Although in our work we evaluate on the R-CNN method on the PASCAL dataset, the Cascade CNN can be applied to the SPP-net method of \cite{He-ECCV-2014}, or the part-based method of \cite{Zhang-ECCV-2014}.
+In fact, the Cascade CNN can be applied to any existing CNN that predicts in a class-imbalanced domain where speed is important --- speech recognition, for example.
+
+\PM{End-to-end}
+Although, the Cascade CNN is shown to be a strong method for speeding up CNN-based detection approaches, its layers were trained in a stage following the initial network training, not in an \emph{end-to-end} fashion that is the hallmark of deep learning models.
+Furthermore, the thresholds were set in a separate process, using a different validation set.
+Future work should train and set thresholds of the Reject layers at the same time as the other layers are trained, not after the fact.
+
+\input{../ccnn/ccnn_anytime_fig}
+
+\PM{Anytime loss}
+More interestingly, networks could be augmented with an ``Anytime loss'' layer that combines classification output from multiple levels of the network in a cost-sensitive way.
+This would allow optimizing classification networks for arbitrary distributions of cost budgets.
+\autoref{fig:ccnn_anytime} shows the idea: the new layer combines the outputs of all fully-connected layers, which are regularly placed throughout the network.
+The Anytime loss computes the expected accuracy of each prediction, takes into account the computational cost up to that layer of the network, and back-propagates according to the budget (for example, if no answers are allowed after 50 ms, and it takes 60 ms to get through the network fully, then the final fully connected layer predictions are not counted).
+
+\subsection{Image Style}
+\PM{Anytime}
+While we collected two novel datasets and showed first results on the challenging task of recognizing image style, we did not evaluate Anytime performance of our features.
+Part of the reason was that one of the most interesting outcomes of this work was the success of features trained on object categorization datasets, and in particular the CNN-based feature.
+As we show in \autoref{sec:ccnn_chapter}, the CNN can be well suited for Anytime recognition needs.
+However, it would still be interesting to evaluate Anytime performance of other visual features on the style datasets.
+
+\PM{Features}
+We propose several possible hypotheses to explain the success of general multi-layer features on the style dataset, despite not having been trained on the style task.
+Perhaps the network layers that we use as features are extremely good as general visual features for image representation in general.
+Another explanation is that object recognition depends on object appearance, e.g., distinguishing red from white wine, or different kinds of terriers, and that the model learns to repurpose these features for image style.
+Understanding and improving on these results is fertile ground for future work.

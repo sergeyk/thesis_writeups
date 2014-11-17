@@ -4,8 +4,7 @@
 \section{Motivation}
 
 \PM{Perception}
-It is well-known that human perception is Anytime, meaning that a scene can be described after even a short presentation.
-Perception is also progressive, meaning that the quality of description increases with more time.
+It is well known that human perception is both Anytime, meaning that a scene can be described after even a short presentation, and progressive, meaning that the quality of description increases with more time.
 The progressive time course of visual perception has been confirmed by multiple studies \parencite{Vanrullen-1996,Fei-Fei-Vision-2007}, with some studies providing evidence that enhancement occurs in an ontologically meaningful way.
 For example, people tend to recognize something as an animal before recognizing it as a dog \parencite{Mace-PloS-2009}.
 The underlying mechanisms of this behavior are unknown, and only a few attempts have been made to explain the temporal dynamics (for instance, a promising work by \cite{Hegde-Neuro-2008} has employed the framework of sequential decision processes).
@@ -13,19 +12,19 @@ The underlying mechanisms of this behavior are unknown, and only a few attempts 
 \PM{Computer applications}
 Meanwhile, automated visual recognition has achieved levels of performance that allow useful real-world implementation.
 We focus on two problem formulations: \emph{image classification}, in which some property of the image -- such as scene type, visual style, or even object presence -- is predicted, and \emph{object detection}, in which the location and category (or identity) of all objects in a scene is predicted.
-Solutions to the two problems are often linked, as classification can be a subroutine for detection.
-Our motivation is that state-of-the-art methods for classification and detection tend to be computationally expensive, insensitive to Anytime demands, and not progressively enhanced.
+Solutions to the two problems are often linked, as classification can be a ``subroutine'' in a detection method.
+State-of-the-art methods for classification and detection tend to be computationally expensive, insensitive to Anytime demands, and not progressively enhanced.
 
 \PM{Application}
 As real-world deployment of recognition methods grows, managing resource cost (power or compute time) becomes increasingly important.
 For tasks such as personal robotics, it is crucial to be able to deploy varying levels of processing to different stimuli, depending on computational demands on the robot.
 A hypothetical system for vision-based advertising, in which paying customers engage with the system to have their products detected in images on the internet, presents another example.
 The system has different values (in terms of cost per click) and accuracies for different classes of objects, and the backlog of unprocessed images fluctuates based on demand and available server time.
-The recognition strategy to maximize profit in such an environment should exploit all signals available to it, and the quality of detections should be Anytime, depending on the length of the queue (for example, lowering recall when queue pressure grows).
+A recognition strategy to maximize profit in such an environment should exploit all signals available to it, and the quality of detections should be Anytime, depending on the length of the queue (for example, lowering recall with increased queue pressure).
 
-\PM{Visual Features / Classification}
+\PM{Visual Features \& Classification}
 For most state-of-the-art classification methods, a range of features are extracted from an image instance and used to train a classifier.
-Since the feature vectors are usually very high-dimensional, linear classification methods are used most often -- for instance, logistic regression.
+Since the feature vectors are usually high-dimensional, linear classification methods are used most often.
 Features are extracted at different costs, and contribute differently to decreasing classification error.
 Although it can generally be said that ``the more features, the better,'' high accuracy can of course be achieved with only a small subset of features for some instances.
 Additionally, different instances benefit from different subsets of features.
@@ -71,23 +70,23 @@ We demonstrate the advantage of non-myopic over greedy, and of dynamic over stat
 Then we show results on a subset of the hierarchical ImageNet dataset, where we additionally learn to provide the most specific answers for any desired cost budget and accuracy level.
 This work was originally presented in \cite{Karayev-ICMLW-2013} and \cite{Karayev-CVPR-2014}.
 
-\PM{Cascaded CNN}
+\PM{Cascade CNN}
 We additionally investigate a novel approach for speeding up a state-of-the-art CNN-based detection method, and propose a general technique for accelerating CNNs applied to class imbalanced data.
-We bring the classic idea of the cascade to CNNs by inserting a \emph{reject} option between CNN layers.
-When the CNN processes batches of images, which is standard for many applications, the reject layers allows the CNN to ``thin'' the batch as it progresses through the network, thus saving processing time.
+We employ the classic idea of the cascade by inserting a \emph{reject} option between expensive convolutional layers.
+When a CNN processes batches of images, which is standard for many applications, the reject layers allows ``thinning'' of the batch as it progresses through the network, thus saving processing time.
 This method is applicable to both \emph{all-class, proposed-region} methods such as \cite{Girshick-CVPR-2014} and \emph{all-class, exhaustive-region} methods such as \cite{He-ECCV-2014}.
-We demonstrate results --- along with a variety of strong baselines -- on the former method, and show that the Cascaded CNN method obtains a nearly 10x speed-up with only marginal drop in accuracy.
+We demonstrate results --- along with a variety of strong baselines -- on the former method, and show that the Cascade CNN method obtains a nearly 10x speed-up with only marginal drop in accuracy.
 All work is reported in \autoref{sec:ccnn_chapter}.
 
 \PM{Recognizing Style}
-Lastly, we present two novel datasets and first results for an underexplored research problem in computer vision -- recognizing visual style.
+Lastly, in \autoref{sec:style_chapter} we present two novel datasets and first results for an underexplored research problem in computer vision -- recognizing visual style.
 In preparation for an Anytime approach, we evaluate several different features (including CNNs) for the task, and explore content-style correlations in our datasets.
 Our large-scale learning gives state-of-the-art results on an existing dataset of image quality and photographic style, and provides a strong baseline on our contributed datasets of 80K photos and 85K paintings labeled with their style and genre.
 In a demonstration of cross-dataset understanding of style, we show how results of a search by content can be filtered by style.
-The work in \autoref{sec:style_chapter} was originally presented in \cite{Karayev-BMVC-2014}.
+This work was originally presented in \cite{Karayev-BMVC-2014}.
 
 \PM{Future Directions}
-This thesis provides an effective foundation for Anytime visual recognition, and points the way to interesting further development.
+This thesis provides an effective foundation for Anytime visual recognition, and points the way to interesting further developments.
 Our MDP-based formulation of learning a feature-selection policy is empirically effective, but heuristic in nature.
 The recently developed framework of adaptive submodularity \parencite{Golovin-and-Krause-2010-JAIR} could provide theoretical near-optimality results for some policies, but developing an appropriate objective for our task is not straightforward.
 We showed our Cascade CNN model to be effective for a region-based detection task -- but the model was not trained end-to-end with the threshold layers.

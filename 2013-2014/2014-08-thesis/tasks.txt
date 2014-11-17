@@ -23,22 +23,19 @@ x incorporate trevor's edits
 x add citations to myself
 x add marginals to style chapter
 x get bibliography to print all author names
+x add more future work discussion to conclusion section
+    x submodularity
+    x anytime CNN
+x redo Cascade CNN figure and add another figure showing how to train reject layers with individual losses or with an Anytime loss
+x add discussion of Anytime to the style conclusion
 
 Definitely
 ----------
 - add links to all code in the intro
-- add discussion of Anytime to the style conclusion
-- add more future work discussion to conclusion section
-    - submodularity discussion
-        - cite sherwin and active detection
-        - could add lots of equations from 270 slides -- could almost have an appendix chapter
-    - anytime CNN
-        - can add diagram for this
-- run spell-checker
+- run spell-checker, look for broken references [??]
 
 Maybe
 -----
-- redo cascaded CNN figure
-- organize related detection work in same way as in intro (break down by proposal and classification methods)
+- organize related work on detection in same way as in intro (break down by proposal and classification methods)
 - add 281b tables
 - re-plot 281b results or use less plots (there's a new summary.pdf)
