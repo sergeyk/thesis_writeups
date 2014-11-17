@@ -56,7 +56,7 @@ This induces a kind of saliency map on the image, which is useful signal for sel
 }\label{fig:gradient_examples}
 \end{figure}
 
-\subsection{Cascaded CNN}\label{sec:ccnn}
+\subsection{Cascade CNN}\label{sec:ccnn}
 
 \PM{Motivation}
 Despite the intentions of the region-proposal mechanism \parencite{Uijlings-IJCV-2013}, most ROIs that are scored in R-CNN do not contain any object of interest.
@@ -65,7 +65,7 @@ The problem is that the deep neural network architecture is trained to always ru
 We need to introduce a new primitive to enable early termination.
 
 \PM{Method}
-The Cascaded CNN, shown in \autoref{fig:ccnn}, augments the CNN network with an ``Early Reject'' option: after some layers, the network decides whether to keep processing the input with the next layer.
+The Cascade CNN, shown in \autoref{fig:ccnn}, augments the CNN network with an ``Early Reject'' option: after some layers, the network decides whether to keep processing the input with the next layer.
 Each reject layer is implemented as a fully-connected layer following a linear rectification, trained with dropout using logistic loss on foreground/background labels.
 We first train an AlexNet-architecture network \parencite{Krizhevsky-NIPS-2012} on the ImageNet classification dataset.
 This network is augmented with the Reject layers, its loss replaced with a multi-label cross-entropy loss, and fine-tuning on the PASCAL VOC training set is performed until loss stop decreasing (roughly 50000 iterations).

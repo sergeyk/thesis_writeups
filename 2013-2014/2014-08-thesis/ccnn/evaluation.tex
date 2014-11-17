@@ -37,20 +37,15 @@ The experimental settings are
   The region statistics feature is always used.
   Additionally, we consider the Pixel Gradient feature, with \emph{setup time} of the gradient forward-back propagation of 20 ms.
 
-  \item[Cascaded CNN] \hfill \\
-  The Cascaded CNN model, as described in \autoref{sec:ccnn}.
+  \item[Cascade CNN] \hfill \\
+  The Cascade CNN model, as described in \autoref{sec:ccnn}.
   The first experiment (C-CNN) takes batches of regions in a random order.
   The next two experiments also make use of the Region Selection methodology with the quick-to-compute feature.
 \end{description}
 
 \PM{Analysis}
-Since the time to process a full batch with a non-cascaded CNN is 500 ms, there are no results for non-cascaded baselines at 300 ms.
-At this time, the Cascaded CNN without any region ordering is best.
+Since the time to process a full batch with a non-Cascade CNN is 500 ms, there are no results for non-cascaded baselines at 300 ms.
+At this time, the Cascade CNN without any region ordering is best.
 A reason for why C-CNN with Region Selection is not as good at this point is that the region selection presents better region candidates, with fewer rejection opportunities, and thus has less coverage of the image.
 At 600 ms, C-CNN method have had more than one batch go through, and the Region Selection is giving it a lead over the simple C-CNN.
 Both method are better than the baseline non-cascaded methods for this entire duration.
-
-\PM{Future Applications}
-The Cascaded CNN is shown to be a strong method for speeding up CNN-based detection approaches.
-Its general structure of simply ``thinning'' input batches as they travel through the network is agnostic to the underlying mechanism.
-Although in this work we evaluate on the R-CNN method on the PASCAL dataset, the Cascaded CNN can be applied to the SPP-net method of \cite{He-ECCV-2014}, or the part-based method of \cite{Zhang-ECCV-2014}.
