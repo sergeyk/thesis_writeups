@@ -28,10 +28,10 @@ x add more future work discussion to conclusion section
     x anytime CNN
 x redo Cascade CNN figure and add another figure showing how to train reject layers with individual losses or with an Anytime loss
 x add discussion of Anytime to the style conclusion
+x add links to all code in the intro
 
 Definitely
 ----------
-- add links to all code in the intro
 - run spell-checker, look for broken references [??]
 
 Maybe

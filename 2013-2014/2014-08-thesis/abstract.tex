@@ -13,7 +13,7 @@ We explain effective decisions for reward function definition and state-space fe
 In contrast to previous work, our method significantly diverges from predominant greedy strategies and learns to take actions with deferred values.
 If execution is stopped when only half the detectors have been run, our method obtains $66\%$ better mean AP than a random ordering, and $14\%$ better performance than an intelligent baseline.
 
-We then apply our approach to classification tasks, where feature selection actions are less costly and a different inference mechanism is needed.
+We then apply our approach to classification tasks, where less costly feature selection actions prompt a different inference mechanism.
 We explain strategies for dealing with unobserved feature values that are necessary to effectively classify from any state in the sequential process.
 We show the applicability of this system to a challenging synthetic problem and to benchmark problems in scene and object recognition.
 On suitable datasets, we can additionally incorporate a semantic back-off strategy that gives maximally specific predictions for a desired level of accuracy.
@@ -22,12 +22,12 @@ Our method delivers best results on the costliness meaasure, and provides a new 
 Traditional visual recognition obtains significant advantages from the use of many features in classification.
 Recently, however, a single feature learned with multi-layer convolutional networks (CNNs) has outperformed all other approaches on the main recognition datasets.
 We propose Anytime-motivated methods for speeding up CNN-based detection approaches while maintaining their high accuracy: (1) a dynamic region selection method using novel quick-to-compute features; and (2) the Cascade CNN, which adds a \emph{reject} option between expensive convolutional layers and allows the network to terminate some computation early.
-On the PASCAL VOC dataset, we achieve an 8x speed-up while losing no more than 10\% of the top detection performance -- or a 16x speed-up while losing no more than 20\%.
+On the PASCAL VOC dataset, we achieve an 8x speed-up while losing no more than 10\% of the top detection performance.
 
 Lastly, we address the problem of image style recognition, which has received little research attention despite the significant role of visual style in conveying meaning through images.
 We present two novel datasets: 80K Flickr photographs annotated with curated style labels, and 85K paintings annotated with style/genre labels.
 In preparation for Anytime recognition, we perform a thorough evaluation of different image features for image style prediction.
-We find that features learned in a multi-layer network perform best, even when trained with object category (not style) labels.
+We find that features learned in a multi-layer network perform best, even when trained with object category labels.
 Our large-scale learning method also results in the best published performance on an existing dataset of aesthetic ratings and photographic style annotations.
 We use the learned classifiers to extend traditional tag-based image search to consider stylistic constraints, and demonstrate cross-dataset understanding of style.
 \end{abstract}

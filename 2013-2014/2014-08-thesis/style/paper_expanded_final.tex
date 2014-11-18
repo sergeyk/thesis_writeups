@@ -122,7 +122,7 @@ Mechanical Turk experiments described in \autoref{sec:mech_turk_evaluation} serv
 We also provide a new dataset for classifying painting style.
 To our knowledge, no previous large-scale dataset exists for this task -- although very recently a large dataset of artwork did appear for other tasks \parencite{Mensink2014}.
 We collect a dataset of 100,000 high-art images -- mostly paintings -- labeled with artist, style, genre, date, and free-form tag information by a community of experts on the \texttt{Wikipaintings.org} website.
-Our dataset presents significant stylistic diversity, primarily spanning Renaissance styles to modern art movements (\autoref{fig:wikipaintings_data} provides further breakdowns).
+Our dataset presents significant stylistic diversity, primarily spanning Renaissance styles to modern art movements.% (\autoref{fig:wikipaintings_data} provides further breakdowns).
 We select 25 styles with more than 1,000 examples, for a total of 85,000 images.
 Example images are shown in~\autoref{fig:wikipaintings_style_examples}.
 
@@ -209,7 +209,8 @@ Wikipaintings     & \textbf{0.473}   & 0.356     & 0.441  & -           & -     
 We learn and predict style labels on the 80,000 images labeled with 20 different visual styles of our new Flickr Style dataset, using 20\% of the data for testing, and another 20\% for parameter-tuning validation.
 There are several performance metrics we consider.
 Average Precision evaluation (as reported in \autoref{tab:mean_aps} and in \autoref{tab:flickr_ap_table}) is computed on a random class-balanced subset of the test data (each class has equal prevalence).
-We compute confusion matrices (\autoref{fig:flickr_conf}, \autoref{fig:wp_conf}, \autoref{fig:ava_style_conf}) on the same data.
+%We compute confusion matrices (\autoref{fig:flickr_conf}, \autoref{fig:wp_conf}, \autoref{fig:ava_style_conf}) on the same data.
+We compute confusion matrices (\autoref{fig:flickr_conf}, \autoref{fig:wp_conf}) on the same data.
 Per-class accuracies are computed on subsets of the data balanced by the binary label, such that chance performance is 50\%.
 We follow these decisions in all following experiments.
 

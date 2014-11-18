@@ -7,7 +7,7 @@
 It is well known that human perception is both Anytime, meaning that a scene can be described after even a short presentation, and progressive, meaning that the quality of description increases with more time.
 The progressive time course of visual perception has been confirmed by multiple studies \parencite{Vanrullen-1996,Fei-Fei-Vision-2007}, with some studies providing evidence that enhancement occurs in an ontologically meaningful way.
 For example, people tend to recognize something as an animal before recognizing it as a dog \parencite{Mace-PloS-2009}.
-The underlying mechanisms of this behavior are unknown, and only a few attempts have been made to explain the temporal dynamics (for instance, a promising work by \cite{Hegde-Neuro-2008} has employed the framework of sequential decision processes).
+The underlying mechanisms of this behavior are not well explored, with only a few attempts made to explain the temporal dynamics --- for instance, a promising work by \cite{Hegde-Neuro-2008} has employed the framework of sequential decision processes.
 
 \PM{Computer applications}
 Meanwhile, automated visual recognition has achieved levels of performance that allow useful real-world implementation.
@@ -45,7 +45,7 @@ And even the most recent \emph{all-class, all-region}, Convolutional Neural Net 
 \PM{Costliness}
 Computing all features, running all detectors, or processing all regions for all images is infeasible in a deployment sensitive to Anytime needs, as each feature brings a significant computational burden.
 Yet the conventional approach to evaluating visual recognition does not consider efficiency, and evaluates performance independently across classes.
-We address the problem of selecting and combining a subset of features under an Anytime cost budget, specified in terms of wall time or total power expended or another metric, and propose a new \emph{costliness} measure of performance vs. cost.
+We address the problem of selecting and combining a subset of features under an Anytime cost budget (specified in terms of wall time or total power expended or another metric) and propose a new \emph{costliness} measure of performance vs. cost.
 
 \PM{Learning a Policy}
 To exploit the fact that different instances benefit from different subsets of features, our approach to feature selection is a sequential policy.
@@ -59,7 +59,7 @@ For \emph{per-class} detection, the actions are time-consuming detectors applied
 We run scene context and object class detectors over the whole image sequentially, using the results of detection obtained so far to select the next actions.
 Since the actions are time-consuming, we use a powerful inference mechanism to select the best next action.
 In \autoref{sec:det_evaluation}, we evaluate on the PASCAL VOC dataset and obtain better performance than all baselines when there is less time available than is needed to exhaustively run all detectors.
-This work was originally presented in \cite{Karayev-NIPS-2012}.
+This work was originally presented in \cite{Karayev-NIPS-2012} and all work is open source\footnote{Available at \url{https://github.com/sergeyk/timely_object_recognition}}.
 
 \PM{Image Classification}
 Classification actions are much faster than detectors, and the action-selection method accordingly needs to be fast.
@@ -68,13 +68,13 @@ In \autoref{sec:clf_chapter}, we consider several value-imputation methods and p
 We first demonstrate on synthetic data that our algorithm learns to pick features most useful for the specific test instance.
 We demonstrate the advantage of non-myopic over greedy, and of dynamic over static on this and the Scene-15 visual classification dataset.
 Then we show results on a subset of the hierarchical ImageNet dataset, where we additionally learn to provide the most specific answers for any desired cost budget and accuracy level.
-This work was originally presented in \cite{Karayev-ICMLW-2013} and \cite{Karayev-CVPR-2014}.
+This work was originally presented in \cite{Karayev-CVPR-2014} and all work is open source\footnote{Available at \url{https://github.com/sergeyk/anytime_recognition}}.
 
 \PM{Cascade CNN}
 We additionally investigate a novel approach for speeding up a state-of-the-art CNN-based detection method, and propose a general technique for accelerating CNNs applied to class imbalanced data.
 We employ the classic idea of the cascade by inserting a \emph{reject} option between expensive convolutional layers.
 When a CNN processes batches of images, which is standard for many applications, the reject layers allows ``thinning'' of the batch as it progresses through the network, thus saving processing time.
-This method is applicable to both \emph{all-class, proposed-region} methods such as \cite{Girshick-CVPR-2014} and \emph{all-class, exhaustive-region} methods such as \cite{He-ECCV-2014}.
+This method is applicable to both \emph{all-class, proposed-region} methods such as \cite{Girshick-CVPR-2014} and \emph{all-class, all-region} methods such as \cite{He-ECCV-2014}.
 We demonstrate results --- along with a variety of strong baselines -- on the former method, and show that the Cascade CNN method obtains a nearly 10x speed-up with only marginal drop in accuracy.
 All work is reported in \autoref{sec:ccnn_chapter}.
 
@@ -83,12 +83,12 @@ Lastly, in \autoref{sec:style_chapter} we present two novel datasets and first r
 In preparation for an Anytime approach, we evaluate several different features (including CNNs) for the task, and explore content-style correlations in our datasets.
 Our large-scale learning gives state-of-the-art results on an existing dataset of image quality and photographic style, and provides a strong baseline on our contributed datasets of 80K photos and 85K paintings labeled with their style and genre.
 In a demonstration of cross-dataset understanding of style, we show how results of a search by content can be filtered by style.
-This work was originally presented in \cite{Karayev-BMVC-2014}.
+This work was originally presented in \cite{Karayev-BMVC-2014}, and all code is open source\footnote{Available at \url{https://github.com/sergeyk/vislab}}.
 
 \PM{Future Directions}
 This thesis provides an effective foundation for Anytime visual recognition, and points the way to interesting further developments.
 Our MDP-based formulation of learning a feature-selection policy is empirically effective, but heuristic in nature.
 The recently developed framework of adaptive submodularity \parencite{Golovin-and-Krause-2010-JAIR} could provide theoretical near-optimality results for some policies, but developing an appropriate objective for our task is not straightforward.
 We showed our Cascade CNN model to be effective for a region-based detection task -- but the model was not trained end-to-end with the threshold layers.
-An even more interesting future development would add an Anyitme loss layer that combines classification output from multiple levels of the network in a cost-sensitive way.
-We explain these ideas in detail in \autoref{sec:conclusion}.
+An even more interesting future development would add an Anytime loss layer that combines classification output from multiple levels of the network in a cost-sensitive way.
+We expand on these ideas in \autoref{sec:conclusion}.
