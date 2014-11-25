@@ -2,22 +2,22 @@
 \begin{abstract}\label{sec:abstract}
 Humans are capable of perceiving a scene at a glance, and obtain deeper understanding with additional time.
 Computer visual recognition should be similarly robust to varying computational budgets --- a property we call Anytime recognition.
-Despite its value to real-world scenarios, this topic is underappreciated in the field.
 We present a general method for learning dynamic policies to optimize Anytime performance in visual recognition.
 We approach this problem from the perspective of Markov Decision Processes, and use reinforcement learning techniques.
 Crucially, decisions are made at test time and depend on observed data and intermediate results.
-Our method is easily extendable, learning from execution traces of existing detectors and classifiers.
+Our method is applicable to a wide variety of existing detectors and classifiers, as it learns from execution traces and requires no special knowledge of their implementation.
 
 We first formulate a dynamic, closed-loop policy that infers the contents of the image in order to decide which single-class detector to deploy next.
 We explain effective decisions for reward function definition and state-space featurization, and evaluate our method on the PASCAL VOC dataset with a novel \emph{costliness} measure, computed as the area under an Average Precision (AP) vs. Time curve.
 In contrast to previous work, our method significantly diverges from predominant greedy strategies and learns to take actions with deferred values.
 If execution is stopped when only half the detectors have been run, our method obtains $66\%$ better mean AP than a random ordering, and $14\%$ better performance than an intelligent baseline.
 
-We then apply our approach to classification tasks, where less costly feature selection actions prompt a different inference mechanism.
+The detection actions are costly relative to the inference performed in executing our policy.
+Next, we apply our approach to a setting with less costly actions: feature selection for linear classification.
 We explain strategies for dealing with unobserved feature values that are necessary to effectively classify from any state in the sequential process.
 We show the applicability of this system to a challenging synthetic problem and to benchmark problems in scene and object recognition.
 On suitable datasets, we can additionally incorporate a semantic back-off strategy that gives maximally specific predictions for a desired level of accuracy.
-Our method delivers best results on the costliness meaasure, and provides a new view on the time course of human visual perception.
+Our method delivers best results on the costliness measure, and provides a new view on the time course of human visual perception.
 
 Traditional visual recognition obtains significant advantages from the use of many features in classification.
 Recently, however, a single feature learned with multi-layer convolutional networks (CNNs) has outperformed all other approaches on the main recognition datasets.

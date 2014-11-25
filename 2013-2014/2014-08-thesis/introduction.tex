@@ -34,7 +34,7 @@ For example, simple binary features are sufficient to quickly detect faces \pare
 \PM{Detection}
 Detection methods tend to employ the same visual features and classifiers but apply them to many image sub-regions.
 Approaches can broadly be grouped into (A) \emph{per-class, all-region}, (B) \emph{all-class, all-region}, and (C) \emph{all-class, proposed-region} methods.
-State-of-the-art \emph{all-class, proposed-region} methods such as \cite{Girshick-CVPR-2014} and \emph{per-class, all-region} methods such as \cite{Felzenszwalb2010a} are considerably slow, performing an expensive computation on (respectively) a thousand to a million image windows.
+State-of-the-art \emph{all-class, proposed-region} methods such as \cite{Girshick-CVPR-2014} and \emph{per-class, all-region} methods such as \cite{Felzenszwalb2010a} are considerably slow (on the order of seconds), performing an expensive computation on (respectively) a thousand to a million image windows.
 To maximize early performance gains of these methods, scene and inter-object contextual cues can be exploited in two ways.
 First, regions can be processed in an intelligent order, with most likely locations selected first.
 Second, if detectors are applied per class, then they can be sequenced so as to maximize the chance of finding objects actually present in the image.
